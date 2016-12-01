@@ -110,64 +110,52 @@ function getElemsStrs($obj,name){//取元素组成数组
 }
 
 var validText={
-  "notnull":"*必填",
+  "null":"*可以为空",
   "date":"*格式为XXXX-XX-XX",
   "email":"*格式为XXX@XX.com",
   "number":"*须为纯数字",
+  "length":"*输入长度不在范围内",
+  "letterStart":"*输入长度不在范围内",
+  "range":"*数字不在范围内",
 }
 function checkValue(typeStr,value){
-  var types=typeStr.split(",");//将类型值以逗号分隔成数组
-  $.each(types,function(i,type){
-    if(type.indexOf("range")!=-1){
-      var i=type.substring(6,type.length-1).split(",");
-      type="number";
-      if(getRegExp(type).test(value)){
-        
-      }else{
-        return validText.number;
+  if(typeStr.indexOf("null")!=-1){//两位type 可以为空的某类型
+    var types=typeStr.split(" ");//将类型值以逗号分隔成数组
+    var t=(types[0]=="null")?types[1]:types[0];
+    if(t.indexOf("range")!=-1){
+      var s=testRange(typeStr,value);
+      if(s!="true"&&value!=""){
+        return s;
       }
-      if(parseInt(value)>=parseInt(i[0])&&)
-      a=i[0];
-      b=i[1];
-    }else{
-      
     }
-    
-    if($(input)[0].tagName=="INPUT"){
-      data[i]=[$(input).attr(name),$(input).val()];
-    }else{
-      data[i]=[$(input).attr(name),$(input).text()];
+    if(!getRegExp(t).test(value)&&value!=""){
+      return validText[t];
     }
-  });
-  if(types.length==1){
-    var reg = getRegExp(typeStr);
-    if(reg.test(value)){
-      return "true";
-    }else{
-      return validText[typeStr];
-    }
-  }else if(types.length==2){//参数有两个
-    if(!value){//若为空直接返回
-      return "*必填";
-    }else{
-      var type;
-      if(types[0]=="notnull"){//找出不是notnull的那个参数
-        type=types[1];
-      }else{
-        type=types[0];
+  }else{//一类
+    if(typeStr.indexOf("range")!=-1){
+      var s=testRange(typeStr,value);
+      if(s!="true"){
+        return s;
       }
-      var reg=getRegExp(type);
-      if(reg=="")
-        return "jet-valid参数错误";
-      else if(!reg.test(value)){
-        return validText[type];
-      }else{
-        return "√通过";
+    }else{
+      if(!getRegExp(typeStr).test(value)){
+        return validText[typeStr];
       }
+    }
+  }
+  return "true";
+}
+function testRange(type,value){
+  var i=type.substring(6,type.length-1).split(",");
+  type="number";
+  if(getRegExp(type).test(value)){
+    if(parseInt(value)<parseInt(i[0])||parseInt(value)>parseInt(i[1])){
+      return validText.range+"["+i[0]+","+i[1]+"]"
     }
   }else{
-    return "jet-valid参数个数错误";
+    return validText.number;
   }
+  return "true";
 }
 function getRegExp(type){
   var a=0;
@@ -185,12 +173,13 @@ function getRegExp(type){
   }
   switch(type){
     case "null":return /^\S{0}$/;break;
-    case "notnull":return /^\S+$/;break;
+    //case "notnull":return /^\S+$/;break;
     case "date":return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;break;
     case "email":return /^((\w*@\w*.com))$/;break;
     case "number":return /^(\d+)$/;break;
     case "tel":return /^([1]\d{10})$/;break;
-    case "userName":return new RegExp("^([a-zA-Z]([a-zA-Z\\d]){"+a+","+b+"})$");break;
+    case "letterStart":return new RegExp("^([a-zA-Z]([a-zA-Z\\d]){"+(parseInt(a)-1)+","+(parseInt(b)-1)+"})$");break;
+    case "length":return new RegExp("^(([a-zA-Z\\d]){"+a+","+b+"})$");break;
     //待扩展
     case "express":return value;break;
     default:return "";break;
