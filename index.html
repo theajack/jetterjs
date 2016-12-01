@@ -3,15 +3,12 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="assets/css/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="assets/css/print.css" media="print">
-    <link rel="stylesheet" type="text/css" href="assets/css/jetter.css"
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <!--<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>-->
+    <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/github-light.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/print.css" media="print"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/jetter.css"/>
 
     <title>Jetter.js by theajack</title>
   </head>
@@ -70,21 +67,26 @@
     <script src="assets/js/jetter.js"></script>
     
     <script>
+    /*<!--<!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->*/
       $(function(){
         Jet.set("test",{
           "test":"test",
-          "test1":"test1",
+          "test1":"test1"
         })
         $(".jet-valid-tile").css({
         });
       })
       function showData(){
-        Jet.ban
+        
         Jet.validate({
-          "jet-form":"test",
+          "jetform":"test",
           "onpass":function(){
+            alert("pass");
           },
           "onfail":function(data){
+            alert("fail");
           }
         });
       }

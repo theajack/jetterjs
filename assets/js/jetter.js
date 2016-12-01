@@ -2,22 +2,24 @@ $(function(){
   $("[jet-valid]").attr("onBlur","validInput(this)");
 })
 var Jet={
-  "useDefaultStyle":true;
+  "useDefaultStyle":true,
   "get":function(jetForm){
     return getElemsObj($("[jet-form="+jetForm+"]"),"jet-name");
   },"set":function(jetForm,data){
     setObjVal($("[jet-form="+jetForm+"]"),"jet-name",data);
   },"validate":function(a,b){
     if(arguments.length==1){
-      
+      validateForm($("[jet-form="+a.jetform+"]"),a.onpass,a.onfail);
+    }else{
+      validateForm($("[jet-form="+a+"]"),b);
     }
-    validateForm($("[jet-form="+jetForm+"]"),callback);
+    
   },"banDefault":function(){
     this.useDefaultStyle=false
   },
   
 }
-function getElemsObj($obj,name){//È¡ÔªËØ×é³Éjson
+function getElemsObj($obj,name){//å–å…ƒç´ ç»„æˆjson
   var $inputs = $obj.find("["+name+"]");
   var data={};
   $.each($inputs,function(i,input){
@@ -41,7 +43,7 @@ function setObjVal($obj,name,data){
   });
 }
 
-/*¹ØÓÚ±íµ¥ÑéÖ¤*/
+/*å…³äºè¡¨å•éªŒè¯*/
 function addValidTail(){
   $.each($("[jet-valid]"),function(index,elem){
     var star="";
@@ -57,31 +59,44 @@ function validInput(obj){
     if(Jet.useDefaultStyle){
       $(obj).addClass("jet-unpass");
     }
-    return false;
   }else{
     if(Jet.useDefaultStyle){
       $(obj).removeClass("jet-unpass");
     }
-    return true;
   }
+  return result;
 }
-function validateForm($obj,callback){
+function validateForm($obj,onpass,onfail){
+  var data=[];
+  var needData=true;
+  if(onfail==undefined){
+    needData=false;
+  }
   var isPass=true;
   var $inputs = $obj.find("[jet-valid]");
   $.each($inputs,function(i,input){
-    if(!validInput(input)){
+    var result=validInput(input);
+    if(result!="true"){
       isPass=false;
+      if(needData){
+        data[data.length]={
+          "obj":input,
+          "error":result
+        }
+      }
     }
   });
   if(!isPass){
-    alert("wrong");//mesShow("ÊäÈëÓĞÎó£¡Çë°´ÌáÊ¾¸ÄÕı¡£","warn");
+    if(needData){
+      onfail(data);
+    }
   }else{
-    if(callback!=undefined)
-      callback();
+    if(onpass!=undefined)
+      onpass();
   }
 }
 
-function getElemsStrs($obj,name){//È¡ÔªËØ×é³ÉÊı×é
+function getElemsStrs($obj,name){//å–å…ƒç´ ç»„æˆæ•°ç»„
   var $inputs = $obj.find("["+name+"]");
   var data=[];
   $.each($inputs,function(i,input){
@@ -95,51 +110,88 @@ function getElemsStrs($obj,name){//È¡ÔªËØ×é³ÉÊı×é
 }
 
 var validText={
-  "notnull":"*±ØÌî",
-  "date":"*¸ñÊ½ÎªXXXX-XX-XX",
-  "email":"*¸ñÊ½ÎªXXX@XX.com",
-  "number":"*ĞëÎª´¿Êı×Ö",
+  "notnull":"*å¿…å¡«",
+  "date":"*æ ¼å¼ä¸ºXXXX-XX-XX",
+  "email":"*æ ¼å¼ä¸ºXXX@XX.com",
+  "number":"*é¡»ä¸ºçº¯æ•°å­—",
 }
 function checkValue(typeStr,value){
-  var types=typeStr.split(",");//½«ÀàĞÍÖµÒÔ¶ººÅ·Ö¸ô³ÉÊı×é
+  var types=typeStr.split(",");//å°†ç±»å‹å€¼ä»¥é€—å·åˆ†éš”æˆæ•°ç»„
+  $.each(types,function(i,type){
+    if(type.indexOf("range")!=-1){
+      var i=type.substring(6,type.length-1).split(",");
+      type="number";
+      if(getRegExp(type).test(value)){
+        
+      }else{
+        return validText.number;
+      }
+      if(parseInt(value)>=parseInt(i[0])&&)
+      a=i[0];
+      b=i[1];
+    }else{
+      
+    }
+    
+    if($(input)[0].tagName=="INPUT"){
+      data[i]=[$(input).attr(name),$(input).val()];
+    }else{
+      data[i]=[$(input).attr(name),$(input).text()];
+    }
+  });
   if(types.length==1){
     var reg = getRegExp(typeStr);
-    if(!reg.test(value)){
-      return validText[typeStr];
-    }else{
+    if(reg.test(value)){
       return "true";
+    }else{
+      return validText[typeStr];
     }
-  }else if(types.length==2){//²ÎÊıÓĞÁ½¸ö
-    if(!value){//ÈôÎª¿ÕÖ±½Ó·µ»Ø
-      return "*±ØÌî";
+  }else if(types.length==2){//å‚æ•°æœ‰ä¸¤ä¸ª
+    if(!value){//è‹¥ä¸ºç©ºç›´æ¥è¿”å›
+      return "*å¿…å¡«";
     }else{
       var type;
-      if(types[0]=="notnull"){//ÕÒ³ö²»ÊÇnotnullµÄÄÇ¸ö²ÎÊı
+      if(types[0]=="notnull"){//æ‰¾å‡ºä¸æ˜¯notnullçš„é‚£ä¸ªå‚æ•°
         type=types[1];
       }else{
         type=types[0];
       }
       var reg=getRegExp(type);
       if(reg=="")
-        return "jet-valid²ÎÊı´íÎó";
+        return "jet-validå‚æ•°é”™è¯¯";
       else if(!reg.test(value)){
         return validText[type];
       }else{
-        return "¡ÌÍ¨¹ı";
+        return "âˆšé€šè¿‡";
       }
     }
   }else{
-    return "jet-valid²ÎÊı¸öÊı´íÎó";
+    return "jet-validå‚æ•°ä¸ªæ•°é”™è¯¯";
   }
 }
 function getRegExp(type){
+  var a=0;
+  var b=0;
+  if(type.indexOf("length")!=-1){
+    var i=type.substring(7,type.length-1).split(",");
+    type="length";
+    a=i[0];
+    b=i[1];
+  }else if(type.indexOf("letterStart")!=-1){
+    var i=type.substring(12,type.length-1).split(",");
+    type="letterStart";
+    a=i[0];
+    b=i[1];
+  }
   switch(type){
-    case "cannull":return /^\S*$/;break;
+    case "null":return /^\S{0}$/;break;
     case "notnull":return /^\S+$/;break;
-    case "date":return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1)))|(\S{0}))$/;break;
-    case "email":return /^((\w*@\w*.com)|(\S{0}))$/;break;
-    case "number":return /^((\d+)|(\S{0}))$/;break;
-    //´ıÀ©Õ¹
+    case "date":return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;break;
+    case "email":return /^((\w*@\w*.com))$/;break;
+    case "number":return /^(\d+)$/;break;
+    case "tel":return /^([1]\d{10})$/;break;
+    case "userName":return new RegExp("^([a-zA-Z]([a-zA-Z\\d]){"+a+","+b+"})$");break;
+    //å¾…æ‰©å±•
     case "express":return value;break;
     default:return "";break;
   }
