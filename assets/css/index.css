@@ -1,0 +1,135 @@
+body{
+  background-color:#fff;
+  color:#000;
+  width:100%;
+  margin:0;
+  font-size:20px;
+  line-height:inherit!important;
+}
+a{
+  font-size:20px;
+}
+.bg-white{  background-color:#fff!important;}
+.bg-black{  background-color:#000!important;}
+.bg-gray{  background-color:#ccc!important;}
+.bg-dark{background-color:#444!important;}
+
+.text-white{  color:#fff!important;}
+.text-black{  color:#000!important;}
+.text-gray{  color:#ccc!important;}
+.text-dark{color:#444!important;}
+
+#header{
+  background-color:#000;
+  color:#fff;
+  padding:20px;
+  text-align:center;
+}
+#title{
+  margin: 0 auto;
+  font-size: 80px;
+  font-weight: bold;
+}
+#smallTitle{
+  font-weight: bold;
+  font-size: 20px;
+}
+.border-btn{
+  color: #fff;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-size:20px;
+  text-align:center;
+}
+.border-btn:hover{
+  background-color:#333!important;
+  box-shadow:0 0 5px 5px rgba(255,255,255,0.3);
+}
+.border-btn:active{
+  background-color:#777!important;
+}
+#viewProject{
+  width: 150px;
+  float: right;
+  position: absolute;
+  top: 45px;
+  right: 30px;
+}
+.part{
+  padding:100px 15%;
+}
+.intro-item{
+  width:25%;
+  float:left;
+  text-align:center;
+  color:#000;
+  transition: color 0.3s;
+  -moz-transition: color 0.3s;	/* Firefox 4 */
+  -webkit-transition: color 0.3s;	/* Safari 和 Chrome */
+  -o-transition: color 0.3s;
+}
+.intro-item:hover{
+  color:#fff;
+  cursor:pointer;
+}
+.intro-icon{
+  height:100px;
+  width:100px;
+  font-size:100px;
+  display:block;
+}
+.intro-text{    
+  margin: 60px 20px 0 20px;
+  font-size:30px;
+  display:block;
+}
+.part-title{
+  margin-bottom: 80px;
+  font-size: 50px;
+  text-align: center;
+  font-weight: bold;
+}
+.part-title.hassmall{
+  margin-bottom: 10px;
+}
+.part-title.small{
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+.icon-wrapper{
+  
+}
+#downloadArea{
+  width: 100%;
+  border-color: #eee;
+  box-shadow: #555 0px 0px 10px 10px;
+  margin: 0px;
+  background-color: #eee;
+  border-radius: 5px;
+  color: #000;
+  font-size: 15px;
+  outline: none;
+  resize: none;
+}
+#downloadArea:active{
+  border-color: #eee;
+}
+#copyBtn{
+  width: 150px;
+  margin: 20px auto 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

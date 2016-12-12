@@ -2,24 +2,22 @@ $(function(){
   $("[jet-valid]").attr("onBlur","validInput(this)");
 })
 var Jet={
-  "useDefaultStyle":true,
+  "useDefaultStyle":true;
   "get":function(jetForm){
     return getElemsObj($("[jet-form="+jetForm+"]"),"jet-name");
   },"set":function(jetForm,data){
     setObjVal($("[jet-form="+jetForm+"]"),"jet-name",data);
   },"validate":function(a,b){
     if(arguments.length==1){
-      validateForm($("[jet-form="+a.jetform+"]"),a.onpass,a.onfail);
-    }else{
-      validateForm($("[jet-form="+a+"]"),b);
+      
     }
-    
+    validateForm($("[jet-form="+jetForm+"]"),callback);
   },"banDefault":function(){
     this.useDefaultStyle=false
   },
   
 }
-function getElemsObj($obj,name){//å–å…ƒç´ ç»„æˆjson
+function getElemsObj($obj,name){//È¡ÔªËØ×é³Éjson
   var $inputs = $obj.find("["+name+"]");
   var data={};
   $.each($inputs,function(i,input){
@@ -43,7 +41,7 @@ function setObjVal($obj,name,data){
   });
 }
 
-/*å…³äºè¡¨å•éªŒè¯*/
+/*¹ØÓÚ±íµ¥ÑéÖ¤*/
 function addValidTail(){
   $.each($("[jet-valid]"),function(index,elem){
     var star="";
@@ -59,44 +57,31 @@ function validInput(obj){
     if(Jet.useDefaultStyle){
       $(obj).addClass("jet-unpass");
     }
+    return false;
   }else{
     if(Jet.useDefaultStyle){
       $(obj).removeClass("jet-unpass");
     }
+    return true;
   }
-  return result;
 }
-function validateForm($obj,onpass,onfail){
-  var data=[];
-  var needData=true;
-  if(onfail==undefined){
-    needData=false;
-  }
+function validateForm($obj,callback){
   var isPass=true;
   var $inputs = $obj.find("[jet-valid]");
   $.each($inputs,function(i,input){
-    var result=validInput(input);
-    if(result!="true"){
+    if(!validInput(input)){
       isPass=false;
-      if(needData){
-        data[data.length]={
-          "obj":input,
-          "error":result
-        }
-      }
     }
   });
   if(!isPass){
-    if(needData){
-      onfail(data);
-    }
+    alert("wrong");//mesShow("ÊäÈëÓĞÎó£¡Çë°´ÌáÊ¾¸ÄÕı¡£","warn");
   }else{
-    if(onpass!=undefined)
-      onpass();
+    if(callback!=undefined)
+      callback();
   }
 }
 
-function getElemsStrs($obj,name){//å–å…ƒç´ ç»„æˆæ•°ç»„
+function getElemsStrs($obj,name){//È¡ÔªËØ×é³ÉÊı×é
   var $inputs = $obj.find("["+name+"]");
   var data=[];
   $.each($inputs,function(i,input){
@@ -110,77 +95,51 @@ function getElemsStrs($obj,name){//å–å…ƒç´ ç»„æˆæ•°ç»„
 }
 
 var validText={
-  "null":"*å¯ä»¥ä¸ºç©º",
-  "date":"*æ ¼å¼ä¸ºXXXX-XX-XX",
-  "email":"*æ ¼å¼ä¸ºXXX@XX.com",
-  "number":"*é¡»ä¸ºçº¯æ•°å­—",
-  "length":"*è¾“å…¥é•¿åº¦ä¸åœ¨èŒƒå›´å†…",
-  "letterStart":"*è¾“å…¥é•¿åº¦ä¸åœ¨èŒƒå›´å†…",
-  "range":"*æ•°å­—ä¸åœ¨èŒƒå›´å†…",
+  "notnull":"*±ØÌî",
+  "date":"*¸ñÊ½ÎªXXXX-XX-XX",
+  "email":"*¸ñÊ½ÎªXXX@XX.com",
+  "number":"*ĞëÎª´¿Êı×Ö",
 }
 function checkValue(typeStr,value){
-  if(typeStr.indexOf("null")!=-1){//ä¸¤ä½type å¯ä»¥ä¸ºç©ºçš„æŸç±»å‹
-    var types=typeStr.split(" ");//å°†ç±»å‹å€¼ä»¥é€—å·åˆ†éš”æˆæ•°ç»„
-    var t=(types[0]=="null")?types[1]:types[0];
-    if(t.indexOf("range")!=-1){
-      var s=testRange(typeStr,value);
-      if(s!="true"&&value!=""){
-        return s;
-      }
-    }
-    if(!getRegExp(t).test(value)&&value!=""){
-      return validText[t];
-    }
-  }else{//ä¸€ç±»
-    if(typeStr.indexOf("range")!=-1){
-      var s=testRange(typeStr,value);
-      if(s!="true"){
-        return s;
-      }
+  var types=typeStr.split(",");//½«ÀàĞÍÖµÒÔ¶ººÅ·Ö¸ô³ÉÊı×é
+  if(types.length==1){
+    var reg = getRegExp(typeStr);
+    if(!reg.test(value)){
+      return validText[typeStr];
     }else{
-      if(!getRegExp(typeStr).test(value)){
-        return validText[typeStr];
-      }
+      return "true";
     }
-  }
-  return "true";
-}
-function testRange(type,value){
-  var i=type.substring(6,type.length-1).split(",");
-  type="number";
-  if(getRegExp(type).test(value)){
-    if(parseInt(value)<parseInt(i[0])||parseInt(value)>parseInt(i[1])){
-      return validText.range+"["+i[0]+","+i[1]+"]"
+  }else if(types.length==2){//²ÎÊıÓĞÁ½¸ö
+    if(!value){//ÈôÎª¿ÕÖ±½Ó·µ»Ø
+      return "*±ØÌî";
+    }else{
+      var type;
+      if(types[0]=="notnull"){//ÕÒ³ö²»ÊÇnotnullµÄÄÇ¸ö²ÎÊı
+        type=types[1];
+      }else{
+        type=types[0];
+      }
+      var reg=getRegExp(type);
+      if(reg=="")
+        return "jet-valid²ÎÊı´íÎó";
+      else if(!reg.test(value)){
+        return validText[type];
+      }else{
+        return "¡ÌÍ¨¹ı";
+      }
     }
   }else{
-    return validText.number;
+    return "jet-valid²ÎÊı¸öÊı´íÎó";
   }
-  return "true";
 }
 function getRegExp(type){
-  var a=0;
-  var b=0;
-  if(type.indexOf("length")!=-1){
-    var i=type.substring(7,type.length-1).split(",");
-    type="length";
-    a=i[0];
-    b=i[1];
-  }else if(type.indexOf("letterStart")!=-1){
-    var i=type.substring(12,type.length-1).split(",");
-    type="letterStart";
-    a=i[0];
-    b=i[1];
-  }
   switch(type){
-    case "null":return /^\S{0}$/;break;
-    //case "notnull":return /^\S+$/;break;
-    case "date":return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;break;
-    case "email":return /^((\w*@\w*.com))$/;break;
-    case "number":return /^(\d+)$/;break;
-    case "tel":return /^([1]\d{10})$/;break;
-    case "letterStart":return new RegExp("^([a-zA-Z]([a-zA-Z\\d]){"+(parseInt(a)-1)+","+(parseInt(b)-1)+"})$");break;
-    case "length":return new RegExp("^(([a-zA-Z\\d]){"+a+","+b+"})$");break;
-    //å¾…æ‰©å±•
+    case "cannull":return /^\S*$/;break;
+    case "notnull":return /^\S+$/;break;
+    case "date":return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1)))|(\S{0}))$/;break;
+    case "email":return /^((\w*@\w*.com)|(\S{0}))$/;break;
+    case "number":return /^((\d+)|(\S{0}))$/;break;
+    //´ıÀ©Õ¹
     case "express":return value;break;
     default:return "";break;
   }
