@@ -8,7 +8,6 @@
     <title>Jetter.js by theajack</title>
     <link rel="stylesheet" type="text/css" href="assets/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="assets/css/base.min.css"/>
-
   </head>
 
   <body>
@@ -20,53 +19,117 @@
       <div id="smallTitle">Js lib for form operate.by theajack</div>
     </div>
     <!--intro-->
-    <div id="introPart" class="bg-gray text-black part clearfix">
+    <div id="introPart" class="bg-gray text-black part clearfix pb-none">
       <div class="part-title">What can I do?</div>
-      <div class="icon-wrapper">
+      <div class="icon-wrapper clearfix">
         <div class="intro-item">
           <span class="glyphicon glyphicon-search intro-icon"></span>
-          <span class="intro-text">Select and set HTML element expediently.</span>
+          <span class="intro-text">jetSelect</span>
         </div>
         <div class="intro-item">
           <span class="glyphicon glyphicon-edit intro-icon"></span>
-          <span class="intro-text">Read and write a set of element value or text expediently.</span>
+          <span class="intro-text">Serialize</span>
         </div>
         <div class="intro-item">
           <span class="glyphicon glyphicon-ok-circle intro-icon"></span>
-          <span class="intro-text">Convient validation of a set of element.</span>
+          <span class="intro-text">Validation</span>
         </div>
         <div class="intro-item">
           <span class="glyphicon glyphicon-wrench intro-icon"></span>
-          <span class="intro-text">Some other frequently-used functions.</span>
+          <span class="intro-text">Tools</span>
         </div>
       </div>
     </div>
+		<div id="introDetail" class="bg-gray" jet-index="-1">
+			<div class="trangle"></div>
+			<div class="detail-div"></div>
+      <div id="viewApi" class="border-btn dark">View this API</div>
+		</div>
+		<div class="fill-div bg-gray"></div>
+		
     
     <!--download-->
     <div id="downloadPart" class="bg-dark text-white part">
       <div class="part-title hassmall">Download</div>
       <div class="part-title small">(Copy and save the code blow)</div>
       <textarea id="downloadArea" cols="30" rows="10" readonly="true">
-  <span class="glyphicon glyphicon-pause intro-icon"></span>
-  <span class="intro-text">Some other frequently-used functions.</span></textarea>
+jetter.             <br/> min.js 
+      </textarea>
       <div id="copyBtn" class="border-btn">Copy code</div>
     </div>
     <!--api-->
     <div id="apiPart" class="bg-gray part">
-    apiPart
-    </div>
-    <!--case-->
-    <div id="casePart" class="bg-dark text-white part">
-    casePart
+      <div class="part-title text-black">API document</div>
+      <div class="relative">
+        <div id="apiDetailWrapper">
+          <div id="apiDetail" jet-form="apiDetail">
+            <span class="close-btn glyphicon glyphicon-remove"></span>
+            <div id="apiDetailTitleWrapper">
+              <div id="apiTitleLeft">
+                <div class="part-title hassmall" jet-name="title">Title</div>
+                <div class="part-title smaller" jet-name="intro">intro</div>
+              </div>
+              <div id="apiTitleRight">
+                <div class="mb-m">
+                  <span class="api-detail-title"><span class="glyphicon glyphicon-th-large"></span>Function:</span>
+                  <span class="api-detail-content" jet-name="function">function</span>
+                </div>
+                <div class="">
+                  <span class="api-detail-title"><span class="glyphicon glyphicon-file"></span>How to use:</span>
+                  <span class="api-detail-content" jet-name="howUse">how to use</span>
+                </div>
+              </div>
+            </div>
+            <div class="api-detail-item small relative border">
+              <div id="apiBtnWrapper">
+                <div id="apiCodeBtn" class="border-btn dark"><span class="glyphicon glyphicon-saved"></span>Submit</div>
+                <div id="apiCodeCopyBtn" class="border-btn dark"><span class="glyphicon glyphicon-floppy-disk "></span>Copy</div>
+                <div id="apiCodeResetBtn" class="border-btn dark"><span class="glyphicon glyphicon-repeat"></span>Reset</div>
+              </div>
+              <span class="api-detail-title display-block"><span class="glyphicon glyphicon-pencil"></span>Code:</span>
+              <textarea id="apiCode" jet-data="" spellcheck="false" jet-change="0" jet-name="code"></textarea>
+              
+            </div>
+            <div class="api-detail-item large">
+              <span class="api-detail-title display-block"><span class="glyphicon glyphicon-globe"></span>Result:</span>
+              <div id="resultArea"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="apiBarTitle">
+        <div class="api-title bg-dark"><span class="glyphicon glyphicon-search"></span>jetSelect</div>
+        <div class="api-title bg-lgray"><span class="glyphicon glyphicon-edit"></span>Serialize</div>
+        <div class="api-title bg-dark"><span class="glyphicon glyphicon-ok-circle"></span>Validation</div>
+        <div class="api-title bg-lgray"><span class="glyphicon glyphicon-wrench"></span>Tools</div>
+      </div>
+      <div id="apiWindow">
+        <div id="apiTrangleBar">
+          <div class="trangle api dark"></div>
+        </div>
+        <div id="apiBar">
+            <div class="api-item bg-lgray" jet-api="jetSelect">
+            </div>
+            <div class="api-item bg-dark" jet-api="Serialize">
+            </div>
+            <div class="api-item bg-lgray" jet-api="Validation">
+            </div>
+            <div class="api-item bg-dark" jet-api="Tools">
+            </div>
+        </div>
+      </div>
     </div>
     <!--relate-->
-    <div id="relatePart" class="bg-gray part">
+    <div id="relatePart" class="bg-dark part">
     relatePart
     </div>
     <!--footer-->
     <div id="footer" class="bg-black text-white part">
     footer
     </div>
-    
+    <script src="assets/js/jetQuery.js"></script>
+    <script src="assets/js/jetter.js"></script>
+    <script src="assets/js/tabIndent.js"></script>
+    <script src="assets/js/main.js"></script>
   </body>
 </html>

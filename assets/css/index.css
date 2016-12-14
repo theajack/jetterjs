@@ -11,14 +11,21 @@ a{
 }
 .bg-white{  background-color:#fff!important;}
 .bg-black{  background-color:#000!important;}
-.bg-gray{  background-color:#ccc!important;}
+.bg-gray{  background-color:#aaa!important;}
+.bg-lgray{  background-color:#ddd!important;}
 .bg-dark{background-color:#444!important;}
 
 .text-white{  color:#fff!important;}
 .text-black{  color:#000!important;}
-.text-gray{  color:#ccc!important;}
+.text-gray{  color:#aaa!important;}
 .text-dark{color:#444!important;}
-
+.display-none{display:none!important;}
+.display-block{display:block!important;}
+.relative{position:relative}
+.overflow-hidden{overflow:hidden}
+.mb-m{margin-bottom:5px}
+.pb-none{padding-bottom:0px!important}
+.fill-div{width:100%;height:100px}
 #header{
   background-color:#000;
   color:#fff;
@@ -60,6 +67,8 @@ a{
 .part{
   padding:100px 15%;
 }
+
+/*intro part*/
 .intro-item{
   width:25%;
   float:left;
@@ -85,6 +94,50 @@ a{
   font-size:30px;
   display:block;
 }
+#introDetail{
+  height:0;
+  overflow:hidden;
+  position:relative;
+  transition: height 0.3s;
+  -moz-transition: height 0.3s;	/* Firefox 4 */
+  -webkit-transition: height 0.3s;	/* Safari 和 Chrome */
+  -o-transition: height 0.3s;
+}
+.detail-div{    
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	padding: 32px 15%;
+	font-size: 30px;
+	color: #000;
+	text-align: center;
+	
+}
+.trangle{
+	width:0;
+	border: 20px solid transparent;
+	border-bottom: 25px solid #fff;
+  transition: margin-left 0.3s;
+  margin-left:23%;
+  -moz-transition: margin-left 0.3s;	/* Firefox 4 */
+  -webkit-transition: margin-left 0.3s;	/* Safari 和 Chrome */
+  -o-transition: margin-left 0.3s;
+}
+#viewApi{
+  width: 150px;
+  height: 50px;
+  position: absolute;
+  right: 30px;
+  top: 70px;
+}
+.border-btn.dark{
+  color: #444;
+  border-color: #444;
+}
+.border-btn.dark:hover{
+  background-color:#ddd!important;
+}
+/*downloadArea*/
 .part-title{
   margin-bottom: 80px;
   font-size: 50px;
@@ -98,8 +151,11 @@ a{
   font-size: 20px;
   margin-bottom: 40px;
 }
+.part-title.smaller{
+  font-size: 20px;
+  margin-bottom: 20px;
+}
 .icon-wrapper{
-  
 }
 #downloadArea{
   width: 100%;
@@ -121,7 +177,284 @@ a{
   margin: 20px auto 0 auto;
 }
 
+/*api part*/
+#apiPart{
+}
+#apiBarTitle{
+  width: 100%;
+  height: 40px;
+}
+.api-title{
+  width: 25%;
+  float: left;
+  height: 60px;
+  font-size: 20px;
+  padding: 20px;
+  margin-bottom:0;
+  text-align: center;    
+  position: relative;
+  overflow:hidden;
+  top: 0px;
+  cursor:pointer;
+  transition: all 0.3s;
+  -moz-transition: all 0.3s;	/* Firefox 4 */
+  -webkit-transition: all 0.3s;	/* Safari 和 Chrome */
+  -o-transition: all 0.3s;
+}
+.api-title span{
+  margin-right:5px;
+}
+.api-title:hover{
+  top:-30px;
+  padding-top:30px;
+  margin-bottom:-30px;
+  height: 90px;
+}
+#apiWindow{
+  width:100%;
+  overflow:hidden;
+  position:relative;
+}
+#apiDetailWrapper{
+  width:100%;
+  position:absolute;
+  overflow:hidden;
+  height:630px;
+}
+#apiDetail{
+  width: 100%;
+  height: 100%;
+  position: absolute;  
+  top:-100%;  
+  transition: top 0.5s;
+  -webkit-transition: top 0.5s;	/* Safari 和 Chrome */
+  background-color: rgba(255,255,255,0.8);
+  z-index: 10;
+  color:#000;
+  padding:20px;
+}
+#apiDetailTitleWrapper{
+  height:180px;
+  width:100%;
+}
+#apiTitleLeft,#apiTitleRight{
+  height:100%;
+  float:left;
+  overflow-y:auto;
+  padding:0 10px;
+}
+#apiTitleLeft{
+  width:30%;
+  padding-top:40px;
+  border-right: 3px dashed #888;
+}
+#apiTitleLeft .part-title{
+  margin:0!important;
+  padding:0!important;
+}
+#apiTitleRight{
+  width:70%;
+  padding-top:10px!important;
+}
+.api-detail-item{
+  height: 410px;
+  float: left;    
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding:10px 20px;
+}
+.api-detail-item.small{
+  width: 67%;
+}
+.api-detail-item.large{
+  width: 33%;
+}
+.api-detail-title{    
+  font-size: 25px;
+  color: #444;
+  margin: 10px 20px 10px 0;
+  font-weight:bold;
+}
+.api-detail-title span{
+  margin-right:5px;
+  color:#000;
+  position:relative;
+  top:3px;
+}
+.api-detail-content{
+  font-size: 20px;
+  color: #000;
+  text-indent: 2em;
+  line-height: 30px;
+}
+.api-detail-item.border{
+  border-right: 3px dashed #888;
+}
+.close-btn{
+  display:block;
+  font-size: 35px;
+  position: absolute!important;
+  right: 0;
+  margin: 5px;
+  color:#aaa;
+  cursor:pointer;
+}
+#apiDetail.show{
+  top:0;
+}
+#apiTrangleBar{
+  width:100%;
+  position:absolute;
+  z-index: 5;
+}
+#apiBar{
+  width: 400%;
+  height: 570px;
+  position:relative;
+  left:0%;
+  transition: left 0.5s;
+  -webkit-transition: left 0.5s;	/* Safari 和 Chrome */
+  -moz-transition: left 0.5s;	/* Firefox 4 */
+  -o-transition: left 0.5s;
+}
+.api-item{
+  height:100%;
+  width:25%;
+  float:left;
+  padding:25px;
+  padding-top:40px;
+  overflow-y:auto;
+}
+.api-item.bg-lgray{
+  border:1px solid #444;
+}
+.api-item.bg-dark{
+  border:1px solid #ddd;
+}
+.api-item span{
+  display: block;
+  width: 18%;
+  height: 80px;
+  margin: 1%;
+  float: left;
+  font-size: 30px;
+  text-align: center;
+  padding-top: 22px;
+  cursor:pointer;
+  position:relative;
+  top:0;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+.api-item span:hover{
+  top:-15px;
+}
+.api-item.bg-lgray span{
+  background-color: #444;
+  color: #fff;
+  overflow:hidden;
+}
+.api-item.bg-lgray span:hover{
+  background-color: #222;
+}
+.api-item.bg-dark span{
+  background-color: #ddd;
+  color:#777;
+}
+.api-item.bg-dark span:hover{
+  background-color: #fff;
+}
+#apiCode{
+  width: 100%;
+  background-color: rgba(50,50,50,0.8);
+  border-radius: 5px;
+  border-color: #000;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  resize: none;
+  height: 337px;
+  padding:10px;
+}
+#apiBtnWrapper{
+  position: absolute;
+  width: 100%;
+  padding: 0 40px;
+  height: auto;
+}    
+#apiBtnWrapper .border-btn{
+  height: 35px;
+  float: right;
+  padding: 4px 5px;
+  margin: 5px 0 0 5px;
+}
+#apiBtnWrapper .border-btn span{
+  margin-right:7px;
+  font-size: 17px;
+}
+#apiBtnWrapper .border-btn span.only{
+  margin-right:0;
+  font-size: 19px;
+}
 
+#resultArea{
+  width: 100%;
+  height: 340px;
+  border: 2px dotted #000;
+  border-radius: 10px;
+  padding:10px;
+  overflow-y:auto;
+}
+.trangle.api{
+	border-width:30px;
+	border-bottom-width: 0;
+	border-top-width: 15px;
+  margin-left:10%;
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  z-index:5;
+}
+.trangle.dark{
+  border-top-color:#444;
+}
+.trangle.lgray{
+  border-top-color:#ddd;
+}
+.ripple {
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  position: absolute;
+  opacity: 1;
+}
+.ripple.r-white{
+  background: rgba(255, 255, 255, 0.4);
+}
+.ripple.r-black{
+  background: rgba(0, 0, 0, 0.4);
+}
+.rippleEffect {
+  -webkit-animation: rippleDrop .4s linear;
+  animation: rippleDrop .4s linear;
+}
+ 
+@-webkit-keyframes 
+  rippleDrop {  100% {
+   -webkit-transform: scale(2);
+   transform: scale(2);
+   opacity: 0;
+  }
+}
+@keyframes 
+  rippleDrop {  100% {
+   -webkit-transform: scale(2);
+   transform: scale(2);
+   opacity: 0;
+  }
+}   
 
 
 
