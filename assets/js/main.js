@@ -228,14 +228,14 @@ function showIntroDetail(obj){
     var i=obj.index();
     detail.css("height","150px");
     detail.attr("jet-index",i).child(1).text(detailText[i]);
-    detail.child()[0].css("marginLeft",(23+i*17+((i>2)?1:0))+"%");
+    detail.findClass("trangle").css("marginLeft",(10+i*25)+"%");
   }else{
     if(obj.index()==detail.attr("jet-index")){
       detail.css("height","0px");
       detail.attr("jet-index","-1");
     }else{
       var i=obj.index();
-      detail.child()[0].css("marginLeft",(23+i*17+((i>2)?1:0))+"%");
+      detail.findClass("trangle").css("marginLeft",(10+i*25)+"%");
       detail.attr("jet-index",i).child(1).text(detailText[i]);
     }
   }

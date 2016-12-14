@@ -67,6 +67,10 @@ a{
 .part{
   padding:100px 15%;
 }
+.part.intro{
+  padding-top:0!important;
+  padding-bottom:0!important;
+}
 
 /*intro part*/
 .intro-item{
@@ -118,7 +122,7 @@ a{
 	border: 20px solid transparent;
 	border-bottom: 25px solid #fff;
   transition: margin-left 0.3s;
-  margin-left:23%;
+  margin-left:10%;
   -moz-transition: margin-left 0.3s;	/* Firefox 4 */
   -webkit-transition: margin-left 0.3s;	/* Safari 和 Chrome */
   -o-transition: margin-left 0.3s;
@@ -409,7 +413,6 @@ a{
 	border-width:30px;
 	border-bottom-width: 0;
 	border-top-width: 15px;
-  margin-left:10%;
   transition: all 0.5s;
   -webkit-transition: all 0.5s;
   z-index:5;
