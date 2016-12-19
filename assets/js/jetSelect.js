@@ -275,10 +275,24 @@ HTMLElement.prototype.findAttr = function(a) {
 	return j_checkSelect(this.querySelectorAll("[" + a + "]"));
 };
 HTMLElement.prototype.findName = function(a) {
-	return j_checkSelect(this.querySelectorAll("[name=" + a + "]"));
+	return j_checkSelect(this.getElementsByName(a));
 };
 HTMLElement.prototype.select = function(a) {
 	return j_checkSelect(this.querySelectorAll(a));
+};
+HTMLCollection.prototype.select = function(c) {
+	var b = [];
+	this.each(function(a) {
+		b[b.length] = a.select(c)
+	});
+	return b
+};
+NodeList.prototype.select = function() {
+	var b = [];
+	this.each(function(a) {
+		b[b.length] = a.select(name)
+	});
+	return b
 };
 HTMLElement.prototype.addClass = function(a) {
 	if (!this.hasClass(a)) {
@@ -320,24 +334,16 @@ HTMLElement.prototype.val = function(a) {
 };
 
 HTMLCollection.prototype.val =function(v){
-  if(v==undefined){
-    return this[0].val();
-  }else{
-    this.each(function(b) {
-      b.val(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.val(v);
+	});
+	return this;
 };
 NodeList.prototype.val=function(v){
-  if(v==undefined){
-    return this[0].val();
-  }else{
-    this.each(function(b) {
-      b.val(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.val(v);
+	});
+	return this;
 };
 HTMLElement.prototype.text = function(a) {
 	if (a==undefined) {
@@ -348,24 +354,16 @@ HTMLElement.prototype.text = function(a) {
 	}
 };
 HTMLCollection.prototype.text =function(v){
-  if(v==undefined){
-    return this[0].text();
-  }else{
-    this.each(function(b) {
-      b.text(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.text(v);
+	});
+	return this;
 };
 NodeList.prototype.text=function(v){
-  if(v==undefined){
-    return this[0].text();
-  }else{
-    this.each(function(b) {
-      b.text(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.text(v);
+	});
+	return this;
 };
 HTMLElement.prototype.content = function(a) {
 	if (this.tagName == "INPUT"||this.tagName == "TEXTAREA") {
@@ -385,24 +383,16 @@ HTMLElement.prototype.content = function(a) {
 };
 
 HTMLCollection.prototype.content =function(v){
-  if(v==undefined){
-    return this[0].content();
-  }else{
-    this.each(function(b) {
-      b.content(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.content(v);
+	});
+	return this;
 };
 NodeList.prototype.content=function(v){
-  if(v==undefined){
-    return this[0].content();
-  }else{
-    this.each(function(b) {
-      b.content(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.content(v);
+	});
+	return this;
 };
 HTMLElement.prototype.copy = function(){
   return j_copy(this.content());
@@ -433,24 +423,16 @@ HTMLElement.prototype.html = function(a) {
 	}
 };
 HTMLCollection.prototype.html =function(v){
-  if(v==undefined){
-    return this[0].html();
-  }else{
-    this.each(function(b) {
-      b.html(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.html(v);
+	});
+	return this;
 };
 NodeList.prototype.html=function(v){
-  if(v==undefined){
-    return this[0].html();
-  }else{
-    this.each(function(b) {
-      b.html(v);
-    });
-    return this;
-  }
+	this.each(function(b) {
+		b.html(v);
+	});
+	return this;
 };
 HTMLElement.prototype.hasClass = function(a) {
 	return new RegExp("(\\s|^)" + a + "(\\s|$)").test(this.className)
@@ -546,18 +528,6 @@ NodeList.prototype.animate = function(css,callback,speed,timing) {
     a.animate(css,callback,speed,timing);
   });
 	return this;
-};
-HTMLElement.prototype.rotate=function(deg,callback,speed,timing){
-  
-  
-};
-HTMLElement.prototype.span=function(deg,callback,speed,timing){
-  
-  
-};
-HTMLElement.prototype.stopSpan=function(deg,callback,speed,timing){
-  
-  
 };
 HTMLElement.prototype.slideUp=function(callback,speed,timing){
   return j_animateBase(this,"j-slide",callback,speed,timing,false)

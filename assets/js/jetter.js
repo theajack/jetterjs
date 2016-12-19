@@ -1,21 +1,37 @@
 J.ready(function() {
 	Jet.initValid();
-  jet_addNoteWrapper();
-	J.tag("head")[0].append(J.new("style").text(".jet-unpass{border-color:#f20!important;border-style:solid!important;background-color:rgba(255,0,0,0.1)!important;color:#f00!important;}#jetNoteWrapper{width:100%;position:fixed;z-index:100;transition:top .3s ease;top:-70px}#jetNoteLittleWrapper{width:30%;min-height:65px;text-align:center;margin:0 auto;border:1px solid #666;border-radius:0 0 10px 10px;border-top:0}#jetNoteLittleWrapper[jet-style=gray].success{background-color:rgba(210,210,210,0.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].info{background-color:rgba(170,170,170,0.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].warn{background-color:rgba(80,80,80,0.9);color:#ccc}#jetNoteLittleWrapper[jet-style=gray].error{background-color:rgba(40,40,40,0.9);color:#ccc}#jetNoteLittleWrapper[jet-style=color]{border-color:#ddd;color:#fff}#jetNoteLittleWrapper[jet-style=color].success{background-color:rgba(51,134,51,0.9)}#jetNoteLittleWrapper[jet-style=color].info{background-color:rgba(55,78,237,0.9)}#jetNoteLittleWrapper[jet-style=color].warn{background-color:rgba(237,149,58,0.9)}#jetNoteLittleWrapper[jet-style=color].error{background-color:rgba(212,73,73,0.9)}#jetNoteIcon{font-size:30px;margin:5px 0}#jetNoteContent{font-size:20px;margin-bottom:5px;}"))
+  jet_addNoteAndConfirmWrapper();
+	J.tag("head").append(J.new("style").text(".jet-unpass{border-color:#f20!important;border-style:solid!important;background-color:rgba(255,0,0,0.1)!important;color:#f00!important;}.icon-wrapper{width:100%;height:40px}.icon-circle{display:block;width:40px;height:40px;margin:0 auto;border-radius:20px;border:5px solid #000;position:relative}.icon-circle span{background-color:#fff;display:block;position:absolute;border-radius:3px}.icon-circle.no-border{border-color:transparent;position:relative;top:5px;left:5px}.icon-part-ok1{width:11px;height:7px;top:14px;left:5px}.icon-part-ok2{width:7px;height:18px;top:7px;left:14px}.icon-part-x{width:7px;height:20px;top:5px;left:11px}.rotate-45{transform:rotate(45deg);-ms-transform:rotate(45deg);-webkit-transform:rotate(45deg);-o-transform:rotate(45deg);-moz-transform:rotate(45deg)}.rotate-045{transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-o-transform:rotate(-45deg);-moz-transform:rotate(-45deg)}.icon-part-bar,.icon-part-block{width:7px;left:11px}.icon-part-block{height:7px}.icon-part-bar{height:13px}.icon-part-info1,.icon-part-warn1{top:4px}.icon-part-info2{top:13px}.icon-part-warn2{top:19px}#jetConfirmWrapper,#jetConfirmWrapper *,#jetNoteWrapper{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#jetConfirmWrapper,#jetNoteWrapper{width:100%;position:fixed;z-index:100;transition:top .3s ease;top:-100%}#jetConfirmContent{font-size:25px;padding:3% 10px 10px 10px;color:#fff;height:50%;white-space:normal;word-break:break-all}#jetConfirmBtnWrapper{height:50px}#jetConfirmCancel,#jetConfirmOk{width:50%;float:left;height:100%;border-top:4px solid rgba(255,255,255,.9);cursor:pointer;padding-top:5px}#jetConfirmOk{border-right:2px solid rgba(255,255,255,.9)}#jetConfirmCancel{border-left:2px solid rgba(255,255,255,.9)}#jetConfirmLittleWrapper,#jetNoteLittleWrapper{width:30%;min-height:65px;text-align:center;margin:0 auto;border:1px solid #666;border-radius:0 0 10px 10px;border-top:0;padding-top:10px;background-color:rgba(51,134,51,.9)}#jetConfirmLittleWrapper.large,#jetNoteLittleWrapper[jet-size=large]{width:70%}#jetConfirmLittleWrapper.middle,#jetNoteLittleWrapper[jet-size=middle]{width:50%}#jetConfirmLittleWrapper{width:30%;background-color:rgba(136,136,136,.9);border-color:#bbb;padding-top:0}#jetNoteLittleWrapper[jet-style=gray].success{background-color:rgba(210,210,210,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].info .icon-circle,#jetNoteLittleWrapper[jet-style=gray].success .icon-circle{border-color:#444}#jetNoteLittleWrapper[jet-style=gray].info .icon-circle span,#jetNoteLittleWrapper[jet-style=gray].success .icon-circle span{background-color:#444}#jetNoteLittleWrapper[jet-style=gray].info{background-color:rgba(170,170,170,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].warn{background-color:rgba(80,80,80,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=gray].error .icon-circle,#jetNoteLittleWrapper[jet-style=gray].warn .icon-circle{border-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].error .icon-circle span,#jetNoteLittleWrapper[jet-style=gray].warn .icon-circle span{background-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].error{background-color:rgba(40,40,40,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=color]{border-color:#ddd;color:#fff}#jetNoteLittleWrapper[jet-style=color].success{background-color:rgba(51,134,51,.9)}#jetNoteLittleWrapper[jet-style=color].info{background-color:rgba(55,78,237,.9)}#jetNoteLittleWrapper[jet-style=color].warn{background-color:rgba(237,149,58,.9)}#jetNoteLittleWrapper[jet-style=color].error{background-color:rgba(212,73,73,.9)}#jetNoteLittleWrapper[jet-style=color] .icon-circle,#jetNoteLittleWrapper[jet-style=gray] .icon-circle{border-color:#fff}#jetNoteLittleWrapper[jet-style=color] .icon-circle span,#jetNoteLittleWrapper[jet-style=gray] .icon-circle span{background-color:#fff}#jetNoteContent{font-size:20px;margin-bottom:5px;padding-top:5px;white-space:normal;word-break:break-all}"));
 });
-var jet_t;
+var jet_t,jet_ct;
 var Jet = {
 	useDefaultStyle: true,
+	useShowForValid: false,
   language:"English",
-	get: function(jetForm,type) {
+  lang:function(l){this.language=l},
+	get: function(jetForm,type,name) {
+    name=j_checkArg(name,"jet-name");
     if(type!=undefined&&type!="json"){
-      return jet_getElemsFormData(J.select("[jet-form=" + jetForm + "]"), "jet-name");
+      if(jetForm.constructor.name=="HTMLElement"){
+        return jet_getElemsFormData(jetForm, name);
+      }else{
+        return jet_getElemsFormData(J.select("[jet-form=" + jetForm + "]"), name);
+      }
     }else{
-      return jet_getElemsObj(J.select("[jet-form=" + jetForm + "]"), "jet-name");
+      if(jetForm.constructor.name=="HTMLElement"){
+        return jet_getElemsObj(jetForm, name);
+      }else{
+        return jet_getElemsObj(J.select("[jet-form=" + jetForm + "]"), name);
+      }
     }
 	},
-	set: function(jetForm, data) {
-		jet_setObjVal(J.select("[jet-form=" + jetForm + "]"), "jet-name", data)
+	set: function(jetForm,data,callback,name) {
+    name=j_checkArg(name,"jet-name");
+    if(jetForm.constructor.name=="HTMLElement"){
+      jet_setObjVal(jetForm, "jet-name", data,callback)
+    }else{
+      jet_setObjVal(J.select("[jet-form=" + jetForm + "]"), "jet-name", data,callback)
+    }
 	},
   initValid:function(obj){
     var list;
@@ -32,32 +48,53 @@ var Jet = {
     });
   },
 	validate: function(a, b,c) {
-    if(c!=undefined){
-			jet_validateForm(J.select("[jet-form=" + a + "]"), b, c)
+    if(a.constructor.name=="HTMLElement"){
+      jet_validateForm(a, b, c);
     }else{
-			jet_validateForm(J.select("[jet-form=" + a + "]"), b)
+      if(c!=undefined){
+        jet_validateForm(J.select("[jet-form=" + a + "]"), b, c)
+      }else{
+        jet_validateForm(J.select("[jet-form=" + a + "]"), b)
+      }
     }
 	},
 	banDefault: function() {
 		this.useDefaultStyle = false;
 		J.class("jet-unpass").removeClass("jet-unpass")
 	},
+  useDefault:function(){
+    this.useDefaultStyle = true;
+  },
+  banValidShow:function(){this.useShowForValid=false},
+  useValidShow:function(){this.useShowForValid=true},
   show:jet_mesShow,
+  confirm:jet_confirmShow,
   showWait:jet_mesShowWait,
   close:jet_mesClose,
-  checkArg:jet_checkArg,
+  checkArg:j_checkArg,
   setNoteStyle:jet_setNoteStyle,
-	validSinglePass: function(input, result) {},
-	validSingleFail: function(input, result) {},
+	onOnePass: function(input, result) {},
+	onOneFail: function(input, result) {},
   turnPage:jet_turnPage,
-  getContent:jet_getContentForGet,
   getUrlPara:jet_getUrlPara,
   fit:jet_fit,
   getRandom:jet_getRandomNum,
   isMobile:jet_isMobile,
   copy:j_copy
 };
-
+HTMLElement.prototype.getContent= function(){
+  return jet_getContentForGet(this);
+}
+HTMLElement.prototype.get = function(type,name) {
+  Jet.get(this,type,name);
+};
+HTMLElement.prototype.set = function(type,name) {
+  Jet.set(this,type,name);
+};
+HTMLElement.prototype.validate = function(s,f) {
+  jet_validateForm(this,s,f);
+};
+var jet=Jet;
 function jet_getElemsObj(d, b) {
 	var a = d.select("[" + b + "]");
 	var c = {};
@@ -82,14 +119,17 @@ function jet_getContentForGet(input){
     return a;
   }
 }
-function jet_setObjVal(c, a, b) {
+function jet_setObjVal(c, a, b,callback) {
 	inputs = c.select("[" + a + "]");
 	inputs.each(function(d) {
 		var e = d.attr(a);
-		d.content(b[e])
+		d.content(b[e]);
+    if(callback!=undefined){
+      callback(d,b[e],e);
+    }
 	})
 }
-function jet_validInput(b) {
+function jet_validInput(b,needShow) {
   var v=b.attr("jet-valid");
   var vt="";
   if(v.indexOf("lengthOfAny") != -1){
@@ -114,6 +154,9 @@ function jet_validInput(b) {
       b.attr("jet-value", b.content()).content(vt).addClass("jet-unpass");
     }
     Jet.validSingleFail(b, vt);
+    if(Jet.useShowForValid&&needShow!=false){
+      Jet.show(vt,"error");
+    }
   }
 }
 function jet_addValidValue(a) {
@@ -130,7 +173,7 @@ function jet_validateForm(g, f, c) {
 	var d = true;
 	var a = g.select("[jet-valid]");
 	a.each(function(j) {
-		var h = jet_validInput(j);
+		var h = jet_validInput(j,false);
 		if (h != "true") {
 			d = false;
 			if (b) {
@@ -145,6 +188,9 @@ function jet_validateForm(g, f, c) {
 		if (b) {
 			c(e)
 		}
+    if(Jet.useShowForValid){
+      Jet.show("Values is not expected","error");
+    }
 	} else {
 		if (f != undefined) {
 			f()
@@ -203,7 +249,7 @@ function jet_getRegExp(f) {
 		return /^\S{0}$/;
 		break;
 	case "date":
-		return /^(([12]\d{3}-((0[1-9])|(1[1-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;
+		return /^(([12]\d{3}-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;
 		break;
 	case "email":
 		return /^((\w*@\w*.com))$/;
@@ -340,24 +386,23 @@ function jet_isMobile(){
 };
 function jet_mesShow(content,statu,time,callback,needClose){
   clearTimeout(jet_t);
-  var icon="";
+  var child=J.id("jetNoteLittleWrapper").findClass("icon-circle").child();
   if(!statu){
-    icon="glyphicon glyphicon-ok-sign";
+    child[0].className="icon-part-ok1 rotate-45";child[1].className="icon-part-ok2 rotate-45";
     statu="success";
   }else{
     switch (statu){
-      case "success":icon="glyphicon glyphicon-ok-sign";break;
-      case "warn":icon="glyphicon glyphicon-exclamation-sign";break;
-      case "error":icon="glyphicon glyphicon-remove-sign";break;
-      case "info":icon="glyphicon glyphicon-info-sign";break;
-      default:icon="glyphicon glyphicon-info-sign";statu="info";break;
+      case "success":child[0].className="icon-part-ok1 rotate-45";child[1].className="icon-part-ok2 rotate-45";break;
+      case "warn":child[0].className="icon-part-bar icon-part-warn1";child[1].className="icon-part-block icon-part-warn2";break;
+      case "error":child[0].className="icon-part-x rotate-45";child[1].className="icon-part-x rotate-045";break;
+      case "info":child[0].className="icon-part-block icon-part-info1";child[1].className="icon-part-bar icon-part-info2";break;
+      default:child[0].className="icon-part-ok1 rotate-45";child[1].className="icon-part-ok2 rotate-45";break;
     }
   }
-  J.id("jetNoteIcon").className=icon;
   J.id("jetNoteLittleWrapper").className=statu;
   J.id("jetNoteContent").text(content);
-  J.id("jetNoteWrapper").css("top","0px");
-  time=jet_checkArg(time,1500);
+  J.id("jetNoteWrapper").css("top","0");
+  time=j_checkArg(time,1500);
   if(time.constructor.name=="String"){
     switch (time){
       case "slower":time=2500;break;
@@ -379,15 +424,52 @@ function jet_mesShow(content,statu,time,callback,needClose){
     }
   },300);
 }
+var jet_okCall=null;
+var jet_cancelCall=null;
+function jet_confirmShow(content,callback1,callback2){
+  clearTimeout(jet_ct);
+  //J.id("jetNoteIcon").className=icon;
+  J.id("jetConfirmContent").text(content);
+  J.id("jetConfirmWrapper").css("top","0");
+  if(callback1!=undefined){
+    if(callback1.constructor.name=="Function"){
+      jet_okCall=callback1;
+    }else{
+      eval("jet_okCall=function(){"+callback1+"}");
+    }
+  }
+  if(callback2!=undefined){
+    if(callback2.constructor.name=="Function"){
+      jet_cancelCall=callback2;
+    }else{
+      eval("jet_cancelCall=function(){"+callback2+"}");
+    }
+  }
+}
 function jet_mesShowWait(content,statu){
-  statu=jet_checkArg(statu,"info");
+  statu=j_checkArg(statu,"info");
   jet_mesShow(content,statu,0,function(){},false);
 }
 function jet_mesClose(){
-  J.id("jetNoteWrapper").css("top","-70px");
+  J.id("jetNoteWrapper").css("top","-100%");
 }
-function jet_checkArg(arg,defaultValue){
-  return (arg==undefined)?defaultValue:arg;
+function jet_confirmOk(){
+  if(jet_okCall!=null){
+    jet_okCall();
+    jet_okCall=null;
+  }
+  jet_confirmClose();
+}
+function jet_confirmCancel(){
+  if(jet_cancelCall!=null){
+    jet_cancelCall();
+    jet_cancelCall=null;
+  }
+  jet_confirmClose();
+}
+
+function jet_confirmClose(){
+  J.id("jetConfirmWrapper").css("top","-100%");
 }
 function jet_setNoteStyle(style){
   if(style!="color"){
@@ -395,7 +477,31 @@ function jet_setNoteStyle(style){
   }
   J.id("jetNoteLittleWrapper").attr("jet-style",style);
 }
-function jet_addNoteWrapper(){
-  var lwrapper=J.new("div").attr({"id":"jetNoteLittleWrapper","jet-style":"color","onclick":"Jet.close()"}).append([J.new("span").attr("id","jetNoteIcon"),J.new("div").attr("id","jetNoteContent")]);
-  J.body().append(J.new("div").attr("id","jetNoteWrapper").append(lwrapper));
+function jet_addNoteAndConfirmWrapper(){
+  
+  var confirmOkIcon=J.new("span").addClass("icon-circle no-border").append([J.new("span").addClass("icon-part-ok1 rotate-45"),J.new("span").addClass("icon-part-ok2 rotate-45")]);
+  var confirmCancelIcon=J.new("span").addClass("icon-circle no-border").append([J.new("span").addClass("icon-part-x rotate-45"),J.new("span").addClass("icon-part-x rotate-045")]);
+  var confirmOk=J.new("div").attr({"id":"jetConfirmOk","onclick":"jet_confirmOk()"}).append(confirmOkIcon);
+  var confirmCancle=J.new("div").attr({"id":"jetConfirmCancel","onclick":"jet_confirmCancel()"}).append(confirmCancelIcon);
+  
+  var confirmBtnWrapper=J.new("div").attr("id","jetConfirmBtnWrapper").append([confirmOk,confirmCancle]);
+  var confirmContent=J.new("div").attr("id","jetConfirmContent");
+  var confirmLittleWrapper=J.new("div").attr("id","jetConfirmLittleWrapper").append([confirmContent,confirmBtnWrapper]);
+  var confirmWrapper=J.new("div").attr("id","jetConfirmWrapper").append(confirmLittleWrapper);
+  J.body().append(confirmWrapper);
+  
+  var iconCircle=J.new("span").addClass("icon-circle").append([J.new("span"),J.new("span")]);
+  var jetNoteIcon=J.new("div").attr("id","jetNoteIcon").addClass("icon-wrapper").append(iconCircle);
+  var jetNoteContent=J.new("div").attr("id","jetNoteContent")
+  var lwrapper=J.new("div").attr({"id":"jetNoteLittleWrapper","jet-style":"color"}).append([jetNoteIcon,jetNoteContent]);
+  J.body().append(J.new("div").attr({"id":"jetNoteWrapper","onclick":"Jet.close()"}).append(lwrapper));
+  
+  var w=J.width();
+  if(w<400){
+    J.id("jetConfirmLittleWrapper").addClass("large");
+    J.id("jetNoteLittleWrapper").attr("jet-size","large");
+  }else if(w<1200){
+    J.id("jetConfirmLittleWrapper").addClass("middle");
+    J.id("jetNoteLittleWrapper").attr("jet-size","middle");
+  }
 }

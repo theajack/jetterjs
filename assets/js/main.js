@@ -5,142 +5,11 @@ var detailText=[
   "Convient validation of a set of HTML element.",
   "Some other frequently-used functions."
 ];
-var apiData={
-  jetSelect:[
-    {
-      title:"title",
-      intro:"intro intro intro intro",
-      function:"function test",
-      howUse:"howUse test",
-      code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    }
-    ],
-  Serialize:[
-    {
-      title:"title",
-      intro:"intro intro intro intro",
-      function:"function test",
-      howUse:"howUse test",
-      code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    }],
-  Validation:[
-    {
-      title:"title",
-      intro:"intro intro intro intro",
-      function:"function test",
-      howUse:"howUse test",
-      code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    }],
-  Tools:[
-    {
-      title:"title",
-      intro:"intro intro intro intro",
-      function:"function test",
-      howUse:"howUse test",
-      code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    },{
-      title:"title2",
-      intro:"intro",
-      function:"function",
-      howUse:"howUse",
-      code:"code"
-    }]
-}
 J.ready(function(){
   tabIndent.render(J.id("apiCode"));
   addApiDetails();
   J.class("intro-item").event("onclick","showIntroDetail(this)");
-  J.id("copyBtn").event("onclick",copyCode);
+  J.id("copyBtn").event("onclick",copySourceCode);
   J.class("api-title").event("onclick",function(e){
     showRipple(e,this);
     moveApiBar(this);
@@ -153,8 +22,23 @@ J.ready(function(){
     showApiDetail(this);
   });
   J.id("apiCodeBtn").event("onclick",showResult);
-  J.id("apiCodeResetBtn").event("onclick",resetCode);
-  J.id("apiCodeCopyBtn").event("onclick","J.id('apiCode').copy();Jet.show('Code copy success')");
+  J.id("apiCodeResetBtn").event("onclick",function(){
+    Jet.confirm("Are you sure to reset code,you will lose all code you are editting!",resetCode);
+  });
+  J.id("apiCodeClearBtn").event("onclick",function(){
+    Jet.confirm("Are you sure to clear code,you will lose all code you are editting!",function(){
+      J.id("apiCode").val("");
+    });
+  });
+  J.id("apiCodeCopyBtn").event("onclick",function(){
+    if(Jet.isMobile()){
+      Jet.show('Sorry,this function is just for PC',"warn","slow");
+    }else{
+      if(J.id('apiCode').copy()){
+        Jet.show('Code copy success');
+      }
+    }
+  });
   J.id("apiCode").event({
     "onmouseleave":"showResult(false)",
     "onkeydown":codeChange,
@@ -166,7 +50,15 @@ function addApiDetails(){
   var list=J.id("apiBar").child();
   list.each(function(api){
     apiData[api.attr("jet-api")].each(function(data){
-      api.append(J.new("span").text(data.title));
+      var span=J.new("span").text(data.title);
+      if(data.title.length>13){
+        if(data.title.length<19){
+          span.css({"font-size":"22px","padding-top":"25px"});
+        }else{
+          span.css({"font-size":"18px","padding-top":"29px"});
+        }
+      }
+      api.append(span);
     })
   })
 }
@@ -179,7 +71,7 @@ window.onresize=function(){
   checkWidth();
 }
 function checkWidth(){
-  var w=document.body.offsetWidth;
+  var w=J.width();
   if(w>=1800){
     J.class("part").css("padding","100px 20%");
   }else if(w<=1200){
@@ -190,8 +82,9 @@ function checkWidth(){
 }
 function showResult(needShow){
   if(needShow!=false){
-    showResultBase();
-    Jet.show("submit success");
+    if(showResultBase()){
+      Jet.show("submit success");
+    }
   }else{
     if(J.id("apiCode").attr("jet-change")=="1"){
       showResultBase();
@@ -199,27 +92,37 @@ function showResult(needShow){
   }
 }
 function showResultBase(){
-  var a=J.id("apiCode").val();
-  if(a.indexOf("<\/script>")!=-1){
-    var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
-    var elems=a.replace(script,"");
-    var newScript = J.new('script').attr("type","text/javascript").html(script.substring(script.indexOf(">")+1,(script.indexOf("<\/script>"))));
-    J.id("resultArea").append(newScript).html(elems);
-  }else{
-    J.id("resultArea").html(a);
+  var obj=J.id("resultArea");
+  if(obj!=null){
+    var a=J.id("apiCode").val();
+    if(a.includes("<\/script>")){
+      var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
+      var elems=a.replace(script,"");
+      var newScript = J.new('script[type=text/javascript]').html(script.substring(script.indexOf(">")+1,(script.indexOf("<\/script>"))));
+      obj.append(newScript).html(elems);
+    }else{
+      obj.html(a);
+    }
+    if(a.includes("jet-valid")){
+      Jet.initValid();
+    }
+    J.id("apiCode").attr("jet-change","0");
+    Jet.initValid(obj);
+    return true;
   }
-  J.id("apiCode").attr("jet-change","0");
-  Jet.initValid(J.id("resultArea"));
+  return false;
 }
 function showResultHtml(){
-  var a=J.id("apiCode").val();
-  var a=J.id("apiCode").val();
-  if(a.indexOf("<\/script>")!=-1){
-    var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
-    var elems=a.replace(script,"");
-    J.id("resultArea").html(elems);
-  }else{
-    J.id("resultArea").html(a);
+  var obj=J.id("resultArea");
+    if(obj!=null){
+    var a=J.id("apiCode").val();
+    if(a.indexOf("<\/script>")!=-1){
+      var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
+      var elems=a.replace(script,"");
+      obj.html(elems);
+    }else{
+      obj.html(a);
+    }
   }
 }
 function showIntroDetail(obj){
@@ -228,24 +131,29 @@ function showIntroDetail(obj){
     var i=obj.index();
     detail.css("height","150px");
     detail.attr("jet-index",i).child(1).text(detailText[i]);
-    detail.findClass("trangle").css("marginLeft",(10+i*25)+"%");
+    detail.findClass("trangle").css("margin-left",(10+i*25)+"%");
   }else{
     if(obj.index()==detail.attr("jet-index")){
       detail.css("height","0px");
       detail.attr("jet-index","-1");
     }else{
       var i=obj.index();
-      detail.findClass("trangle").css("marginLeft",(10+i*25)+"%");
+      detail.findClass("trangle").css("margin-left",(10+i*25)+"%");
       detail.attr("jet-index",i).child(1).text(detailText[i]);
     }
   }
 }
-function copyCode(){
+function copySourceCode(){
   J.id("downloadArea").copy();
   Jet.show("copy success");
 }
 function showApi(i){
-  var n=0;
+  
+  J.body().scrollTo(J.id("apiPart").top(),function(){
+    J.id("apiBarTitle").child(i).click();
+    hideApiDetail();
+  });
+  /*var n=0;
   var top=J.id("apiPart").top();
   var per=(top-J.body().scrollTop)/30;
   var t=setInterval(function(){
@@ -257,7 +165,7 @@ function showApi(i){
       J.body().scrollTo(top);
       clearTimeout(t);
     }
-  },10);
+  },10);*/
 }
 function showApiDetail(obj){
   var api=obj.parent().attr("jet-api");
@@ -270,7 +178,23 @@ function resetCode(){
   showDetailBase(a[0],a[1]);
 }
 function showDetailBase(api,i){
-  Jet.set("apiDetail",apiData[api][i]);
+  var d=apiData[api][i];
+  Jet.set("apiDetail",d,function(elem,text,name){
+    if(text.length>13&&name=="title"){
+      if(text.length<19){
+        elem.css({"font-size":"35px","padding-top":"25px!important"});
+      }else{
+        elem.css({"font-size":"27px","padding-top":"29px!important"});
+      }
+    }
+  });
+  if(!d.test){
+    J.id("resultArea").addClass("hide");
+    J.class("result-cover").removeClass("hide");
+  }else{
+    J.id("resultArea").removeClass("hide");
+    J.class("result-cover").addClass("hide");
+  }
   J.id('apiDetail').addClass('show');
   showResultBase();
 }
@@ -298,7 +222,7 @@ function showRipple(e,obj){
 function moveApiBar(obj){
   var i=obj.index();
   J.id("apiBar").css("left",(-100*i)+"%");
-  J.select(".trangle.api").css({"marginLeft":(10+i*25)+"%","borderTopColor":obj.css("background-color")});
+  J.select(".trangle.api").css({"margin-left":(10+i*25)+"%","border-top-color":obj.css("background-color")});
 }
 
 

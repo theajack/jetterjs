@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="assets/css/index.css"/>
     <link rel="stylesheet" type="text/css" href="assets/css/base.min.css"/>
   </head>
-
   <body>
     <!--header-->
     <div id="header">
@@ -55,7 +54,7 @@
       <div class="part-title hassmall">Download</div>
       <div class="part-title small">(Copy and save the code blow)</div>
       <textarea id="downloadArea" cols="30" rows="10" readonly="true">
-jetter.             <br/> min.js 
+jetter.min.js 
       </textarea>
       <div id="copyBtn" class="border-btn">Copy code</div>
     </div>
@@ -86,15 +85,18 @@ jetter.             <br/> min.js
               <div id="apiBtnWrapper">
                 <div id="apiCodeBtn" class="border-btn dark"><span class="glyphicon glyphicon-saved"></span>Submit</div>
                 <div id="apiCodeCopyBtn" class="border-btn dark"><span class="glyphicon glyphicon-floppy-disk "></span>Copy</div>
-                <div id="apiCodeResetBtn" class="border-btn dark"><span class="glyphicon glyphicon-repeat"></span>Reset</div>
+                <div id="apiCodeResetBtn" class="border-btn dark"><span class="glyphicon glyphicon-repeat only"></span></div>
+                <div id="apiCodeClearBtn" class="border-btn dark"><span class="glyphicon glyphicon-remove only"></span></div>
               </div>
               <span class="api-detail-title display-block"><span class="glyphicon glyphicon-pencil"></span>Code:</span>
               <textarea id="apiCode" jet-data="" spellcheck="false" jet-change="0" jet-name="code"></textarea>
               
             </div>
-            <div class="api-detail-item large">
+            <div class="api-detail-item large result">
               <span class="api-detail-title display-block"><span class="glyphicon glyphicon-globe"></span>Result:</span>
               <div id="resultArea"></div>
+              <div class="result-cover hide">This case cannot be executed,just use it in your project.</div>
+              
             </div>
           </div>
         </div>
@@ -132,6 +134,7 @@ jetter.             <br/> min.js
     <script src="assets/js/jetQuery.js"></script>
     <script src="assets/js/jetter.js"></script>
     <script src="assets/js/tabIndent.js"></script>
+    <script src="assets/js/apiData.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>
