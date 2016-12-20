@@ -114,7 +114,7 @@ var J = {
 };
 var j=J;
 J.ready(function(){
-  J.tag("head").append(J.new("style").text(".j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}"));
+  J.tag("head").append(J.new("style").text(".j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}"));
 });
 function S(s){
   if(s==undefined){
@@ -496,7 +496,7 @@ HTMLElement.prototype.scrollTo=function(top,callback,speed){
     if(n==times){
       obj.scrollTop=top;
       if(callback!=undefined){
-        callback();
+        callback(obj);
       }
       clearTimeout(scroll_t);
     }
@@ -528,7 +528,7 @@ HTMLElement.prototype.animate=function(css,callback,speed,timing){
     obj.css(css);
     setTimeout(function(){
       if(callback!=undefined){
-        callback();
+        callback(obj);
       }
       obj.removeClass(" j-animation");
     },speed);
@@ -547,21 +547,198 @@ NodeList.prototype.animate = function(css,callback,speed,timing) {
   });
 	return this;
 };
-HTMLElement.prototype.rotate=function(deg,callback,speed,timing){
-  
-  
+HTMLElement.prototype.rotate =function(deg,callback,speed,origin,timing){
+  var obj=this;
+  obj.addClass("j-animation");
+  setTimeout(function(){
+    speed=j_checkAnimatePara(obj,speed,timing);
+    obj.css({
+      "transform": "rotate("+deg+"deg)",
+      "-ms-transform": "rotate("+deg+"deg)",
+      "-webkit-transform": "rotate("+deg+"deg)",
+      "-o-transform": "rotate("+deg+"deg)",
+      "-moz-transform": "rotate("+deg+"deg)"
+    });
+    j_checkOrigin(obj,origin);
+    setTimeout(function(){
+      if(callback!=undefined){
+        callback(obj);
+      }
+      j_removeAnimation(obj);
+    },speed);
+  },50);
+  return this;
+};HTMLElement.prototype.scale =function(rate,callback,speed,timing){
+  return j_scaleBase(this,rate,rate,callback,speed,timing);
+};HTMLElement.prototype.scaleX =function(rate,callback,speed,timing){
+  return j_scaleBase(this,rate,1,callback,speed,timing);
+};HTMLElement.prototype.scaleY =function(rate,callback,speed,timing){
+  return j_scaleBase(this,1,rate,callback,speed,timing);
 };
-HTMLElement.prototype.span=function(deg,callback,speed,timing){
-  
-  
+HTMLCollection.prototype.scale = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scale(rate,callback,speed,timing);
+  });
+	return this
 };
-HTMLElement.prototype.stopSpan=function(deg,callback,speed,timing){
-  
-  
+NodeList.prototype.scale = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scale(deg,callback,speed,origin,timing);
+  });
+	return this
 };
+HTMLCollection.prototype.scaleX = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scaleX(rate,callback,speed,timing);
+  });
+	return this
+};
+NodeList.prototype.scaleX = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scaleX(deg,callback,speed,origin,timing);
+  });
+	return this
+};
+HTMLCollection.prototype.scaleY = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scaleY(rate,callback,speed,timing);
+  });
+	return this
+};
+NodeList.prototype.scaleY = function(rate,callback,speed,timing) {
+  this.each(function(a){
+    a.scaleY(deg,callback,speed,origin,timing);
+  });
+	return this
+};
+function j_scaleBase(obj,x,y,callback,speed,timing){
+  obj.addClass("j-animation");
+  setTimeout(function(){
+    speed=j_checkAnimatePara(obj,speed,timing);
+    obj.css({
+      "transform": "scale("+x+","+y+")",
+      "-ms-transform": "rotate("+x+","+y+")",
+      "-webkit-transform": "rotate("+x+","+y+")",
+      "-o-transform": "rotate("+x+","+y+")",
+      "-moz-transform": "rotate("+x+","+y+")"
+    });
+    setTimeout(function(){
+      if(callback!=undefined){
+        callback(obj);
+      }
+      j_removeAnimation(obj);
+    },speed);
+  },50);
+  return obj;
+}
+function j_checkOrigin(obj,o){
+  if(o!=undefined){
+    obj.css({
+      "transform-origin": o,
+      "-ms-transform-origin": o,
+      "webkit-transform-origin": o,
+      "-o-transform-origin": o,
+      "-moz-transform-origin": o
+    });
+  }
+}
+HTMLCollection.prototype.rotate = function(deg,callback,speed,origin,timing) {
+  this.each(function(a){
+    a.rotate(deg,callback,speed,origin,timing);
+  });
+	return this
+};
+NodeList.prototype.rotate = function(deg,callback,speed,origin,timing) {
+  this.each(function(a){
+    a.rotate(deg,callback,speed,origin,timing);
+  });
+	return this
+};
+HTMLElement.prototype.spin =function(speed,times,origin,callback,timing){
+  timing=j_checkArg(timing,"linear");
+  if(speed!=undefined){
+    speed=j_checkSpinSpeed(speed);
+  }else{
+    speed=2;
+  }
+  times=j_checkArg(times,"infinite");
+  this.css({
+    "animation":"j-spin "+speed+"s "+timing+" 0s "+times,
+    "-moz-animation":"j-spin "+speed+"s "+timing+" 0s "+times,
+    "-webkit-animation":"j-spin "+speed+"s "+timing+" 0s "+times,
+    "-o-animation":"j-spin "+speed+"s "+timing+" 0s "+times
+  });
+  j_checkOrigin(obj,origin);
+  if(callback!=undefined){
+    var obj=this;
+    setTimeout(function(){
+      callback(obj);
+    },speed*times*1000);
+  }
+  return this;
+};
+HTMLCollection.prototype.spin = function(speed,times,origin,callback,timing) {
+  this.each(function(a){
+    a.spin(speed,times,origin,callback,timing);
+  });
+	return this
+};
+NodeList.prototype.spin = function(callback,times,origin,speed,timing) {
+  this.each(function(a){
+    a.spin(speed,times,origin,callback,timing);
+  });
+	return this
+};
+function j_checkSpinSpeed(time){
+  if(time.constructor.name=="String"){
+    switch (time){
+      case "slower":time=3;break;
+      case "slow":time=2.5;break;
+      case "normal":time=2;break;
+      case "fast":time=1.5;break;
+      case "faster":time=1;break;
+      default:time=2;
+    }
+  }
+  return time/1000;
+};
+HTMLElement.prototype.stopSpin =function(){
+  var mat=this.css("transform");
+  this.css({
+    "animation":"none",
+    "-moz-animation":"none",
+    "-webkit-animation":"none",
+    "-o-animation":"none",
+    "transform":mat
+  });
+  return this;
+};
+HTMLCollection.prototype.stopSpin = function() {
+  this.each(function(a){
+    a.stopSpin();
+  });
+	return this
+};
+NodeList.prototype.stopSpin = function() {
+  this.each(function(a){
+    a.stopSpin();
+  });
+	return this
+};
+function j_removeAnimation(obj){
+  obj.removeClass("j-animation").css({
+    "transition-duration":"0s",
+    "-ms-transition-duration":"0s",
+    "-webkit-transition-duration":"0s",
+    "-o-transition-duration":"0s",
+    "-moz-transition-duration":"0s"
+  });
+}
 HTMLElement.prototype.slideUp=function(callback,speed,timing){
   return j_animateBase(this,"j-slide",callback,speed,timing,false)
 };
+
+
 HTMLElement.prototype.slideDown=function(callback,speed,timing){
   if(this.hasClass("j-fade")){
     this.removeClass("j-fade").addClass("j-slide");
@@ -622,7 +799,7 @@ function j_animateBase(obj,name,callback,speed,timing,isShow){
   if(isShow!=false){
     setTimeout(function(){
       j_animateBasePart(obj,name,callback,speed,timing,isShow);
-    },100);
+    },50);
   }else{
     j_animateBasePart(obj,name,callback,speed,timing,isShow);
   }
@@ -637,9 +814,9 @@ function j_animateBasePart(obj,name,callback,speed,timing,isShow){
   }
   setTimeout(function(){
     if(callback!=undefined){
-      callback();
+      callback(obj);
     }
-    obj.removeClass("j-animation");
+    j_removeAnimation(obj);
     if(!isShow){
       obj.hide();
     }
@@ -651,9 +828,21 @@ function j_checkAnimatePara(obj,speed,timing){
   }else{
     speed=0.5;
   }
-  obj.css("transitionDuration",speed+"s");
+  obj.css({
+    "transition-duration":speed+"s",
+    "-ms-transition-duration":speed+"s",
+    "-webkit-transition-duration":speed+"s",
+    "-o-transition-duration":speed+"s",
+    "-moz-transition-duration":speed+"s"
+  });
   if(timing!=undefined){
-    obj.css("transitionTimingFunction",timing);
+    obj.css({
+      "transition-timing-function":timing,
+      "-ms-transition-timing-function":timing,
+      "-webkit-transition-timing-function":timing,
+      "-o-transition-timing-function":timing,
+      "-moz-transition-timing-function":timing
+    });
   }
   return speed*1000;
 };
@@ -801,7 +990,7 @@ HTMLElement.prototype.scrollXTo=function(top,callback,speed){
     if(n==times){
       obj.scrollLeft=top;
       if(callback!=undefined){
-        callback();
+        callback(obj);
       }
       clearTimeout(scroll_t);
     }
