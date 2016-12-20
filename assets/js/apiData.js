@@ -141,6 +141,13 @@ var apiData={
       howUse:"Obj:HTMLElement; Parameter:String; Return HTMLElement|NodeList",
       code:'<div id="test">\n\t<input type="text" id="testSelect"/>\n\t<input type="button" onclick="testid()" value="single"/>\n\t<input type="text" id="testSelect2" class="test-select"/>\n\t<input type="button" onclick="testCombination()" value="Combination"/>\n</div>\n<br></br>\n<p>You can use any legal css selector</p>\n<script>\n\tfunction testid(){\n\t\tJ.id("test").select("#testSelect").val("I am selected");\n\t}\n\tfunction testCombination(){\n\t\tJ.id("test").select("#testSelect2.test-select").val("Selected by combination");\n\t}\n</script>'
     },{
+      title:".each()",
+      intro:"Ergodic a list",
+      test:true,
+      function:"Ergodic HTMLCollection NodeList or Array",
+      howUse:"Obj:HTMLCollection|NodeList|Array; Parameter:function(item,[index]){}; Return HTMLElement|NodeList|Array(Self)",
+      code:'<input type="text" class="test"/>\n<input type="text" class="test"/>\n<input type="text" class="test"/>\n<input type="button" onclick="testEach1()" value="with index"/>\n<input type="button" onclick="testEach2()" value="without index"/>\n<script>\n\tfunction testEach1(){\n\t\tJ.class("test").each(function(item,i){\n\t\t\titem.val("I am No."+i);\n\t\t});\n\t}\n\tfunction testEach2(){\n\t\tJ.class("test").each(function(item){\n\t\t\titem.val("I am an item");\n\t\t});\n\t}\n</script>'
+    },{
       title:".child()",
       intro:"Get children or a child",
       test:true,
@@ -640,84 +647,161 @@ var apiData={
     {
       title:"Jet.show()",
       intro:"intro intro intro intro",
+      test:true,
       function:"function test",
       howUse:"howUse test",
       code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
     },{
       title:"Jet.showWait()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.close()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.setNoteStyle()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.confirm(onOk)",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.confirm(onCancel)",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.checkArg()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.lang()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.turnPage()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.getUrlPara()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.fit()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.getRandom()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.copy()",
       intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
       title:"Jet.isMobile()",
       intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.each();",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.removeByIndex();",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.remove()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.insert()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.append()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.prepend()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.sort()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.sortByAttr()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.reverse()",
+      intro:"intro",
+      test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
