@@ -95,7 +95,7 @@ function showResultBase(){
   var obj=J.id("resultArea");
   if(obj!=null){
     var a=J.id("apiCode").val();
-    if(a.includes("<\/script>")){
+    if(a.has("<\/script>")){
       var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
       var elems=a.replace(script,"");
       var newScript = J.new('script[type=text/javascript]').html(script.substring(script.indexOf(">")+1,(script.indexOf("<\/script>"))));
@@ -103,7 +103,7 @@ function showResultBase(){
     }else{
       obj.html(a);
     }
-    if(a.includes("jet-valid")){
+    if(a.has("jet-valid")){
       Jet.initValid();
     }
     J.id("apiCode").attr("jet-change","0");
@@ -148,33 +148,19 @@ function copySourceCode(){
   Jet.show("copy success");
 }
 function showApi(i){
-  
-  J.body().scrollTo(J.id("apiPart").top(),function(){
+  J.scrollTo(J.id("apiPart").top(),function(){
     J.id("apiBarTitle").child(i).click();
     hideApiDetail();
   });
-  /*var n=0;
-  var top=J.id("apiPart").top();
-  var per=(top-J.body().scrollTop)/30;
-  var t=setInterval(function(){
-    J.body().scroll(per);
-    n++;
-    if(n==30){
-      J.id("apiBarTitle").child(i).click();
-      hideApiDetail();
-      J.body().scrollTo(top);
-      clearTimeout(t);
-    }
-  },10);*/
 }
 function showApiDetail(obj){
   var api=obj.parent().attr("jet-api");
   var i=obj.index();
-  J.id("apiCode").attr("jet-data",api+" "+i);
+  J.id("apiCode").attr("jet-api-index",api+" "+i);
   showDetailBase(api,i);
 }
 function resetCode(){
-  var a=J.id("apiCode").attr("jet-data").split(" ");
+  var a=J.id("apiCode").attr("jet-api-index").split(" ");
   showDetailBase(a[0],a[1]);
 }
 function showDetailBase(api,i){
