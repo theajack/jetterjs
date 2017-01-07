@@ -1,13 +1,20 @@
-
+//搜索api功能  左右切换api
 var detailText=[
   "Select and set HTML element expediently.",
   "Read and write value or text of a set of HTML element expediently.",
   "Convient validation of a set of HTML element.",
   "Some other frequently-used functions."
 ];
+var searchResult=[];
+/*注册事件*/
+/*if(document.addEventListener){
+    document.addEventListener('DOMMouseScroll',scrollFunc,false);
+}//W3C
+window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome/Safari*/
 J.ready(function(){
   tabIndent.render(J.id("apiCode"));
   addApiDetails();
+  //Jet.setNoteStyle("gray");
   J.class("intro-item").event("onclick","showIntroDetail(this)");
   J.id("copyBtn").event("onclick",copySourceCode);
   J.class("api-title").event("onclick",function(e){
@@ -18,6 +25,8 @@ J.ready(function(){
     showApi(this.parent().attr("jet-index"));
   })
   J.select("#apiDetail .close-btn").event("onclick",hideApiDetail);
+  J.select("#apiDetail .prev").event("onclick","switchApiDetail(0)");
+  J.select("#apiDetail .next").event("onclick","switchApiDetail(1)");
   J.select(".api-item span").event("onclick",function(){
     showApiDetail(this);
   });
@@ -42,10 +51,90 @@ J.ready(function(){
   J.id("apiCode").event({
     "onmouseleave":"showResult(false)",
     "onkeydown":codeChange,
-    "oninput":showResultHtml
+    "oninput":showResultHtml,
+    "onmousewheel":redefineMouseWhell
   });
+  J.id("apiSearchResultList").event({
+    "onmousewheel":redefineMouseWhell,
+    //"onmouseleave":function(){this.slideUp()}
+  });
+  J.class("api-item").event("onmousewheel",redefineMouseWhell);
+  
+  J.class("result-close-btn").event("onclick",function(){this.parent().slideUp(null,"fast")});
+  J.id("apiSearchInput").event("onkeydown",function(e){if(e.keyCode===13){J.id("apiSearchBtn").click()}});
+  //J.id("apiSearchBtn").event("onclick","alert('a')");
+  J.id("apiSearchBtn").event("onclick",showApiSearch);
   checkWidth();
 });
+function switchApiDetail(dirc){// 0:prev
+  var arr=J.id("apiCode").attr("jet-api-index").split(" ");
+  if(arr.length==1){//searchResult
+    if(dirc==0){
+      if(arr[0]>0){
+        showApiDetailForSearchByIndex(parseInt(arr[0])-1);
+      }else{
+        Jet.show("Alerady the first one","warn")
+      }
+    }else{
+      if(arr[0]<searchResult.length-1){
+        showApiDetailForSearchByIndex(parseInt(arr[0])+1);
+      }else{
+        Jet.show("Alerady the last one","warn")
+      }
+    }
+  }else{
+    if(dirc==0){
+      if(arr[1]>0){
+        showApiDetailByIndex(arr[0],parseInt(arr[1])-1);
+      }else{
+        Jet.show("Alerady the first one","warn")
+      }
+    }else{
+      if(arr[1]<apiData[arr[0]].length-1){
+        showApiDetailByIndex(arr[0],parseInt(arr[1])+1);
+      }else{
+        Jet.show("Alerady the last one","warn")
+      }
+    }
+  }
+}
+function showApiSearch(){
+ var skey=J.id("apiSearchInput").val().toLowerCase();
+  J.id("apiSearchResultList").empty();
+  searchResult.empty();
+  for(var key in apiData){
+    apiData[key].each(function(d){
+      if(d.title.toLowerCase().includes(skey)){
+        searchResult.append(d);
+        var title;
+        if(skey!=""){
+          var start=d.title.toLowerCase().indexOf(skey);
+          var end=start+skey.length;
+          title=d.title.substring(0,start)+"<span class='search-key'>"+d.title.substring(start,end)+"</span>"+d.title.substring(end);
+        }else{
+          title=d.title;
+        }
+        var span=J.new("span").html(title).event("onclick",function(){
+          showApiDetailForSearch(this);
+        });
+        if(d.title.length>13){
+          if(d.title.length<19){
+            span.css({"font-size":"22px","padding-top":"25px"});
+          }else{
+            span.css({"font-size":"18px","padding-top":"29px"});
+          }
+        }
+        J.id("apiSearchResultList").append(span);
+      }
+    });
+  }
+  J.id("resultNum").text(searchResult.length);
+  J.id("apiSearchResultWrapper").slideDown(null,"fast");
+}
+function redefineMouseWhell(e){
+  e.preventDefault();
+  this.scroll(e.deltaY,null,50);
+}
 function addApiDetails(){
   var list=J.id("apiBar").child();
   list.each(function(api){
@@ -153,18 +242,41 @@ function showApi(i){
     hideApiDetail();
   });
 }
+function showApiDetailForSearch(obj){
+  showApiDetailForSearchByIndex(obj.index());
+}
+function showApiDetailForSearchByIndex(i){
+  J.id("apiCode").attr("jet-api-index",i);
+  checkSwitchBtnState(i,searchResult.length-1);
+  showDetailBase(searchResult[i]);
+}
 function showApiDetail(obj){
   var api=obj.parent().attr("jet-api");
   var i=obj.index();
+  showApiDetailByIndex(api,i);
+}
+function showApiDetailByIndex(api,i){
   J.id("apiCode").attr("jet-api-index",api+" "+i);
-  showDetailBase(api,i);
+  checkSwitchBtnState(i,apiData[api].length-1);
+  showDetailBase(apiData[api][i]);
+}
+function checkSwitchBtnState(i,b){
+  if(i==0){
+    J.select("#apiDetail .prev").addClass("disable");
+  }else{
+    J.select("#apiDetail .prev").removeClass("disable");
+  }
+  if(i==b){
+     J.select("#apiDetail .next").addClass("disable");
+  }else{
+    J.select("#apiDetail .next").removeClass("disable");
+  }
 }
 function resetCode(){
   var a=J.id("apiCode").attr("jet-api-index").split(" ");
-  showDetailBase(a[0],a[1]);
+  showDetailBase(apiData[a[0]][a[1]]);
 }
-function showDetailBase(api,i){
-  var d=apiData[api][i];
+function showDetailBase(d){
   Jet.set("apiDetail",d,function(elem,text,name){
     if(text.length>13&&name=="title"){
       if(text.length<19){
@@ -173,7 +285,7 @@ function showDetailBase(api,i){
         elem.css({"font-size":"27px","padding-top":"29px!important"});
       }
     }
-  });
+  },"api-part");
   if(!d.test){
     J.id("resultArea").addClass("hide");
     J.class("result-cover").removeClass("hide");
@@ -211,6 +323,19 @@ function moveApiBar(obj){
   J.select(".trangle.api").css({"margin-left":(10+i*25)+"%","border-top-color":obj.css("background-color")});
 }
 
+var scrollFunc=function(e){
+    var direct=0;
+    e=e || window.event;
+   
+    var t1=document.getElementById("wheelDelta");
+    var t2=document.getElementById("detail");
+    if(e.wheelDelta){//IE/Opera/Chrome
+        t1.value=e.wheelDelta;
+    }else if(e.detail){//Firefox
+        t2.value=e.detail;
+    }
+    ScrollText(direct);
+}
 
 /*function insertText(obj,str) {
     if (document.selection) {

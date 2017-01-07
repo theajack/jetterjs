@@ -82,14 +82,14 @@ var apiData={
       intro:"Get body",
       test:false,
       function:"Return document.body",
-      howUse:"Parameter:null; Return HTMLElement(document.body)",
+      howUse:"Parameter:null; Return:HTMLElement(document.body)",
       code:'<script>\n\tJ.body();\n\t//return document body\n\t//equal S() or J.tag("body")\n</script>'
     },{
       title:"J.width()",
       intro:"Get window width",
       test:true,
       function:"Return width of broswer window visible area",
-      howUse:"Parameter:null; Return int(window width)",
+      howUse:"Parameter:null; Return:int(window width)",
       code:'<input type="text" id="testWidth"/>\n<input type="button" onclick="testWidth()" value="width"/>\n<script>\n\tfunction testWidth(){\n\tvar width=J.width();\n\t\tS("#testWidth").val("Window width : "+width+" px");\n\t}\n</script>'
     },{
       title:"J.height()",
@@ -98,6 +98,20 @@ var apiData={
       function:"Return height of broswer window visible area",
       howUse:"Parameter:null; Return int(window height)",
       code:'<input type="text" id="testHeight"/>\n<input type="button" onclick="testHeight()" value="height"/>\n<script>\n\tfunction testHeight(){\n\tvar height=J.height();\n\t\tS("#testHeight").val("Window height : "+height+" px");\n\t}\n</script>'
+    },{
+      title:"J.scroll()",
+      intro:"Scroll page",
+      test:true,
+      function:"Scroll page in vertical with a distance or get page scroll top",
+      howUse:"int[Function|String][int|String](distance,callback,speed)|null; Return:int|null",
+      code:'<input type="button" onclick="textScroll(50)" value="body scroll 50px"/>\n<input type="button" onclick="textScroll(-50)" value="body scroll -50px"/>\n<input type="button" onclick="textScrollCallback()" value="add callback"/>\n<input type="button" onclick="textScrollSpeed()" value="add speed"/>\n<input type="button" onclick="textScrollCS()" value="add callback and speed fast"/>\n<input type="button" onclick="textScrollCSInt()" value="add callback and speed 300"/>\n<script>\n\tfunction textScroll(d){\n\t\tJ.scroll(d);\n\t}\n\tfunction textScrollCallback(){\n\t\tJ.scroll(100,function(){\n\t\t\talert("scroll");\n\t\t});\n\t\t//or use string "alert("scroll")" replace function\n\t}\n\tfunction textScrollSpeed(){\n\t\tJ.scroll(-100,null,100);\n\t\t//or use string "alert("scroll")" replace function\n\t}\n\tfunction textScrollCS(){\n\t\tJ.scroll(100,function(){\n\t\t\talert("scroll");\n\t\t},"fast");\n\t}\n\tfunction textScrollCSInt(){\n\t\tJ.scroll(-100,function(){\n\t\t\talert("scroll");\n\t\t},300);\n\t}\n</script>'
+    },{
+      title:"J.scrollTo()",
+      intro:"Scroll page",
+      test:true,
+      function:"Scroll page in vertical to a position by a value",
+      howUse:"int[Function|String][int|String](posY,callback,speed); Return:null",
+      code:'<input type="button" onclick="textScrollTo()" value="body scroll to top 300px"/>\n<script>\n\tfunction textScrollTo(){\n\t\tJ.tag("body").scrollTo(300,"alert(300)","fast");\n\t\t//Opitional parameters is the same as scroll\n\t}\n</script>'
     },{
       title:"j=J",
       intro:"use j OR J",
@@ -373,157 +387,157 @@ var apiData={
       code:'<div style="position:relative">\n\t<input type="button" onclick="viewOffset(this)" value="View my offset"/>\n\t<br/>\n\t<input type="button" onclick="viewOffset(this)" style="margin-left:20px" value="View my width"/>\n</div>\n<div id="show"/>\n<script>\n\tfunction viewOffset(obj){\n\t\tJ.id("show").text(obj.width());\n\t}\n</script>'
     },{
       title:".scroll()",
-      intro:"intro",
+      intro:"Scroll an element",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scroll a HTMLElement or body in vertical with a distance,or get scroll top of a HTMLElement or body",
+      howUse:"Obj:HTMLElement; Parameter:int[Function|String][int|String](distance,callback,speed)|null; Return:this|int",
       code:'<input type="button" onclick="textScroll(50)" value="body scroll 50px"/>\n<input type="button" onclick="textScroll(-50)" value="body scroll -50px"/>\n<input type="button" onclick="textScrollCallback()" value="add callback"/>\n<input type="button" onclick="textScrollSpeed()" value="add speed"/>\n<input type="button" onclick="textScrollCS()" value="add callback and speed fast"/>\n<input type="button" onclick="textScrollCSInt()" value="add callback and speed 300"/>\n<script>\n\tfunction textScroll(d){\n\t\tJ.tag("body").scroll(d);\n\t}\n\tfunction textScrollCallback(){\n\t\tJ.tag("body").scroll(100,function(obj){\n\t\t\talert("scroll");////obj is this\n\t\t});\n\t\t//or use string "alert("scroll")" replace function\n\t}\n\tfunction textScrollSpeed(){\n\t\tJ.tag("body").scroll(-100,null,100);\n\t\t//or use string "alert("scroll")" replace function\n\t}\n\tfunction textScrollCS(){\n\t\tJ.tag("body").scroll(100,function(obj){\n\t\t\talert("scroll");//obj is this\n\t\t},"fast");\n\t}\n\tfunction textScrollCSInt(){\n\t\tJ.tag("body").scroll(-100,function(obj){\n\t\t\talert("scroll");////obj is this\n\t\t}},300);\n\t}\n</script>'
     },{
       title:".scrollTo()",
-      intro:"intro",
+      intro:"Scroll an element",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scroll an HTMLElement or body in vertical to a position by a value",
+      howUse:"Obj:HTMLElement; Parameter:int[Function|String][int|String](posY,callback,speed); Return:this",
       code:'<input type="button" onclick="textScrollTo()" value="body scroll to top 300px"/>\n<script>\n\tfunction textScrollTo(){\n\t\tJ.tag("body").scrollTo(300,"alert(300)","fast");\n\t\t//Opitional parameters is the same as scroll\n\t}\n</script>'
     },{
       title:".scrollX()",
-      intro:"intro",
+      intro:"Scroll an element",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scroll a HTMLElement or body in horizontal with a distance,or get scroll left of a HTMLElement or body",
+      howUse:"Obj:HTMLElement; Parameter:int[Function|String][int|String](distance,callback,speed)|null; Return:this|int",
       code:'<input type="button" onclick="textScroll(this)" style="width:1000px;text-align:left" value="this parent scrollX 100px"/>\n<script>\n\tfunction textScroll(obj){\n\t\tobj.parent().scrollX(100);\n\t\t//Opitional parameters is the same as scroll\n\t}\n</script>'
     },{
       title:".scrollXTo()",
-      intro:"intro",
+      intro:"Scroll an element",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scroll an HTMLElement or body in horizontal to a position by a value",
+      howUse:"Obj:HTMLElement; Parameter:int[Function|String][int|String](posX,callback,speed); Return:this",
       code:'<input type="button" onclick="textScrollXTo(this)" style="width:1000px;text-align:left" value="this parent scrollX to top 200px"/>\n<script>\n\tfunction textScrollXTo(obj){\n\t\tobj.parent().scrollXTo(200,"alert(200)","fast");\n\t\t//Opitional parameters is the same as scroll\n\t}\n</script>'
     },{
       title:".copy()",
-      intro:"intro",
+      intro:"Copy content",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Copy value of text of a HTMLElement(May not supported in some browser)",
+      howUse:"Obj:HTMLElement; Parameter:null; Return:Boolean(success or not)",
       code:'<input type="text" value="test1 content"/>\n<input type="button" onclick="testCopy(this)" value="copy"/>\n<div>test2 content</div>\n<input type="button" onclick="testCopy(this)" value="copy"/>\n<input type="text" placeholder="Ctrl+v on me"/>\n<div id="show"></div>\n<script>\n\tfunction testCopy(obj){\n\t\tif(obj.prev().copy()){\n\t\t\tJ.id("show").text("copy success:"+obj.prev().content());\n\t\t}else{\n\t\t\tJ.id("show").text("Broswer not support");\n\t\t}\n\t}\n</script>'
     },{
       title:".copyHtml()",
-      intro:"intro",
+      intro:"Copy html",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Copy inner html of a HTMLElement(May not supported in some browser)",
+      howUse:"Obj:HTMLElement; Parameter:null; Return:Boolean(success or not)",
       code:'<div>\n\t<input type="button" onclick="testCopyHtml(this)" value="copy html"/>\n</div>\n<input type="text" placeholder="Ctrl+v on me"/>\n<div id="show"/>\n<script>\n\tfunction testCopyHtml(obj){\n\t\tif(obj.parent().copyHtml()){\n\t\t\tJ.id("show").text("copy success:"+obj.parent().html());\n\t\t}else{\n\t\t\tJ.id("show").text("Broswer not support");\n\t\t}\n\t}\n</script>'
     },{
       title:".animate()",
-      intro:"intro",
+      intro:"Animate HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Animate HTMLElement by css",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:JSON[Function|String][int|String][String](css,callback,speed,timing); Return:this",
       code:'<input type="text" id="test" value="test"/>\n<input type="button" onclick="testAnimate()" value="test animate default"/>\n<input type="button" onclick="testAnimateByPlus()" value="test animate by += default"/>\n<input type="button" onclick="testAnimateCallback()" value="test animate with callback"/>\n<input type="button" onclick="testAnimateSpeed()" value="test animate with speed"/>\n<input type="button" onclick="testAnimateTiming()" value="test animate with timing"/>\n<input type="button" onclick="testAnimateAll()" value="test animate with all"/>\n<script>\n\t//You can use those to a element list\n\tfunction testAnimate(){\n\t\tJ.id("test").animate({"background-color":"#f00"});\n\t}\n\tfunction testAnimateByPlus(){\n\t\tJ.id("test").animate({"height":"+=100px"});\n\t}\n\tfunction testAnimateCallback(){\n\t\tJ.id("test").animate({"width":"+=100px"},function(obj){\n\t\t\tobj.val("callback");//obj is this\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testAnimateSpeed(){\n\t\tJ.id("test").animate({"background-color":"#0f0"},null,"fast");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testAnimateTiming(){\n\t\tJ.id("test").animate({"background-color":"#00f"},null,null,"ease");\n\t}\n\tfunction testAnimateAll(){\n\t\tJ.id("test").animate({"height":"650px"},"alert(0)",3000,"linear");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n</script>'
     },{
       title:".rotate()",
-      intro:"intro",
+      intro:"Rotate HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'<input type="text" style="height:100px;width:100px;margin:60px;display:blcok" id="test" value="test"/>\n<input type="button" onclick="testRotate()" value="test rotate default"/>\n<input type="button" onclick="testRotateCallback()" value="test rotate with callback"/>\n<input type="button" onclick="testRotateSpeed()" value="test rotate with speed"/>\n<input type="button" onclick="testRotateOrigin()" value="test rotate with origin"/>\n<input type="button" onclick="testRotateTiming()" value="test rotate with timing"/>\n<input type="button" onclick="testRotateAll()" value="test rotate with all"/>\n<script>\n\t//You can use those to a element list\n\tfunction testRotate(){\n\t\t//J.id("test").rotate(30);\n\t\tJ.id("test").stopSpin();\n\t}\n\tfunction testRotateCallback(){\n\t\tJ.id("test").rotate(60,function(obj){\n\t\t\tobj.val("callback");//obj is this\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testRotateSpeed(){\n\t\tJ.id("test").rotate(90,null,"fast");\n\t}\n\tfunction testRotateOrigin(){\n\t\tJ.id("test").rotate(120,null,null,"buttom left");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testRotateTiming(){\n\t\tJ.id("test").rotate(150,null,null,null,"ease");\n\t}\n\tfunction testRotateAll(){\n\t\tJ.id("test").rotate(190,"alert(0)",3000,"buttom right","linear");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n</script>'
+      function:"Rotate HTMLElement by deg",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:int[Function|String][int|String][String](deg,callback,speed,origin,timing); Return:this",
+      code:'<input type="text" style="height:100px;width:100px;margin:60px;display:blcok" id="test" value="test"/>\n<input type="button" onclick="testRotate()" value="test rotate default"/>\n<input type="button" onclick="testRotateCallback()" value="test rotate with callback"/>\n<input type="button" onclick="testRotateSpeed()" value="test rotate with speed"/>\n<input type="button" onclick="testRotateOrigin()" value="test rotate with origin"/>\n<input type="button" onclick="testRotateTiming()" value="test rotate with timing"/>\n<input type="button" onclick="testRotateAll()" value="test rotate with all"/>\n<script>\n\t//You can use those to a element list\n\tfunction testRotate(){\n\t\tJ.id("test").rotate(30);\n\t}\n\tfunction testRotateCallback(){\n\t\tJ.id("test").rotate(60,function(obj){\n\t\t\tobj.val("callback");//obj is this\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testRotateSpeed(){\n\t\tJ.id("test").rotate(90,null,"fast");\n\t}\n\tfunction testRotateOrigin(){\n\t\tJ.id("test").rotate(120,null,null,"bottom left");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testRotateTiming(){\n\t\tJ.id("test").rotate(150,null,null,null,"ease");\n\t}\n\tfunction testRotateAll(){\n\t\tJ.id("test").rotate(190,"alert(0)",3000,"bottom right","linear");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n</script>'
     },{
       title:".spin()",
-      intro:"intro",
+      intro:"Spin HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'<input type="text" style="height:100px;width:100px;margin:60px;display:blcok" id="test" value="test"/>\n<input type="button" onclick="testSpin()" value="test Spin default"/>\n<input type="button" onclick="testSpinSpeed()" value="test Spin speed"/>\n<input type="button" onclick="testSpinTimes()" value="test Spin with times"/>\n<input type="button" onclick="testSpinOrigin()" value="test Spin with origin"/>\n<input type="button" onclick="testSpinCallback()" value="test Spin with callback"/>\n<input type="button" onclick="testSpinTiming()" value="test Spin with timing"/>\n<input type="button" onclick="testSpinAll()" value="test Spin with all"/>\n<input type="button" onclick="testStopSpin()" value="stop"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSpin(){\n\t\tJ.id("test").spin();\n\t}\n\tfunction testSpinSpeed(){\n\t\tJ.id("test").spin("fast");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testSpinTimes(){\n\t\tJ.id("test").spin(null,2);\n\t}\n\tfunction testSpinOrigin(){\n\t\tJ.id("test").spin(null,null,"top right");\n\t}\n\tfunction testSpinCallback(){\n\t\tJ.id("test").spin(null,1,null,function(obj){\n\t\t\tobj.val("callback");//obj is this\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testSpinTiming(){\n\t\tJ.id("test").spin(null,null,null,null,"ease");\n\t}\n\tfunction testSpinAll(){\n\t\tJ.id("test").spin(1000,2,"alert(0)","buttom right","linear");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testStopSpin(){\n\t\tJ.id("test").stopSpin();\n\t}\n</script>'
+      function:"Spin HTMLElement infinitely or by times",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:(int|String)[int][String][Function|String][String](speed,times,origin,callback,timing); Return:this",
+      code:'<input type="text" style="height:100px;width:100px;margin:60px;display:blcok" id="test" value="test"/>\n<input type="button" onclick="testSpin()" value="test Spin default"/>\n<input type="button" onclick="testSpinSpeed()" value="test Spin speed"/>\n<input type="button" onclick="testSpinTimes()" value="test Spin with times"/>\n<input type="button" onclick="testSpinOrigin()" value="test Spin with origin"/>\n<input type="button" onclick="testSpinCallback()" value="test Spin with callback"/>\n<input type="button" onclick="testSpinTiming()" value="test Spin with timing"/>\n<input type="button" onclick="testSpinAll()" value="test Spin with all"/>\n<input type="button" onclick="testStopSpin()" value="stop"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSpin(){\n\t\tJ.id("test").spin();\n\t}\n\tfunction testSpinSpeed(){\n\t\tJ.id("test").spin("fast");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testSpinTimes(){\n\t\tJ.id("test").spin(null,2);\n\t}\n\tfunction testSpinOrigin(){\n\t\tJ.id("test").spin(null,null,"top right");\n\t}\n\tfunction testSpinCallback(){\n\t\tJ.id("test").spin(null,1,null,function(obj){\n\t\t\tobj.val("callback");//obj is this\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testSpinTiming(){\n\t\tJ.id("test").spin(null,null,null,null,"ease");\n\t}\n\tfunction testSpinAll(){\n\t\tJ.id("test").spin(1000,2,"alert(0)","bottom right","linear");\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testStopSpin(){\n\t\tJ.id("test").stopSpin();\n\t}\n</script>'
     },{
       title:".stopSpin()",
-      intro:"intro",
+      intro:"Stop spin",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Stop spin HTMLElement",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:null; Return:this",
       code:'<input type="text" style="height:100px;width:100px;margin:60px;display:blcok" id="test" value="test"/>\n<input type="button" onclick="testSpin()" value="test Spin"/>\n<input type="button" onclick="testStopSpin()" value="test stop Spin"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSpin(){\n\t\tJ.id("test").spin();\n\t}\n\tfunction testStopSpin(){\n\t\tJ.id("test").stopSpin();\n\t}\n</script>'
     },{
       title:".scale()",
-      intro:"intro",
+      intro:"Scale HTMLElement both",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scale HTMLElement both width and height by a rate",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:Float[Function|String][int|String][String](rate,callback,speed,timing); Return:this",
       code:'<input type="text" style="height:50px;width:50px;margin:50px;display:blcok" id="test" value="test"/>\n<br/>\n<input type="button" onclick="testScale()" value="test scale default"/>\n<input type="button" onclick="testScalecallback()" value="test scale with callback"/>\n<input type="button" onclick="testScalespeed()" value="test scale with speed"/>\n<input type="button" onclick="testScaletiming()" value="test scale with timing"/>\n<input type="button" onclick="testScaleAll()" value="test scale all"/>\n<script>\n\t//You can use those to a element list\n\tfunction testScale(){\n\t\tJ.id("test").scale(2);\n\t}\n\tfunction testScalecallback(){\n\t\tJ.id("test").scale(3,function(obj){\n\t\t\tobj.val("callback");\n\t\t});\n\t}\n\tfunction testScalespeed(){\n\t\tJ.id("test").scale(2.5,null,"fast");\n\t}\n\tfunction testScaletiming(){\n\t\tJ.id("test").scale(3.5,null,null,"ease");\n\t}\n\tfunction testScaleAll(){\n\t\tJ.id("test").scale(1.5,"alert(0)",500,"linear");\n\t}\n</script>'
     },{
       title:".scaleX()",
-      intro:"intro",
+      intro:"Scale HTMLElement width",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scale HTMLElement width by a rate",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:Float[Function|String][int|String][String](rate,callback,speed,timing); Return:this",
       code:'<input type="text" style="height:50px;width:50px;margin:50px;display:blcok" id="test" value="test"/>\n<br/>\n<input type="button" onclick="testScaleX()" value="test scaleX default"/>\n<script>\n\t//You can use those to a element list\n\tfunction testScaleX(){\n\t\tJ.id("test").scaleX(2);\n\t\t//optional parameters is the same as scale\n\t}\n</script>'
     },{
       title:".scaleY()",
-      intro:"intro",
+      intro:"Scale HTMLElement height",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Scale HTMLElement height by a rate",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:Float[Function|String][int|String][String](rate,callback,speed,timing); Return:this",
       code:'<input type="text" style="height:50px;width:50px;margin:50px;display:blcok" id="test" value="test"/>\n<br/>\n<input type="button" onclick="testScaleY()" value="test scaleY default"/>\n<script>\n\t//You can use those to a element list\n\tfunction testScaleY(){\n\t\tJ.id("test").scaleY(2);\n\t\t//optional parameters is the same as scale\n\t}\n</script>'
     },{
       title:".slideUp()",
-      intro:"intro",
+      intro:"Show HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Show HTMLElement in a form of slide",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:[Function|String][int|String][String](callback,speed,timing); Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testSlideUp()" value="test slideUp default"/>\n<input type="button" onclick="testSlideUpcallback()" value="test slideUp with callback"/>\n<input type="button" onclick="testSlideUpspeed()" value="test slideUp with speed"/>\n<input type="button" onclick="testSlideUptiming()" value="test slideUp with timing"/>\n<input type="button" onclick="testSlideUpall()" value="test slideUp with all"/>\n<br/>\n<input type="button" onclick="resetSlide()" value="reset"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSlideUp(){\n\t\tJ.id("test").slideUp();\n\t}\n\tfunction testSlideUpcallback(){\n\t\tJ.id("test").slideUp(function(obj){\n\t\t\tobj.text("callback");\n\t\t});\n\t\t//You can use String to replace Function ,such as "alert(0)"\n\t}\n\tfunction testSlideUpspeed(){\n\t\tJ.id("test").slideUp(null,100);\n\t\t//speed can be a certain String or int(microsecond)\n\t}\n\tfunction testSlideUptiming(){\n\t\tJ.id("test").slideUp(null,null,"ease");\n\t}\n\tfunction testSlideUpall(){\n\t\tJ.id("test").slideUp("alert(0)",100,"linear");\n\t}\n\tfunction resetSlide(){\n\t\tJ.id("test").slideDown();\n\t}\n</script>'
     },{
       title:".slideDown()",
-      intro:"intro",
+      intro:"Hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Hide HTMLElement in a form of slide",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:[Function|String][int|String][String](callback,speed,timing); Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testSlideUp()" value="slideUp"/>\n<input type="button" onclick="testSlideDown()" value="slideDown"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSlideUp(){\n\t\tJ.id("test").slideUp();\n\t}\n\tfunction testSlideDown(){\n\t\tJ.id("test").slideDown();\n\t\t//optional parameters is the same as slideUp()\n\t}\n</script>'
     },{
       title:".slideToggle()",
-      intro:"intro",
+      intro:"Show or hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Show or hide HTMLElement in a form of slide",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:[Function|String][int|String][String](callback,speed,timing); Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testSlideToggle()" value="slideToggle"/>\n<script>\n\t//You can use those to a element list\n\tfunction testSlideToggle(){\n\t\tJ.id("test").slideToggle();\n\t\t//optional parameters is the same as slideUp()\n\t}\n</script>'
     },{
       title:".fadeOut()",
-      intro:"intro",
+      intro:"Show HTMLElement",
       test:true,
-      function:"function",
+      function:"Show HTMLElement in a form of fade",
       howUse:"howUse",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testfadeOut()" value="fadeOut"/>\n<input type="button" onclick="testfadeIn()" value="fadeIn"/>\n<script>\n\t//You can use those to a element list\n\tfunction testfadeOut(){\n\t\tJ.id("test").fadeOut();\n\t\t//optional parameters is the same as slideUp()\n\t}\n\tfunction testfadeIn(){\n\t\tJ.id("test").fadeIn();\n\t\t//optional parameters is the same as slideUp()\n\t}\n</script>'
     },{
       title:".fadeIn()",
-      intro:"intro",
+      intro:"Hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Hide HTMLElement in a form of fade",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:[Function|String][int|String][String](callback,speed,timing); Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testfadeOut()" value="fadeOut"/>\n<input type="button" onclick="testfadeIn()" value="fadeIn"/>\n<script>\n\t//You can use those to a element list\n\tfunction testfadeOut(){\n\t\tJ.id("test").fadeOut();\n\t\t//optional parameters is the same as slideUp()\n\t}\n\tfunction testfadeIn(){\n\t\tJ.id("test").fadeIn();\n\t\t//optional parameters is the same as slideUp()\n\t}\n</script>'
     },{
       title:".fadeToggle()",
-      intro:"intro",
+      intro:"Show or hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Show or hide HTMLElement in a form of fade",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:[Function|String][int|String][String](callback,speed,timing); Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testFadeToggle()" value="fadeToggle"/>\n<script>\n\t//You can use those to a element list\n\tfunction testFadeToggle(){\n\t\tJ.id("test").fadeToggle();\n\t\t//optional parameters is the same as slideUp()\n\t}\n</script>'
     },{
       title:".hide()",
-      intro:"intro",
+      intro:"Hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Hide HTMLElement",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:null; Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testhide()" value="hide"/>\n<input type="button" onclick="testshow()" value="show"/>\n<script>\n\t//You can use those to a element list\n\tfunction testhide(){\n\t\tJ.id("test").hide();\n\t}\n\tfunction testshow(){\n\t\tJ.id("test").show();\n\t}\n</script>'
     },{
       title:".show()",
-      intro:"intro",
+      intro:"Show HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Show HTMLElement",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:null; Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testhide()" value="hide"/>\n<input type="button" onclick="testshow()" value="show"/>\n<script>\n\t//You can use those to a element list\n\tfunction testhide(){\n\t\tJ.id("test").hide();\n\t}\n\tfunction testshow(){\n\t\tJ.id("test").show();\n\t}\n</script>'
     },{
       title:".showToggle()",
-      intro:"intro",
+      intro:"Show or hide HTMLElement",
       test:true,
-      function:"function",
-      howUse:"howUse",
+      function:"Show or hide HTMLElement",
+      howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:null; Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testshowToggle()" value="showToggle"/>\n<script>\n\t//You can use those to a element list\n\tfunction testshowToggle(){\n\t\tJ.id("test").showToggle();\n\t}\n</script>'
     },{
       title:".ajax()",
@@ -555,163 +569,219 @@ var apiData={
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'<input type="text" id="test1" jet-valid="length[3,6]" value="test"\/>\n<input type="button" id="test2" value="submit" onclick="showTest()"\/>\n<script>function showTest(){\n\tJet.show(J.id("test1").content());\n}\n<\/script>'
+      code:'<div id="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n\t<div jet-name="species">human</div>\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar json=Jet.get(J.id("test"));\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
     },{
       title:"Jet.get(jet-form)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar json=Jet.get("test");\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
     },{
       title:"Jet.get(json)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar json=Jet.get("test","json");//json is the default type\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
     },{
       title:"Jet.get(FormData)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
-    },{
-      title:"Jet.get(name)",
-      intro:"intro",
-      test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar formData=Jet.get("test","FormData");\n\tJ.id("show").text("The values of [form] is:name="+formData.get("name")+";password="+formData.get("password")+";birthday="+formData.get("birthday"));\n}\n</script>'
     },{
       title:"Jet.get(jet-name)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar json=Jet.get("test");//jet-name is default attr\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
+    },{
+      title:"Jet.get(attr)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div jet-form="test">\n\t<input type="text" name="name" placeholder="Input name please"/>\n\t<input type="password" name="password" placeholder="Input password please" />\n\t<input type="text" name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>function getTest(){\n\tvar json=Jet.get("test",null,"name");//any attribute\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
     },{
       title:"Jet.set(HTMLElement)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n\t<div jet-name="species">*</div>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test",\n\t\tspecies:"human"\n\t};\n\tJet.set(J.id("test"),info);\n}\n</script>'
     },{
       title:"Jet.set(jet-form)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJet.set("test",info);\n}\n</script>'
+    },{
+      title:"Jet.set(json)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJet.set("test",info);\n}\n</script>'
+    },{
+      title:"Jet.set(FormData)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info= new FormData();\n\tinfo.append("name","name test");\n\tinfo.append("password","password test");\n\tinfo.append("birthday","birthday test");\n\tJet.set("test",info);\n}\n</script>'
     },{
       title:"Jet.set(callback)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
-    },{
-      title:"Jet.set(name)",
-      intro:"intro",
-      test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"red",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJet.set("test",info,function(element,value,key){//every element will execute this function\n\t\tif(key=="name"&&value=="red"){\n\t\t\telement.css("color","#f00");\n\t\t}\n\t});\n}\n</script>'
     },{
       title:"Jet.set(jet-name)",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJet.set("test",info,null,"jet-name");//jet-name is default\n}\n</script>'
+    },{
+      title:"Jet.set(attr)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div jet-form="test">\n\t<input type="text" any-attr="name"/>\n\t<input type="text" any-attr="password"/>\n\t<input type="text" any-attr="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJet.set("test",info,null,"any-attr");\n}\n</script>'
+    },{
+      title:"Jet.clear()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div jet-form="test" id="test">\n\t<input type="text" jet-name="name" any-attr="name" value="name test"/>\n\t<input type="text" jet-name="password" any-attr="password" value="password test"/>\n\t<input type="text" jet-name="birthday" any-attr="birthday" value="birthday test"/>\n</div>\n<input type="button" value="clear by default" onclick="clearDefault()"/>\n<input type="button" value="clear by HTMLElement and attr" onclick="clearElementAndAttr()"/>\n<script>\nfunction clearDefault(){\n\tJet.clear("test");\n}\nfunction clearElementAndAttr(){\n\tJet.clear(J.id("test"),"any-attr");\n}\n</script>'
     },{
       title:"HTMLElement.get()",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-name="name" placeholder="Input name please"/>\n\t<input type="password" jet-name="password" placeholder="Input password please" />\n\t<input type="text" jet-name="birthday" placeholder="Input birthday please" />\n</div>\n<input type="button" value="get values" onclick="getTest()"/>\n<div id="show"></div>\n<script>\nfunction getTest(){\n\tvar json=J.id("test").get();//you can use the same parameters as Jet.get() except for the first parameter\n\tJ.id("show").text("The values of [form] is:"+JSON.stringify(json));\n}\n</script>'
     },{
       title:"HTMLElement.set()",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-name="name"/>\n\t<input type="text" jet-name="password"/>\n\t<input type="text" jet-name="birthday"/>\n</div>\n<input type="button" value="set values" onclick="setTest()"/>\n<script>\nfunction setTest(){\n\tvar info={\n\t\tname:"name test",\n\t\tpassword:"password test",\n\t\tbirthday:"birthday test"\n\t};\n\tJ.id("test").set(info);//you can use the same parameters as Jet.set() except for the first parameter\n}\n</script>'
+    },{
+      title:"HTMLElement.clear()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'<div id="test">\n\t<input type="text" jet-name="name" any-attr="name" value="name test"/>\n\t<input type="text" jet-name="password" any-attr="password" value="password test"/>\n\t<input type="text" jet-name="birthday" any-attr="birthday" value="birthday test"/>\n</div>\n<input type="button" value="clear by default" onclick="clearDefault()"/>\n<input type="button" value="clear by HTMLElement and attr" onclick="clearByAttr()"/>\n<script>\nfunction clearDefault(){\n\tJ.id("test").clear();\n}\nfunction clearByAttr(){\n\tJ.id("test").clear("any-attr");\n}\n</script>'
     }],
   Validation:[
     {
+      title:"Jet.validate(HTMLElement)",
+      intro:"intro intro intro intro",
+      test:true,
+      function:"function test",
+      howUse:"howUse test",
+      code:'<div id="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input name please"/>\n\t<input type="password" jet-valid="length[4,8]" placeholder="Input password please" />\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate(J.id("test"));\n\t}\n</script>'
+    },{
+      title:"Jet.validate(jet-form)",
+      intro:"intro intro intro intro",
+      test:true,
+      function:"function test",
+      howUse:"howUse test",
+      code:'<div jet-form="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input name please"/>\n\t<input type="password" jet-valid="length[4,8]" placeholder="Input password please" />\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate("test");\n\t}\n</script>'
+    },{
       title:"Jet.validate(onPass)",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input name please"/>\n\t<input type="password" jet-valid="length[4,8]" placeholder="Input password please" />\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<div id="show"></div>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate("test",function(data){\n\t\t\tJ.id("show").text("Pass!");\n\t\t});\n\t}\n</script>'
     },{
       title:"Jet.validate(onFail)",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input name please"/>\n\t<input type="password" jet-valid="length[4,8]" placeholder="Input password please" />\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<div id="show"></div>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate("test",null,function(data){\n\t\t\tJ.id("show").text(JSON.stringify(data));\n\t\t\tdata.each(function(dataItem){\n\t\t\t\tdataItem.obj.val("from callback:"+dataItem.error);\n\t\t\t});\n\t\t\t//data[i].obj is the i-th unpass element\n\t\t\t//data[i].error is the i-th unpass element error info\n\t\t\t//data.length is unpass element number\n\t\t});\n\t}\n</script>'
+    },{
+      title:"Jet.initValid()",
+      intro:"intro intro intro intro",
+      test:true,
+      function:"function test",
+      howUse:"howUse test",
+      code:'<div jet-form="test" id="form">\n\t<input type="text" id="test" placeholder="Input name please"/>\n</div>\n<input type="button" value="add valid" onclick="addValidTest()"/>\n<input type="button" value="init valid" onclick="initValidTest()"/>\n<div id="show"></div>\n<script>\n\tfunction addValidTest(){\n\t\tJ.id("test").attr("jet-valid","notnull");\n\t\tJ.id("show").text("Has added,but not effective");\n\t}\n\tfunction initValidTest(){\n\t\tJet.initValid("test");//or Jet.initValid(J.id("form"));\n\t\t//Jet.initValid() is for all HTMLElement with jet-valid\n\t\tJ.id("show").text("Has inited,now effective");\n\t}\n</script>'
     },{
       title:"HTMLElement.validate()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input name please"/>\n\t<input type="password" jet-valid="length[4,8]" placeholder="Input password please" />\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<script>\n\tfunction validateTest(){\n\t\tJ.id("test").validate();\n\t\t//onpass and onfail is the same as Jet.validate()\n\t}\n</script>'
+    },{
+      title:"HTMLElement.initValid()",
+      intro:"intro intro intro intro",
+      test:true,
+      function:"function test",
+      howUse:"howUse test",
+      code:'<div id="form">\n\t<input type="text" id="test" placeholder="Input name please"/>\n</div>\n<input type="button" value="add valid" onclick="addValidTest()"/>\n<input type="button" value="init valid" onclick="initValidTest()"/>\n<div id="show"></div>\n<script>\n\tfunction addValidTest(){\n\t\tJ.id("test").attr("jet-valid","notnull");\n\t\tJ.id("show").text("Has added,but not effective");\n\t}\n\tfunction initValidTest(){\n\t\tJ.id("form").initValid();\n\t\tJ.id("show").text("Has inited,now effective");\n\t}\n</script>'
     },{
       title:"Jet.banDefault()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="ban default" onclick="banDefault()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction banDefault(){\n\t\tJet.banDefault();\n\t\tJ.id("show").text("Has banned,now default style is not effective");\n\t}\n\tfunction reset(){\n\t\tJet.useDefault();\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:"Jet.useDefault()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="ban default" onclick="banDefault()"/>\n<input type="button" value="use default" onclick="useDefault()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction banDefault(){\n\t\tJet.banDefault();\n\t\tJ.id("show").text("Has banned,now default style is not effective");\n\t}\n\tfunction useDefault(){\n\t\tJet.useDefault();\n\t\tJ.id("show").text("Has reused,now default style is effective");\n\t}\n\tfunction reset(){\n\t\tJet.useDefault();\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:"Jet.banValidShow()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="ban valid Show" onclick="banValidShow()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction banValidShow(){\n\t\tJet.banValidShow();\n\t\tJ.id("show").text("Has banned,now the error info not show");\n\t}\n\tfunction reset(){\n\t\tJet.useValidShow();\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:"Jet.useValidShow()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div id="test">\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="ban valid Show" onclick="banValidShow()"/>\n<input type="button" value="use valid Show" onclick="useValidShow()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction banValidShow(){\n\t\tJet.banValidShow();\n\t\tJ.id("show").text("Has banned,now the error info not show");\n\t}\n\tfunction useValidShow(){\n\t\tJet.useValidShow();\n\t\tJ.id("show").text("Has reused,now the error info show");\n\t}\n\tfunction reset(){\n\t\tJet.useValidShow();\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:"Jet.onOnePass()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<input type="button" value="onOnePass test" onclick="onOnePass()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate("test");\n\t}\n\tfunction onOnePass(){\n\t\tJet.onOnePass(function(input,info){\n\t\t\tinput.val("from onOnePass:"+info);\n\t\t});\n\t\t//or use String to replace function\n\t\tJ.id("show").text("Has used your function");\n\t}\n\tfunction reset(){\n\t\tJet.onOnePass(null);\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:"Jet.onOneFail()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<div jet-form="test">\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n\t<input type="text" jet-valid="notnull" placeholder="Input please"/>\n</div>\n<input type="button" value="validate" onclick="validateTest()"/>\n<input type="button" value="onOneFail test" onclick="onOneFail()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction validateTest(){\n\t\tJet.validate("test");\n\t}\n\tfunction onOneFail(){\n\t\tJet.onOneFail(function(input,error){\n\t\t\tinput.val("from onOneFail:"+error);\n\t\t});\n\t\t//or use String to replace function\n\t\tJ.id("show").text("Has used your function");\n\t}\n\tfunction reset(){\n\t\tJet.onOneFail(null);\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
       title:".getContent()",
       intro:"intro intro intro intro",
       test:true,
       function:"function test",
       howUse:"howUse test",
-      code:'code'
+      code:'<input type="text" id="test" jet-valid="date" placeholder="Input please"/>\n<input type="button" value=".val() when in valid" onclick="getVal()"/>\n<input type="button" value=".getContent() when in valid" onclick="getContentTest()"/>\n<div id="show"></div>\n<script>\n\tfunction getVal(){\n\t\tvar value=J.id("test").val();\n\t\tJ.id("show").text("value="+value);\n\t}\n\tfunction getContentTest(){\n\t\tvar value=J.id("test").getContent();\n\t\tJ.id("show").text("content="+value);\n\t}\n</script>'
     }],
   Tools:[
     {
@@ -757,6 +827,34 @@ var apiData={
       howUse:"howUse",
       code:'code'
     },{
+      title:"Jet.input(single)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Jet.input(many)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Jet.input(onOk)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Jet.input(onCancel)",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
       title:"Jet.checkArg()",
       intro:"intro",
       test:true,
@@ -771,7 +869,14 @@ var apiData={
       howUse:"howUse",
       code:'code'
     },{
-      title:"Jet.turnPage()",
+      title:"Jet.turn()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Jet.open()",
       intro:"intro",
       test:true,
       function:"function",
@@ -813,14 +918,21 @@ var apiData={
       howUse:"howUse",
       code:'code'
     },{
-      title:"Array.each();",
+      title:"jet=Jet",
       intro:"intro",
       test:true,
       function:"function",
       howUse:"howUse",
       code:'code'
     },{
-      title:"Array.removeByIndex();",
+      title:"Array.each()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"Array.removeByIndex()",
       intro:"intro",
       test:true,
       function:"function",
@@ -876,7 +988,42 @@ var apiData={
       howUse:"howUse",
       code:'code'
     },{
+      title:"Array.empty()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
       title:"String.has()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"String.times()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"String.replaceAll()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"String.indexsOf()",
+      intro:"intro",
+      test:true,
+      function:"function",
+      howUse:"howUse",
+      code:'code'
+    },{
+      title:"String.insert()",
       intro:"intro",
       test:true,
       function:"function",
