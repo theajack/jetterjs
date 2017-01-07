@@ -18,9 +18,9 @@
     <!--header-->
     <div id="header">
       <div id="title">Jetter.js
-        <div id="viewProject" class="border-btn">View project on github</div>
+        <div id="viewProject" class="border-btn" onclick="Jet.open('https://github.com/theajack/Jetter.js/tree/gh-pages')">View project on github</div>
       </div>
-      <div id="smallTitle">Js lib for form operate.by theajack</div>
+      <div id="smallTitle">Js library for form operation and validation</div>
     </div>
     <!--intro-->
     <div id="introPart" class="bg-gray text-black part clearfix pb-none">
@@ -65,24 +65,42 @@ jetter.min.js
     </div>
     <!--api-->
     <div id="apiPart" class="bg-gray part">
-      <div class="part-title text-black">API document</div>
+      <div class="part-title text-black relative">API document
+        <div id="apiSearchWrapper">
+          <input type="text" id="apiSearchInput" placeholder="Search"/>
+          <span id="apiSearchBtn" class="glyphicon glyphicon-search"></span>
+        </div>
+        <div id="apiSearchResultWrapper" class="display-none">
+          <span class="result-close-btn glyphicon glyphicon-eject j-animation"></br>
+            <span><span id="resultNum" class="search-key"></span>results</span>
+          </span>
+          <div id="apiSearchResultList">
+          </div>
+        </div>
+      </div>
       <div class="relative">
         <div id="apiDetailWrapper">
           <div id="apiDetail" jet-form="apiDetail">
-            <span class="close-btn glyphicon glyphicon-remove"></span>
+            <div id="apiDetailSwitchWrapper">
+              <span class="glyphicon glyphicon-chevron-left prev"></span>
+              <span class="glyphicon glyphicon-chevron-right next"></span>
+              <span class="glyphicon glyphicon-remove close-btn"></span>
+            </div>
+            <!--<span class="close-btn glyphicon glyphicon-remove"></span>-->
             <div id="apiDetailTitleWrapper">
               <div id="apiTitleLeft">
-                <div class="part-title hassmall" jet-name="title">Title</div>
-                <div class="part-title smaller" jet-name="intro">intro</div>
+                
+                <div class="part-title hassmall" api-part="title">Title</div>
+                <div class="part-title smaller" api-part="intro">intro</div>
               </div>
               <div id="apiTitleRight">
                 <div class="mb-m">
                   <span class="api-detail-title"><span class="glyphicon glyphicon-th-large"></span>Function:</span>
-                  <span class="api-detail-content" jet-name="function">function</span>
+                  <span class="api-detail-content" api-part="function">function</span>
                 </div>
                 <div class="">
                   <span class="api-detail-title"><span class="glyphicon glyphicon-file"></span>How to use:</span>
-                  <span class="api-detail-content" jet-name="howUse">how to use</span>
+                  <span class="api-detail-content" api-part="howUse">how to use</span>
                 </div>
               </div>
             </div>
@@ -94,8 +112,10 @@ jetter.min.js
                 <div id="apiCodeClearBtn" class="border-btn dark"><span class="glyphicon glyphicon-remove only"></span></div>
               </div>
               <span class="api-detail-title display-block"><span class="glyphicon glyphicon-pencil"></span>Code:</span>
-              <textarea id="apiCode" jet-api-index="" spellcheck="false" jet-change="0" jet-name="code"></textarea>
-              
+              <div id="showCode">
+                <div class="line display-none" ></div>
+                <textarea id="apiCode" jet-api-index="" spellcheck="false" jet-change="0" api-part="code"></textarea>
+              </div>
             </div>
             <div class="api-detail-item large result">
               <span class="api-detail-title display-block"><span class="glyphicon glyphicon-globe"></span>Result:</span>
@@ -130,11 +150,44 @@ jetter.min.js
     </div>
     <!--relate-->
     <div id="relatePart" class="bg-dark part">
-    relatePart
+      <div class="part-title hassmall">Related link</div>
+      <div class="part-title small">(Welcome to visit)</div>
+      <div id="relateItemWrapper">
+        <div class="relate-item" onclick="Jet.open('https://theajack.github.io/')">
+          <img class="relate-item-img" src="assets/images/theajack.png"/>
+          <span class="relate-item-text">TheaJack's home page</span>
+        </div>
+        <div class="relate-item" onclick="Jet.open('http://bikeshare.imwork.net/')">
+          <img class="relate-item-img" src="assets/images/bikeshare.png"/>
+          <span class="relate-item-text">Bikeshare for ofo</span>
+        </div>
+        <div class="relate-item" onclick="Jet.open('https://theajack.github.io/BombBattle')">
+          <img class="relate-item-img" src="assets/images/bombbattle.png"/>
+          <span class="relate-item-text">BombBattle-standalone</span>
+        </div>
+        <div class="relate-item">
+          <div class="relate-item-img app">
+            <img class="relate-app-img" src="assets/images/app_2048plus.png" onclick="Jet.open('http://a.app.qq.com/o/simple.jsp?pkgname=com.main.theajack')"/>
+            <img class="relate-app-img" src="assets/images/app_bikeshare.png" onclick="Jet.open('http://bikeshare.imwork.net/download.aspx')"/>
+            <img class="relate-app-img" src="assets/images/app_stonefinanace.png" onclick="Jet.open('http://a.app.qq.com/o/simple.jsp?pkgname=com.example.stonefinance')"/>
+            <img class="relate-app-img" src="assets/images/app_breakdefence.png" onclick="Jet.show('This is in developing','info')"/>
+          </div>
+          <span class="relate-item-text">Android apps</span>
+        </div>
+      </div>
     </div>
     <!--footer-->
     <div id="footer" class="bg-black text-white part">
-    footer
+      <div id="footerLink">
+        <span class="link" onclick="Jet.open('https://github.com/theajack')">GitHub</span>
+        <span class="split-icon">|</span>
+        <span class="link" onclick="Jet.open('http://weibo.com/p/1005055304330572/home?from=page_100505&mod=TAB&is_all=1')">Sina Micro-blog</span>
+        <span class="split-icon">|</span>
+        Email:theajack@163.com
+      </div>
+      <div id="copyright">
+        <span class="glyphicon glyphicon-copyright-mark"></span> 2016 TheaJack All rights reserved
+      </div>
     </div>
     <script src="assets/js/jetQuery.js"></script>
     <script src="assets/js/jetter.js"></script>
