@@ -156,10 +156,11 @@ var J = {
     options.dataType = options.dataType || "json";
     var params = j_formatParams(options.data);
     //创建 - 非IE6 - 第一步
+    var xhr;
     if (window.XMLHttpRequest) {
-      var xhr = new XMLHttpRequest();
+      xhr = new XMLHttpRequest();
     } else { //IE6及其以下版本浏览器
-      var xhr = new ActiveXObject('Microsoft.XMLHTTP');
+      xhr = new ActiveXObject('Microsoft.XMLHTTP');
     }
     //接收 - 第三步
     xhr.onreadystatechange = function () {
@@ -171,7 +172,7 @@ var J = {
           options.fail && options.fail(status);
         }
       }
-    }
+    };
     //连接 和 发送 - 第二步
     if (options.type == "GET") {
       xhr.open("GET", options.url + "?" + params, true);
@@ -797,7 +798,7 @@ HTMLElement.prototype.animate =function(css,callback,speed,timing){
       j_checkCallBack(callback,obj);
       obj.removeClass("j-animation");
     },speed);
-  },50)
+  },50);
   return this;
 };
 HTMLCollection.prototype.animate =NodeList.prototype.animate=function(css,callback,speed,timing) {
