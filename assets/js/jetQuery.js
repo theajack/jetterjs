@@ -250,7 +250,7 @@ function j_formatParams(data) {
   }
   arr.push(("v=" + Math.random()).replace(".",""));
   return arr.join("&");
-}
+};
 var j=J;
 J.ready(function(){
   J.tag("head").append(J.new("style").text(".j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"));
@@ -291,6 +291,19 @@ HTMLElement.prototype.css = function(d, value) {
     }
 		return this;
 	}
+};
+HTMLCollection.prototype.css = NodeList.prototype.css = function(d, value) {
+  if(value==undefined&&d.constructor.name != "Object"){
+    var a=[];
+    this.each(function(b) {
+      a.append(b.css(d));
+    });
+    return a;
+  }else{
+    this.each(function(a){
+      a.css(d,value);
+    });return this;
+  }
 };
 HTMLElement.prototype.data = function(d, value) {
   if(arguments.length==0){
@@ -354,52 +367,14 @@ HTMLElement.prototype.data = function(d, value) {
       return this;
     }
   }
-	/*if (value==undefined) {
-    if(d==false){
-      this.removeAttr("jet-data");
-      return this;
-    }else if(d==undefined){
-      if(this.hasAttr("jet-data")){
-        return JSON.parse(this.attr("jet-data"));//escape unescape
-      }else{
-        return {};
-      }
-    }else{
-      if (d.constructor.name == "Object") {
-        if(this.hasAttr("jet-data")){
-          var json=JSON.parse(this.attr("jet-data"));
-          for (var key in d) {
-            json[key]=d[key];
-          }
-          this.attr("jet-data",JSON.stringify(json));
-        }else{
-          this.attr("jet-data",JSON.stringify(d));
-        }
-        return this;
-      } else {
-        if(this.hasAttr("jet-data")){
-          return JSON.parse(this.attr("jet-data"))[d];
-        }else{
-          return "";
-        }
-      }
-    }
-	} else {
-    if(this.hasAttr("jet-data")){
-      var json=JSON.parse(this.attr("jet-data"));
-      json[d]=value;
-      this.attr("jet-data",JSON.stringify(json));
-    }else{
-      var json={};
-      json[d]=value;
-      this.attr("jet-data",JSON.stringify(json));
-    }
-    return this;
-	}*/
 };
 HTMLCollection.prototype.data = NodeList.prototype.data =function(d, value) {
-  if(value==undefined&&d.constructor.name != "Object"&&d != false){
-    return this[0].data(d);
+  if(value==undefined&&d.constructor.name != "Object"&&d != undefined){
+    var a=[];
+    this.each(function(b) {
+      a.append(b.data(d));
+    });
+    return a;
   }else{
     if(value==undefined){
       this.each(function(a){
@@ -455,15 +430,6 @@ function j_checkStyleName(name){
     return str;
   }
 };
-HTMLCollection.prototype.css = NodeList.prototype.css = function(d, value) {
-  if(value==undefined&&d.constructor.name != "Object"){
-    return this[0].css(d,value);
-  }else{
-    this.each(function(a){
-      a.css(d,value);
-    });return this;
-  }
-};
 HTMLElement.prototype.attr = function(c, b) {
 	if (b==undefined) {
 		if (c.constructor.name == "Object") {
@@ -478,6 +444,19 @@ HTMLElement.prototype.attr = function(c, b) {
 		this.setAttribute(c, b);
 		return this;
 	}
+};
+HTMLCollection.prototype.attr =NodeList.prototype.attr =function(d, value) {
+  if(value==undefined&&d.constructor.name != "Object"){
+    var a=[];
+    this.each(function(b) {
+      a.append(b.attr(d));
+    });
+    return a;
+  }else{
+    this.each(function(a){
+      a.attr(d,value);
+    });return this;
+  }
 };
 HTMLElement.prototype.hasAttr = function(name) {
   return this.hasAttribute(name)
@@ -496,15 +475,6 @@ HTMLCollection.prototype.removeAttr=NodeList.prototype.removeAttr= function(name
   this.each(function(a){
     a.removeAttr(name);
   });return this;
-};
-HTMLCollection.prototype.attr =NodeList.prototype.attr =function(d, value) {
-  if(value==undefined&&d.constructor.name != "Object"){
-    return this[0].attr(d,value);
-  }else{
-    this.each(function(a){
-      a.attr(d,value);
-    });return this;
-  }
 };
 
 HTMLElement.prototype.findClass = function(a) {
@@ -541,6 +511,12 @@ HTMLElement.prototype.addClass = function(a) {
   }
 	return this;
 };
+HTMLCollection.prototype.addClass =NodeList.prototype.addClass = function(a) {
+	this.each(function(b) {
+		b.addClass(a);
+	});
+	return this;
+};
 HTMLElement.prototype.replaceClass = function(a,b) {
   if(this.hasClass(a)){
     this.addClass(b).removeClass(a);
@@ -574,6 +550,12 @@ HTMLElement.prototype.removeClass = function(a) {
       }
     }
   }
+	return this;
+};
+HTMLCollection.prototype.removeClass =NodeList.prototype.removeClass = function(a) {
+	this.each(function(b) {
+		b.removeClass(a)
+	});
 	return this;
 };
 HTMLElement.prototype.toggleClass = function(a) {
@@ -763,7 +745,25 @@ HTMLElement.prototype.scrollTo =function(top,callback,speed){
   },10);
   return this;
 };
-
+HTMLCollection.prototype.scrollTo =NodeList.prototype.scrollTo = function(i,callback,speed) {
+  this.each(function(a){
+    a.scrollTo(i,callback,speed);
+  });
+	return this
+};
+HTMLElement.prototype.scroll =function(i,callback,speed){
+  if(arguments.length==0){
+    return this.scrollTop;
+  }else{
+    return this.scrollTo(this.scrollTop+i,callback,speed);
+  }
+};
+HTMLCollection.prototype.scroll =NodeList.prototype.scroll = function(i,callback,speed) {
+  this.each(function(a){
+    a.scroll(i,callback,speed);
+  });
+	return this
+};
 HTMLElement.prototype.animate =function(css,callback,speed,timing){
   var csss=JSON.stringify(css);
   if(csss.has("left")||csss.has("top")){
@@ -844,7 +844,7 @@ function j_checkCallBack(callback,obj){
       eval(callback);
     }
   }
-}
+};
 HTMLCollection.prototype.scale =NodeList.prototype.scale =function(rate,callback,speed,timing) {
   this.each(function(a){
     a.scale(rate,callback,speed,timing);
@@ -932,7 +932,7 @@ function j_helpSpin(speed,times,origin,callback,timing,obj){
       },speed*times*1000);
     }
   }
-}
+};
 HTMLCollection.prototype.spin =NodeList.prototype.spin =function(speed,times,origin,callback,timing) {
   this.each(function(a){
     a.spin(speed,times,origin,callback,timing);
@@ -1158,13 +1158,6 @@ HTMLCollection.prototype.showToggle =NodeList.prototype.showToggle = function() 
   });
 	return this
 };
-HTMLElement.prototype.scroll =function(i,callback,speed){
-  if(arguments.length==0){
-    return this.scrollTop;
-  }else{
-    return this.scrollTo(this.scrollTop+i,callback,speed);
-  }
-};
 function j_checkAnimateSpeed(time){
   if(time.constructor.name=="String"){
     switch (time){
@@ -1201,12 +1194,24 @@ HTMLElement.prototype.scrollXTo =function(left,callback,speed){
   },10);
   return this;
 };
+HTMLCollection.prototype.scrollXTo =NodeList.prototype.scrollXTo = function(i,callback,speed) {
+  this.each(function(a){
+    a.scrollXTo(i,callback,speed);
+  });
+	return this
+};
 HTMLElement.prototype.scrollX=function(i,callback,speed){
   if(arguments.length==0){
     return this.scrollLeft;
   }else{
     return this.scrollXTo(this.scrollLeft+i,callback,speed);
   }
+};
+HTMLCollection.prototype.scrollX =NodeList.prototype.scrollX = function(i,callback,speed) {
+  this.each(function(a){
+    a.scrollX(i,callback,speed);
+  });
+	return this
 };
 HTMLElement.prototype.height = function() {
 	return this.offsetHeight;
@@ -1234,7 +1239,6 @@ HTMLElement.prototype.parent = function(i) {
     return p;
   }
 };
-
 HTMLElement.prototype.brother = function(i) {
   if(i==undefined){
     return this.parent().child();
@@ -1285,7 +1289,13 @@ HTMLElement.prototype.after =function(b){
     this.parent().insertBefore(b, this.next());
   }
   return this;
-}
+};
+HTMLCollection.prototype.after =NodeList.prototype.after = function(b) {
+  this.each(function(c){
+    c.after(b);
+  });
+	return this
+};
 HTMLElement.prototype.before =function(b){
   if(b.constructor.name=="Array"){
     var obj=this;
@@ -1296,12 +1306,6 @@ HTMLElement.prototype.before =function(b){
     this.parent().insertBefore(b, this);
   }
   return this;
-}
-HTMLCollection.prototype.after =NodeList.prototype.after = function(b) {
-  this.each(function(c){
-    c.after(b);
-  });
-	return this
 };
 HTMLCollection.prototype.before =NodeList.prototype.before = function(b) {
   this.each(function(c){
@@ -1342,7 +1346,12 @@ HTMLElement.prototype.event=function(name,fun){
 	}
   return this;
 };
-
+HTMLCollection.prototype.event=NodeList.prototype.event=function(name,fun){
+	this.each(function(b) {
+		b.event(name,fun);
+	});
+	return this;
+};
 HTMLElement.prototype.empty =function(){
   return this.html("");
 };
@@ -1388,30 +1397,6 @@ HTMLCollection.prototype.each = NodeList.prototype.each =Array.prototype.each =f
 	}
   return this;
 };
-HTMLCollection.prototype.attr=NodeList.prototype.attr=function(name,fun){
-	this.each(function(b) {
-		b.attr(name,fun);
-	});
-	return this;
-};
-HTMLCollection.prototype.event=NodeList.prototype.event=function(name,fun){
-	this.each(function(b) {
-		b.event(name,fun);
-	});
-	return this;
-};
-HTMLCollection.prototype.removeClass =NodeList.prototype.removeClass = function(a) {
-	this.each(function(b) {
-		b.removeClass(a)
-	});
-	return this;
-};
-HTMLCollection.prototype.addClass =NodeList.prototype.addClass = function(a) {
-	this.each(function(b) {
-		b.addClass(a);
-	});
-	return this;
-};
 Array.prototype.removeByIndex = function(b) {
 	for (var a = 0; a < this.length; a++) {
 		if(a==b){
@@ -1428,7 +1413,7 @@ Array.prototype.removeByIndex = function(b) {
 };
 Array.prototype.empty= function(b){
   this.length=0;
-}
+};
 Array.prototype.remove = function(b) {
 	for (var a = 0; a < this.length; a++) {
 		if(this[a]==b){
@@ -1443,7 +1428,6 @@ Array.prototype.remove = function(b) {
 	}
   return this;
 };
-
 Array.prototype.insert = function(b,i) {
   for(var a=this.length-1;a>=i;a--){
     this[a+1]=this[a];
@@ -1458,7 +1442,6 @@ Array.prototype.append = function(b) {
 Array.prototype.prepend = function(b) {
   return this.insert(b,0);
 };
-
 Array.prototype.sort=function(asc){
   var len = this.length;
   var preIndex, current;
@@ -1517,7 +1500,7 @@ String.prototype.timesOf=function(s){
 };
 String.prototype.replaceAll=function(a,b){
   var s = this.split(a);
-  var str="";
+  var str=s[0];
   s.each(function(ss,i){
     if(i>0){
       str+=(b+ss);
