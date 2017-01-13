@@ -1332,10 +1332,12 @@ HTMLElement.prototype.index =function(){
 HTMLElement.prototype.event=function(name,fun){
   if (fun==undefined) {
     for (var key in name) {
-      if(name[key].constructor.name=="Function"){
-        eval('this.'+key+'='+name[key]);
-      }else{
-        this.attr(key,name[key]);
+      if(name[key]!=undefined){
+        if(name[key].constructor.name=="Function"){
+          eval('this.'+key+'='+name[key]);
+        }else{
+          this.attr(key,name[key]);
+        }
       }
     }
 	} else {
@@ -1500,15 +1502,43 @@ String.prototype.timesOf=function(s){
   return this.split(s).length-1;
 };
 String.prototype.replaceAll=function(a,b){
-  var s = this.split(a);
+  if(b.constructor.name=="Array"){
+    if(a.constructor.name=="String"){
+      var s = this.split(a);
+      var str=s[0];
+      s.each(function(ss,i){
+        if(i>0){
+          str+=(b+ss);
+        }
+      });
+      return str;
+    }else{
+      var res="";
+      var left=this;
+      var sarr = this.match(a);
+      sarr.each(function(ss,i){
+        var arrtemp=left.split(ss);
+        res+=(left.substring(0,left.indexOf(ss))+b[i]);
+        left=left.substring(left.indexOf(ss)+ss.length);
+      });
+      res+=left;
+      return res;
+    }
+  }else{
+    return this.replace(new RegExp(a,"g"),b);
+  }
+  /*var s = this.split(a);
   var str=s[0];
   s.each(function(ss,i){
     if(i>0){
       str+=(b+ss);
     }
   });
-  return str;
+  return str;*/
 };
+String.prototype.splitByArray=function(arr){
+  
+}
 String.prototype.indexsOf=function(a,i){
   var sa=this.split(a);
   if(sa.length<=2){
@@ -1540,23 +1570,3 @@ String.prototype.indexsOf=function(a,i){
 String.prototype.insert=function(a,i){
   return this.substring(0,i)+a+this.substring(i);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

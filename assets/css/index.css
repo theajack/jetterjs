@@ -1,3 +1,11 @@
+::selection{
+  background-color: #aaa;
+  color:#fff;
+}
+::-moz-selection{
+  background-color: #aaa;
+  color:#fff;
+}
 body{
   background-color:#fff;
   color:#000;
@@ -172,6 +180,7 @@ a{
   font-size: 15px;
   outline: none;
   resize: none;
+  word-break:break-all;
 }
 #downloadArea:active{
   border-color: #eee;
@@ -487,7 +496,8 @@ a{
 .api-item.bg-dark span:hover{
   background-color: #fff;
 }
-#apiCode{
+#apiCode,#apiCodeView{
+  /*width: 340px; height: 210px;*/
   width: 100%;
   background-color: rgba(20,20,20,0.9);
   border-radius: 5px;
@@ -502,8 +512,82 @@ a{
   letter-spacing: .3px;
   font-family: Microsoft Yahei;
   overflow: auto;
+  
+  position:absolute;
+}
+#apiCode{
+  /**/background-color: transparent;
+  color:rgba(255,255,255,0.5);
   white-space: nowrap;
 }
+#apiCodeView{
+  color:#444;
+}
+._key{
+  color:#22b5ff;
+}
+._attr{
+  
+}
+._sign{
+  color:#f0d;
+}
+._fun,._fun j{
+  color:#001dff;
+}
+._d-fun,._d-fun j{
+  color:#b2ff00;
+}
+._num{
+  color:#fff;
+}
+._tag,._tag ._key{
+  color:#ff8d00;
+}
+._str,._str j{
+  color:#f00;
+}
+._note,._note j{
+  color:#019d00;
+}
+#cursor{
+  display: none;
+  width: 2px;
+  height: 23px;
+  background-color: #fff;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 100;
+  animation:cursor 1s infinite;
+  -moz-animation:cursor 1s infinite; /* Firefox */
+  -webkit-animation:cursor 1s infinite; /* Safari and Chrome */
+  -o-animation:cursor 1s infinite; /* Opera */
+}
+@keyframes cursor {
+	0%   {opacity:1;}
+  50%  {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-moz-keyframes cursor {
+	0%   {opacity:1;}
+  50%  {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-webkit-keyframes cursor {
+	0%   {opacity:1;}
+  50%  {opacity:0;}
+  100% {opacity:1;}
+}
+
+@-o-keyframes cursor {
+	0%   {opacity:1;}
+  50%  {opacity:0;}
+  100% {opacity:1;}
+}
+
 #apiBtnWrapper{
   position: absolute;
   width: 100%;
@@ -638,6 +722,19 @@ a{
   text-decoration:underline;
   color:#aaa;
 }
+
+.wechat-public{
+  position:relative;
+  cursor:pointer
+}
+.wechat-public:hover{color:#aaa;}
+.wechat-img{
+  display:none;
+  position: absolute;
+  height: 200px;
+  top: -210px;
+  left: -10px;
+}
 .split-icon{
   font-size: 20px;
   font-weight: bold;
@@ -673,7 +770,6 @@ a{
 #showCode{
   position: relative;
 }
-
 
 
 

@@ -873,7 +873,7 @@ var apiData={
       test:true,
       function:"Show a input box with single input",
       howUse:"Parameter:(String|Array|Json)[Function|String][Function|String];(data,onOk,onCancel)",
-      code:'<input type="button" value="Single input with default" onclick="showSingle()"/>\n<input type="button" value="Single input with values" onclick="showSingleWithValue()"/>\n<script>\nfunction showSingle(){\n\tJet.input("My Information");//null equals "Input Information"\n}\nfunction showSingleWithValue(){\n\tJet.input(["My Information","Information text","default value","date"]);\n\tJet.showWait()\n\t//[box title,input title,default value,valid type]\n\t//if you donot want to use any of them,use null to replace it\n\t//and you can use less than four parameters \n}\n</script>'
+      code:'<input type="button" value="Single input with default" onclick="showSingle()"/>\n<input type="button" value="Single input with values" onclick="showSingleWithValue()"/>\n<script>\nfunction showSingle(){\n\tJet.input("My Information");//null equals "Input Information"\n}\nfunction showSingleWithValue(){\n\tJet.input(["My Information","Information text","default value","date"]);\n\t//[box title,input title,default value,valid type]\n\t//if you donot want to use any of them,use null to replace it\n\t//and you can use less than four parameters \n}\n</script>'
     },{
       title:"Jet.input(many)",
       intro:"Show a input box",
@@ -936,7 +936,7 @@ var apiData={
       test:true,
       function:"Get sign of a number",
       howUse:"Parameter:Number;Return:1|-1",
-      code:'<input type="button" value="Test sign" onclick="testsign()"/>\n<div id="show"></div>\n<script>\nvar a=-10;\nfunction testsign(){\n\tvar b=Jet.sign(a)*100;\n\tJ.id("show").text("Result=":b);\n}\n</script>'
+      code:'<input type="button" value="Test sign" onclick="testsign()"/>\n<div id="show"></div>\n<script>\nvar a=-10;\nfunction testsign(){\n\tvar b=Jet.sign(a)*100;\n\tJ.id("show").text("Result="+b);\n}\n</script>'
     },{
       title:"Jet.getRandom()",
       intro:"Get a random number",
@@ -950,7 +950,7 @@ var apiData={
       test:true,
       function:"Copy string to clipboard",
       howUse:"Parameter:String",
-      code:'<input type="button" value="copy some text" onclick="testCopy()"/>\n<script>\nfunction testCopy(){\n\tJet.copy("This is for copy");\n\tJet.show("Copyed");\n\t//may not supported in some browser\n}\n</script>'
+      code:'<input type="button" value="copy some text" onclick="testCopy()"/>\n<input type="text" placeholder="Ctrl+v on me"/><script>\nfunction testCopy(){\n\tJet.copy("This is for copy");\n\tJet.show("Copyed");\n\t//may not supported in some browser\n}\n</script>'
     },{
       title:"Jet.isMobile()",
       intro:"Check is moblie",
