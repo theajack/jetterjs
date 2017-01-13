@@ -957,14 +957,14 @@ var apiData={
       test:true,
       function:"Check program is run in moblie",
       howUse:"Parameter:null;return:Boolean",
-      code:'<input type="button" value="check is mobile" onclick="testmobile()"/>\n<div id="show"></div>\n<script>\nfunction testmobile(){\n\tJ.id("show").text(Jet.isMobile());\n}\n</script>\njet=Jet\n<script>\n\t//Jet=jet\n\tjet.show();\n\tjet.confirm();\n\t//...\n</script>'
+      code:'<input type="button" value="check is mobile" onclick="testmobile()"/>\n<div id="show"></div>\n<script>\nfunction testmobile(){\n\tJ.id("show").text(Jet.isMobile());\n}\n</script>'
     },{
       title:"jet=Jet",
       intro:"jet equals Jet",
       test:false,
       function:"jet equals Jet",
       howUse:"null",
-      code:'<script>\n\t//Jet=jet\n\tjet.show();\n\tjet.confirm();\n\t//...\n</script>'
+      code:'<script>\n\tjet.show("aa");\n\t//Jet=jet\n\t//...\n</script>'
     },{
       title:"Array.each()",
       intro:"Traversal an Array",
