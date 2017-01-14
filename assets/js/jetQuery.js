@@ -209,7 +209,8 @@ var J = {
         head.removeChild(script);
         options.timeout && options.timeout({ message: "timeout" });
       }, options.time);
-    },
+    }
+  },
   cookie:function(c_name,value,expiredays,path){
     if(arguments.length==1){
       if (document.cookie.length>0){
