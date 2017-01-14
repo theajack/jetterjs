@@ -540,26 +540,26 @@ var apiData={
       howUse:"Obj:HTMLElement|HTMLCollection|NodeList; Parameter:null; Return:this",
       code:'<div style="height:50px;width:100%;background-color:#333;color:#fff" id="test">test</div>\n<br/>\n<input type="button" onclick="testshowToggle()" value="showToggle"/>\n<script>\n\t//You can use those to a element list\n\tfunction testshowToggle(){\n\t\tJ.id("test").showToggle();\n\t}\n</script>'
     },{
-      title:".ajax()",
-      intro:"intro",
+      title:"J.ajax()",
+      intro:"Send ajax request",
       test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'code'
+      function:"Send ajax request",
+      howUse:"parameter:Json",
+      code:'<script>\n\tJ.ajax({\n\t\ttype: "", \n\t\turl: "",\n\t\tdata: "",\n\t\tcontentType: "",\n\t\tdataType: "",\n\t\tasync: Boolean,\n\t\tsuccess: function(data){\n\t\t\t\n\t\t},\n\t\terror: function (err) {\n\t\t\t\n\t\t}\n\t});\n</script>'
     },{
-      title:".jsonp()",
-      intro:"intro",
+      title:"J.jsonp()",
+      intro:"Cross-domain request",
       test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'code'
+      function:"Cross-domain request by jsonp",
+      howUse:"parameter:Json",
+      code:'<script>\n\tJ.jsonp({\n\t\turl:"",\n\t\tdata:{},\n\t\tdataType:"",\n\t\ttime:int,\n\t\tsuccess:function(data){\n\t\t\t\n\t\t},\n\t\ttimeout:function(err){\n\t\t\t\n\t\t}\n\t});\n</script>'
     },{
-      title:".cookie()",
-      intro:"intro",
+      title:"J.cookie()",
+      intro:"Set or get cookie",
       test:true,
-      function:"function",
-      howUse:"howUse",
-      code:'code'
+      function:"Set or get cookie",
+      howUse:"Parameter:String[String][int][String](name,value,expires,path);",
+      code:'<input type="button" value="set cookie" onclick="setCookie()"/>\n<input type="button" value="get cookie" onclick="getCookie()"/>\n<input type="button" value="set cookie with expires" onclick="setCookieExp()"/>\n<input type="button" value="get cookie with path" onclick="getCookiePath()"/>\n<input type="button" value="clear cookie" onclick="clearCookie()"/>\n<div id="show"></div>\n<script>\n\tfunction setCookie(){\n\t\tJ.cookie("myCookie","cookie");\n\t\tJ.id("show").text("myCookie=cookie")\n\t}\n\tfunction getCookie(){\n\t\tvar value=J.cookie("myCookie");\n\t\tJ.id("show").text(value);\n\t}\n\tfunction setCookieExp(){\n\t\tJ.cookie("myCookie","cookie",3);\n\t\t//3 days,default is after this conversation\n\t}\n\tfunction setCookiePath(){\n\t\tJ.cookie("myCookie","cookie",null,);\n\t\t//set cookie worked in a path,default is "/"\n\t}\n\tfunction clearCookie(){\n\t\tJ.cookie("myCookie",null);\n\t\t//set cookie worked in a path,default is "/"\n\t}\n</script>'
     }],
   Serialize:[
     {

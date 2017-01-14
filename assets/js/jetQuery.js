@@ -150,70 +150,67 @@ var J = {
       }
     }
   },
-  ajax:function(options){
-    options = options || {};
-    options.type = (options.type || "GET").toUpperCase();
-    options.dataType = options.dataType || "json";
-    var params = j_formatParams(options.data);
-    //创建 - 非IE6 - 第一步
-    var xhr;
-    if (window.XMLHttpRequest) {
-      xhr = new XMLHttpRequest();
-    } else { //IE6及其以下版本浏览器
-      xhr = new ActiveXObject('Microsoft.XMLHTTP');
-    }
-    //接收 - 第三步
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4) {
-        var status = xhr.status;
-        if (status >= 200 && status < 300) {
-          options.success && options.success(xhr.responseText, xhr.responseXML);
-        } else {
-          options.fail && options.fail(status);
-        }
-      }
-    };
-    //连接 和 发送 - 第二步
-    if (options.type == "GET") {
-      xhr.open("GET", options.url + "?" + params, true);
-      xhr.send(null);
-    } else if (options.type == "POST") {
-      xhr.open("POST", options.url, true);
-      //设置表单提交时的内容类型
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.send(params);
-    }
+  ajax:function (option){ 
+    var ajaxData = { 
+      type:option.type || "GET", 
+      url:option.url || "", 
+      async:option.async || "true", 
+      data:option.data || null, 
+      dataType:option.dataType || "text", 
+      contentType:option.contentType || "application/x-www-form-urlencoded", 
+      beforeSend:option.beforeSend || function(){}, 
+      success:option.success || function(){}, 
+      error:option.error || function(){} 
+    } 
+    ajaxData.beforeSend();
+    var xhr;  
+    if (window.ActiveXObject) {  
+      xhr = ActiveXObject("Microsoft.XMLHTTP");  
+    } else if (window.XMLHttpRequest) {  
+      xhr = XMLHttpRequest();  
+    }  
+    xhr.responseType=ajaxData.dataType; 
+    xhr.open(ajaxData.type,ajaxData.url,ajaxData.async);  
+    xhr.setRequestHeader("Content-Type",ajaxData.contentType);  
+    xhr.send(j_convertData(ajaxData.data));  
+    xhr.onreadystatechange = function() {  
+      if (xhr.readyState == 4) {  
+        if(xhr.status == 200){ 
+          ajaxData.success(xhr.response) ;
+        }else{ 
+          ajaxData.error() ;
+        }  
+      } 
+    }  
   },
-  jsonp:function(options){
-    options = options || {};
-    if (!options.url || !options.callback) {
-      throw new Error("illagel parameter");
-    }
-    //创建 script 标签并加入到页面中
-    var callbackName = ('jsonp_' + Math.random()).replace(".", "");
-    var oHead = document.getElementsByTagName('head')[0];
-    options.data[options.callback] = callbackName;
-    var params = formatParams(options.data);
-    var oS = document.createElement('script');
-    oHead.appendChild(oS);
-    //创建jsonp回调函数
-    window[callbackName] = function (json) {
-      oHead.removeChild(oS);
-      clearTimeout(oS.timer);
-      window[callbackName] = null;
-      options.success && options.success(json);
-    };
-    //发送请求
-    oS.src = options.url + '?' + params;
-    //超时处理
-    if (options.time) {
-      oS.timer = setTimeout(function () {
+  jsonp(options){
+      if (!options.url) {
+        throw new Error("Parameter error");
+      var callbackName = ('j_jsonp' + Math.random()).replace(".", "").substring(0,15);
+      var head = J.tag("head");
+      options.data[j_checkArg(options.callback,"callback")] = callbackName;
+      //var params = formatParams(options.data);
+      var script = J.new('script');
+      head.append(script);
+      window[callbackName] = function (json) {
+          head.removeChild(script);
+          clearTimeout(script.timer);
+          window[callbackName] = null;
+          options.success && options.success(json);
+      };
+      if(options.dataType!=undefined&&options.dataType.toUpperCase()=="JSON"){
+        script.attr("src",options.url + '?json='+encodeURIComponent(JSON.stringify(options.data)));
+      }else{
+        script.attr("src",options.url + '?' + j_formatParams(options.data));
+      }
+      options.time=j_checkArg(options.callback,5000);
+      script.timer = setTimeout(function () {
         window[callbackName] = null;
-        oHead.removeChild(oS);
-        options.fail && options.fail({ message: "time out" });
-      }, time);
-    }
-  },cookie:function(c_name,value,expiredays,path){
+        head.removeChild(script);
+        options.timeout && options.timeout({ message: "timeout" });
+      }, options.time);
+    },
+  cookie:function(c_name,value,expiredays,path){
     if(arguments.length==1){
       if (document.cookie.length>0){
         var c_start=document.cookie.indexOf(c_name + "=");
@@ -226,32 +223,51 @@ var J = {
       }
       return ""
     }else{
-      var exdate=new Date();
-      exdate.setDate(exdate.getDate()+expiredays);
-      var c=c_name+ "=" +escape(value);
-      if(expiredays!=undefined){
-        c+=";expires="+exdate.toGMTString();
-      }
-      if(path!=undefined){
-        if(path.constructor.name=="Boolean"){
-          if(path){
-            c+=(";path=/");
-          }
-        }else{
-          c+=(";path="+path);
+      if(value==null){
+        J.cookie(c_name,"",-1);
+      }else{
+        var c=c_name+ "=" +escape(value);
+        if(expiredays!=undefined){
+          var exdate=new Date();
+          exdate.setDate(exdate.getDate()+expiredays);
+          c+=";expires="+exdate.toGMTString();
         }
+        if(path!=undefined){
+          if(path.constructor.name=="Boolean"){
+            if(path){
+              c+=(";path=/");
+            }
+          }else{
+            c+=(";path="+path);
+          }
+        }
+        document.cookie=c;
+        return c_name+"="+value;
       }
     }
   }
 };
+
+function j_convertData(data){ 
+  if( typeof data === 'object' ){ 
+    var convertResult = "" ;  
+    for(var c in data){  
+      convertResult+= c + "=" + data[c] + "&";  
+    }  
+    convertResult=convertResult.substring(0,convertResult.length-1) 
+    return convertResult; 
+  }else{ 
+    return data; 
+  } 
+}
 function j_formatParams(data) {
   var arr = [];
   for (var name in data) {
-      arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
+    arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
   }
-  arr.push(("v=" + Math.random()).replace(".",""));
+  //arr.push(("v=" + Math.random()).replace("."));
   return arr.join("&");
-};
+}
 var j=J;
 J.ready(function(){
   J.tag("head").append(J.new("style").text(".j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"));
