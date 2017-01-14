@@ -796,6 +796,20 @@ var apiData={
       howUse:"Parameter:null;",
       code:'<div id="test">\n\t<input type="text" jet-valid="date" placeholder="Input birthday please" />\n</div>\n<input type="button" value="ban valid Show" onclick="banValidShow()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<div id="show"></div>\n<script>\n\tfunction banValidShow(){\n\t\tJet.banValidShow();\n\t\tJ.id("show").text("Has banned,now the error info not show");\n\t}\n\tfunction reset(){\n\t\tJet.useValidShow();\n\t\tJ.id("show").text("Has reseted");\n\t}\n</script>'
     },{
+      title:"Jet.usePlaceHolder()",
+      intro:"Set placeholder",
+      test:true,
+      function:"Set valid error text placeholder",
+      howUse:"Parameter:null;",
+      code:'<div id="test">\n\t<input type="text" jet-valid="notnull"/>\n\t<input type="password" jet-valid="length[4,8]"/>\n\t<input type="text" jet-valid="date"/>\n</div>\n<input type="button" value="use placeholder" onclick="usePlaceholder()"/>\n<input type="button" value="reset" onclick="reset()"/>\n<script>\n\tfunction usePlaceholder(){\n\t\tJet.usePlaceHolder();\n\t}\n\tfunction reset(){\n\t\tJet.banPlaceHolder();\n\t}\n</script>'
+    },{
+      title:"Jet.banPlaceHolder()",
+      intro:"Disabled placeholder for valid input",
+      test:true,
+      function:"Not use valid error text placeholder",
+      howUse:"Parameter:null;",
+      code:'<div id="test">\n\t<input type="text" jet-valid="notnull"/>\n\t<input type="password" jet-valid="length[4,8]"/>\n\t<input type="text" jet-valid="date"/>\n</div>\n<input type="button" value="use placeholder" onclick="usePlaceholder()"/>\n<input type="button" value="ban placeholder" onclick="banPlaceholder()"/>\n<script>\n\tfunction usePlaceholder(){\n\t\tJet.usePlaceHolder();\n\t}\n\tfunction banPlaceholder(){\n\t\tJet.banPlaceHolder();\n\t}\n</script>'
+    },{
       title:"Jet.useValidShow()",
       intro:"Use error show",
       test:true,
@@ -1019,8 +1033,8 @@ var apiData={
       intro:"Sort Array",
       test:true,
       function:"Sort an Array according to an attribute asc or desc",
-      howUse:"Parameter:[Boolean];return:this",
-      code:'<input type="button" value="test sort by attr" onclick="sortTest()"/>\n<input type="button" value="test sort by attr desc" onclick="sortDescTest()"/>\n<div id="show">Bob:18; Jack:16; Allen:22; Thea:20; </div>\n<script>\nvar arr=[{\n\t\tname:"Bob",age:18\n\t},{\n\t\tname:"Jack",age:16\n\t},{\n\t\tname:"Allen",age:22\n\t},{\n\t\tname:"Thea",age:20\n\t}];\nfunction sortTest(){\n\tarr.sortByAttr("age");\n\tprintInfo();\n}\nfunction sortDescTest(){\n\tarr.sortByAttr("age",false);\n\tprintInfo();\n}\nfunction printInfo(){\n\tvar s="";\n\tarr.each(function(item){\n\t\ts+=(item.name+":"+item.age+"; ")\n\t});\n\tJ.id("show").text(s);\n}\n</script>'
+      howUse:"Parameter:String[Boolean];return:this",
+      code:'<input type="button" value="test sort by attr" onclick="sortTest()"/>\n<input type="button" value="test sort by attr desc" onclick="sortDescTest()"/>\n<div id="show">Bob:18; Jack:16; Allen:22; Thea:20; </div>\n</br>\n<input type="button" value="test sort string by length" onclick="sortString()"/>\n<div id="show1">aa3,aaaa5,aaa4,a2,aaaaaaa8</div>\n<script>\nvar arr=[{\n\t\tname:"Bob",age:18\n\t},{\n\t\tname:"Jack",age:16\n\t},{\n\t\tname:"Allen",age:22\n\t},{\n\t\tname:"Thea",age:20\n\t}];\nvar sArr=["aa3","aaaa5","aaa4","a2","aaaaaaa8"];\nfunction sortTest(){\n\tarr.sortByAttr("age");\n\tprintInfo();\n}\nfunction sortDescTest(){\n\tarr.sortByAttr("age",false);\n\tprintInfo();\n}\nfunction sortString(){\n\tsArr.sortByAttr("length");\n\tJ.id("show1").text(sArr);\n}\nfunction printInfo(){\n\tvar s="";\n\tarr.each(function(item){\n\t\ts+=(item.name+":"+item.age+"; ")\n\t});\n\tJ.id("show").text(s);\n}\n</script>'
     },{
       title:"Array.reverse()",
       intro:"Reverse Array",
@@ -1039,29 +1053,29 @@ var apiData={
       title:"String.has()",
       intro:"Check includes String",
       test:true,
-      function:"Check whether a String is in another String",
-      howUse:"Parameter:String;return:Boolean",
+      function:"Check whether a String or RegExp is in another String",
+      howUse:"Parameter:String|RegExp;return:Boolean",
       code:'<input type="text" id="test1" placeholder="input one string" value="string"/>\n<input type="text" id="test2" placeholder="input another string" value="str"/>\n<input type="button" value="test has string" onclick="hasTest()"/>\n<div id="show"></div>\n<script>\nfunction hasTest(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar has=a.has(b);\n\tJ.id("show").text(has);\n}\n</script>'
     },{
       title:"String.timesOf()",
       intro:"Count times",
       test:true,
-      function:"Count times that a String show in this",
-      howUse:"Parameter:String;return:int",
+      function:"Count times that a String or RegExp show in this",
+      howUse:"Parameter:String|RegExp(/./g);return:int",
       code:'<input type="text" id="test1" placeholder="input one string" value="I love programming"/>\n<input type="text" id="test2" placeholder="input another string" value="o"/>\n<input type="button" value="count the times" onclick="countTest()"/>\n<div id="show"></div>\n<script>\nfunction countTest(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar times=a.timesOf(b);\n\tJ.id("show").text("["+b+"] show ["+times+"] times in ["+a+"]");\n}\n</script>'
     },{
       title:"String.replaceAll()",
       intro:"Replace all a certain String",
       test:true,
-      function:"Replace all a certain String with another",
-      howUse:"Parameter:String(be replaced),String(replace);return:String",
-      code:'<input type="text" id="test1" placeholder="input one string" value="I love programming"/>\n<input type="text" id="test2" placeholder="input another string" value="o"/>\n<input type="button" value="replace all" onclick="replaceAllTest()"/>\n<div id="show"></div>\n<script>\nfunction replaceAllTest(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar str=a.replaceAll(b,"x");\n\tJ.id("show").text(str);\n}\n</script>'
+      function:"Replace all a certain String or a RegExp with another one or Array",
+      howUse:"Parameter:String(be replaced)|RegExp(/./g),String(replace)|Array;return:String",
+      code:'<input type="text" id="test1" placeholder="input one string" value="I love programming"/>\n<input type="text" id="test2" placeholder="input another string" value="o"/>\n<input type="button" value="replace all" onclick="replaceAllTest()"/>\n<input type="button" value="replace by Array" onclick="replaceAllTestByArr()"/>\n<input type="button" value="replace by RegExp" onclick="replaceAllTestByRegExp()"/>\n<div id="show"></div>\n<script>\nfunction replaceAllTest(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar str=a.replaceAll(b,"x");\n\tJ.id("show").text(str);\n}\nfunction replaceAllTestByArr(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar str=a.replaceAll(b,["x","y"]);\n\tJ.id("show").text(str);\n}\nfunction replaceAllTestByRegExp(){\n\tvar a=J.id("test1").val();\n\tvar str=a.replaceAll(/o/g,["Reg","Exp"]);\n\tJ.id("show").text(str);\n}\n</script>'
     },{
       title:"String.indexsOf()",
       intro:"Get indexs",
       test:true,
-      function:"Get indexs of all a certain String",
-      howUse:"Parameter:String;return:Array",
+      function:"Get indexs of all a certain String or RegExp,or get ith index by parameter 2",
+      howUse:"Parameter:String|RegExp(/./g),[index];return:Array",
       code:'<input type="text" id="test1" placeholder="input one string" value="I love programming"/>\n<input type="text" id="test2" placeholder="input another string" value="o"/>\n<input type="button" value="get indexs" onclick="indexsTest()"/>\n<div id="show"></div>\n<script>\nfunction indexsTest(){\n\tvar a=J.id("test1").val();\n\tvar b=J.id("test2").val();\n\tvar arr=a.indexsOf(b);\n\tJ.id("show").text("["+arr+"]");\n}\n</script>'
     },{
       title:"String.insert()",

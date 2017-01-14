@@ -16,6 +16,7 @@ var jet_t,jet_ct;
 var Jet = {
 	useDefaultStyle: true,
 	useShowForValid: true,
+  showInPlaceHolder: false,
   noteStyle:"color",
   language:"English",
   lang:function(l){this.language=l},
@@ -49,7 +50,10 @@ var Jet = {
       a.attr({
         "onBlur": "jet_validInput(this)",
         "onfocus": "jet_addValidValue(this)"
-      })
+      });
+      if(Jet.showInPlaceHolder){//待修改
+        a.attr("placeholder",jet_getValueText(a.attr("jet-valid")));
+      }
     });
   },
   clearValid:function(obj){
@@ -75,6 +79,18 @@ var Jet = {
   },
   banValidShow:function(){this.useShowForValid=false},
   useValidShow:function(){this.useShowForValid=true},
+  banPlaceHolder:function(){
+    this.showInPlaceHolder=false;
+    J.attr("jet-valid").each(function(a) {
+      a.attr("placeholder","");
+    });
+  },
+  usePlaceHolder:function(){
+    this.showInPlaceHolder=true;
+    J.attr("jet-valid").each(function(a) {
+      a.attr("placeholder",jet_getValueText(a.attr("jet-valid")));
+    });
+  },
   show:jet_mesShow,
   confirm:jet_confirmShow,
   showWait:jet_mesShowWait,
@@ -446,7 +462,10 @@ var validTextCn = {
 	"date": "*格式为XXXX-XX-XX",
 	"email": "*格式为XXX@XX.com",
 	"number": "*须为纯数字",
+	"idcard": "*17位数字加一位数字或X",
 	"length": "*输入长度为",
+  "url":"*请输入正确的网址",
+  "float":"*请正确的小数",
 	"lengthOfAny": "*输入长度为",
 	"phone": "*须为11位纯数字",
 	"letterStart": "*字母开头且长度为",
@@ -459,26 +478,92 @@ var validTextEn = {
 	"date": "*format:XXXX-XX-XX",
 	"email": "*format:XXX@XX.com",
 	"number": "*expect a number",
+	"idcard": "*17 numbers plus a number or X",
 	"length": "*length between",
+  "url":"*Expect an url name",
+  "float":"*Expect a float number",
 	"lengthOfAny": "*length between",
 	"phone": "*must be 11 digits",
 	"letterStart": "*letter start and length",
 	"range": "*not in range",
 	"express": "*wrong express",
 };
-function jet_getRegExp(f) {
-	var d = 0;
+function jet_getValueText(b) {
 	var c = 0;
+	if (b.indexOf("range") != -1) {
+		c = 6;
+	} else {
+		if (b.indexOf("letterStart") != -1) {
+			c = 12;
+		} else if (b.indexOf("length") != -1) {
+      c = 7;
+		} else if (b.has("number")&&b!="number"){
+      c = 7;
+    }
+	}
+	if (c != 0) {
+		var a = b.substring(c, b.length - 1).split(",");
+    if(a[1]==undefined){
+      a[1]=a[0];
+    }
+    return jet_getValidText(b.substring(0, c - 1),a);
+	} else {
+		return jet_getValidText(b);
+	}
+};
+function jet_getValidText(type,range){
+  if(Jet.language=="Chinese"){
+    if(range==undefined){
+      return validTextCn[type];
+    }else{
+      var add="";
+      if (type.has("number")){
+        add=" 且长度为";
+      }
+      return validTextCn[type] +add+ "[" + range[0] + "," + range[1] + "]";
+    }
+  }else{
+    if(range==undefined){
+      return validTextEn[type];
+    }else{
+      var add="";
+      if (type.has("number")){
+        add=" and length between";
+      }
+      return validTextEn[type] +add+ "[" + range[0] + "," + range[1] + "]";
+    }
+  }
+};
+function jet_getRegExp(f) {
+	var d = -1;
+	var c = -1;
 	if (f.indexOf("length") != -1) {
 		var e = f.substring(7, f.length - 1).split(",");
 		f = "length";
 		d = e[0];
+    if(e[1]==undefined){
+      e[1]=e[0];
+    }
 		c = e[1]
 	} else if (f.indexOf("letterStart") != -1) {
     var e = f.substring(12, f.length - 1).split(",");
     f = "letterStart";
     d = e[0];
+    if(e[1]==undefined){
+      e[1]=e[0];
+    }
     c = e[1]
+  }else if (f.has("number")&&f!="number"){
+    var e = f.substring(7, f.length - 1).split(",");
+		f = "number";
+		d = e[0];
+    if(e[1]==undefined){
+      e[1]=e[0];
+    }
+		c = e[1]
+  }else if (f.has("express")){
+    d = f.substring(8, f.length - 1);
+		f = "express";
   }
 	switch (f) {
 	case "null":
@@ -491,8 +576,21 @@ function jet_getRegExp(f) {
 		return /^((\w*@\w*.com))$/;
 		break;
 	case "number":
-		return /^(\d+)$/;
+    if(d>=0){
+      return new RegExp("^-?(\\d{" + d + "," + c + "})$");
+    }else{
+      return /^-?(\d+)$/;
+    }
 		break;
+  case "float":
+    return /^-?[1-9]\d*.\d*|0.\d*[1-9]\d*$/;
+		break;
+	case "idcard":
+    return /^(\d{17}(X|\d))$/;
+		break;
+  case "url":
+    return /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+$/;
+    break;
 	case "phone":
 		return /^([1]\d{10})$/;
 		break;
@@ -503,27 +601,12 @@ function jet_getRegExp(f) {
 		return new RegExp("^(([a-zA-Z\\d]){" + d + "," + c + "})$");
 		break;
 	case "express":
-		return value;
+		return new RegExp(d);
 		break;
 	default:
 		return "null";
 		break;
 	}
-};
-function jet_getValidText(type,range){
-  if(Jet.language=="Chinese"){
-    if(range==undefined){
-      return validTextCn[type];
-    }else{
-      return validTextCn[type] + "[" + range[0] + "," + range[1] + "]";
-    }
-  }else{
-    if(range==undefined){
-      return validTextEn[type];
-    }else{
-      return validTextEn[type] + "[" + range[0] + "," + range[1] + "]";
-    }
-  }
 };
 function jet_checkValue(a, e) {
   if(a.indexOf("notnull")!=-1){
@@ -555,26 +638,6 @@ function jet_checkValue(a, e) {
 		}
 	}
 	return "true";
-};
-function jet_getValueText(b) {
-	var c = 0;
-	if (b.indexOf("range") != -1) {
-		c = 6;
-	} else {
-		if (b.indexOf("letterStart") != -1) {
-			c = 12;
-		} else {
-			if (b.indexOf("length") != -1) {
-				c = 7;
-			}
-		}
-	}
-	if (c != 0) {
-		var a = b.substring(c, b.length - 1).split(",");
-    return jet_getValidText(b.substring(0, c - 1),a);
-	} else {
-		return jet_getValidText(b);
-	}
 };
 function jet_testRange(b, c) {
 	var a = b.substring(6, b.length - 1).split(",");

@@ -1,4 +1,55 @@
 var J = {
+	ready: (function() {
+		var b = [];
+		var d = false;
+		function c(g) {
+			if (d) {
+				return
+			}
+			if (g.type === "onreadystatechange" && document.readyState !== "complete") {
+				return
+			}
+			for (var f = 0; f < b.length; f++) {
+				b[f].call(document)
+			}
+			d = true;
+			b = null
+		}
+		if (document.addEventListener) {
+			document.addEventListener("DOMContentLoaded", c, false);
+			document.addEventListener("readystatechange", c, false);
+			window.addEventListener("load", c, false)
+		} else {
+			if (document.attachEvent) {
+				document.attachEvent("onreadystatechange", c);
+				window.attachEvent("onload", c)
+			}
+		}
+		return function a(e) {
+			if (d) {
+				e.call(document)
+			} else {
+				b.push(e)
+			}
+		}
+	})(),
+	load: function(a) {
+		if (document.addEventListener) {
+			document.addEventListener("DOMContentLoaded", function() {
+				document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+				a()
+			}, false)
+		} else {
+			if (document.attachEvent) {
+				document.attachEvent("onreadystatechange", function() {
+					if (document.readyState == "complete") {
+						document.detachEvent("onreadystatechange", arguments.callee);
+						a()
+					}
+				})
+			}
+		}
+	},
   height:function(){return document.body.offsetHeight},
   width:function(){return document.body.offsetWidth},
 	class: function(a) {
@@ -99,57 +150,6 @@ var J = {
       }
     }
   },
-	ready: (function() {
-		var b = [];
-		var d = false;
-		function c(g) {
-			if (d) {
-				return
-			}
-			if (g.type === "onreadystatechange" && document.readyState !== "complete") {
-				return
-			}
-			for (var f = 0; f < b.length; f++) {
-				b[f].call(document)
-			}
-			d = true;
-			b = null
-		}
-		if (document.addEventListener) {
-			document.addEventListener("DOMContentLoaded", c, false);
-			document.addEventListener("readystatechange", c, false);
-			window.addEventListener("load", c, false)
-		} else {
-			if (document.attachEvent) {
-				document.attachEvent("onreadystatechange", c);
-				window.attachEvent("onload", c)
-			}
-		}
-		return function a(e) {
-			if (d) {
-				e.call(document)
-			} else {
-				b.push(e)
-			}
-		}
-	})(),
-	load: function(a) {
-		if (document.addEventListener) {
-			document.addEventListener("DOMContentLoaded", function() {
-				document.removeEventListener("DOMContentLoaded", arguments.callee, false);
-				a()
-			}, false)
-		} else {
-			if (document.attachEvent) {
-				document.attachEvent("onreadystatechange", function() {
-					if (document.readyState == "complete") {
-						document.detachEvent("onreadystatechange", arguments.callee);
-						a()
-					}
-				})
-			}
-		}
-	},
   ajax:function(options){
     options = options || {};
     options.type = (options.type || "GET").toUpperCase();
@@ -1492,14 +1492,31 @@ Array.prototype.reverse=function(){
   return this;
 };
 String.prototype.has=function(s){//兼容
-  if(this.includes==undefined){
-    return (this.indexOf(s)!=-1);
+  if(s.constructor.name=="String"){
+    if(this.includes==undefined){
+      return (this.indexOf(s)!=-1);
+    }else{
+      return this.includes(s);
+    }
   }else{
-    return this.includes(s);
+    if(this.match(s)==null){
+      return false;
+    }else{
+      return true;
+    }
   }
 };
 String.prototype.timesOf=function(s){
-  return this.split(s).length-1;
+  if(s.constructor.name=="String"){
+    return this.split(s).length-1;
+  }else{
+    var arr=this.match(s);
+    if(arr==null){
+      return 0;
+    }else{
+      return arr.length;
+    }
+  }
 };
 String.prototype.replaceAll=function(a,b){
   if(b.constructor.name=="Array"){
@@ -1508,7 +1525,7 @@ String.prototype.replaceAll=function(a,b){
       var str=s[0];
       s.each(function(ss,i){
         if(i>0){
-          str+=(b+ss);
+          str+=(b[i-1]+ss);
         }
       });
       return str;
@@ -1516,31 +1533,31 @@ String.prototype.replaceAll=function(a,b){
       var res="";
       var left=this;
       var sarr = this.match(a);
-      sarr.each(function(ss,i){
-        var arrtemp=left.split(ss);
-        res+=(left.substring(0,left.indexOf(ss))+b[i]);
-        left=left.substring(left.indexOf(ss)+ss.length);
-      });
-      res+=left;
-      return res;
+      if(sarr!=null){
+        sarr.each(function(ss,i){
+          var arrtemp=left.split(ss);
+          res+=(left.substring(0,left.indexOf(ss))+b[i]);
+          left=left.substring(left.indexOf(ss)+ss.length);
+        });
+        res+=left;
+        return res;
+      }
+      return this;
     }
   }else{
-    return this.replace(new RegExp(a,"g"),b);
-  }
-  /*var s = this.split(a);
-  var str=s[0];
-  s.each(function(ss,i){
-    if(i>0){
-      str+=(b+ss);
+    if(a.constructor.name=="String"){
+      return this.replace(new RegExp(a,"g"),b);
+    }else{
+      return this.replace(a,b);
     }
-  });
-  return str;*/
+  }
 };
-String.prototype.splitByArray=function(arr){
-  
-}
 String.prototype.indexsOf=function(a,i){
   var sa=this.split(a);
+  var ra=null;
+  if(a.constructor.name!="String"){
+    ra=this.match(a);
+  }
   if(sa.length<=2){
     if(this.indexOf(a)==-1){
       return [];
@@ -1554,7 +1571,11 @@ String.prototype.indexsOf=function(a,i){
     sa.each(function(s,n){
       if(n>0){
         ia[ia.length]=index;
-        index+=a.length;
+        if(ra!=null){
+          index+=ra[n-1].length;
+        }else{
+          index+=a.length;
+        }
       }
       index+=s.length;
     });
