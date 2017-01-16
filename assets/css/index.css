@@ -523,6 +523,7 @@ a{
 }
 #apiCodeView{
   color:#444;
+  word-wrap: normal;
 }
 ._key{
   color:#22b5ff;
