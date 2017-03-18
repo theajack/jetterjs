@@ -276,219 +276,6 @@
           return a + "=" + b
         }
       }
-    },
-    jetForm:function(a) {
-      return J.attr("jet-form=" + a)
-    },
-    jetName:function(a, b) {
-      if (arguments.length == 2) {
-        return J.attr("jet-form=" + a).findAttr("jet-name=" + b)
-      } else {
-        return J.attr("jet-name=" + a)
-      }
-    },
-    useDefaultStyle: true,
-    useShowForValid: true,
-    showInPlaceHolder: false,
-    noteStyle: "color",
-    language: "ENGLISH",
-    lang: function(l) {
-      this.language = l.toUpperCase()
-    },
-    get: function(a, b, c) {
-      c = this.checkArg(c, "jet-name");
-      if (b != undefined && b != "json") {
-        return _getElemsFormData(_checkJetForm(a), c)
-      } else {
-        return _getElemsObj(_checkJetForm(a), c)
-      }
-    },
-    set: function(a, b, c, d) {
-      d = this.checkArg(d, "jet-name");
-      _setObjVal(_checkJetForm(a), d, b, c)
-    },
-    clear: function(a, b) {
-      this.set(a, {}, null, b)
-    },
-    addValid: function(a, b) {
-      b = this.checkArg(b, "notnull");
-      _checkJetForm(a).addValid(b)
-    },
-    initValid: function(b) {
-      var c;
-      if (b == undefined) {
-        c = J.attr("jet-valid")
-      } else {
-        c = _checkJetForm(b).select("[jet-valid]")
-      }
-      c.each(function(a) {
-        a.attr({
-          "onBlur": "J.validInput(this)",
-          "onfocus": "J.addValidValue(this)"
-        });
-        if (this.showInPlaceHolder) {
-          a.attr("placeholder", _getValueText(a.attr("jet-valid")))
-        }
-      })
-    },
-    clearValid: function(a) {
-      _checkJetForm(a).clearValid()
-    },
-    validate: function(a, b, c) {
-      if (c != undefined) {
-        _validateForm(_checkJetForm(a), b, c)
-      } else {
-        _validateForm(_checkJetForm(a), b)
-      }
-    },
-    validText: function(a, b) {
-      if(a.constructor==Object&&b==undefined){
-        for (var c in a) {
-          this.validText(c,a[c]);
-        }
-      }else{
-        if(this.language=="CHINESE"){
-          validTextCn[a]=b;
-        }else{
-          validTextEn[a]=b;
-        }
-      }
-    },
-    banDefault: function() {
-      this.useDefaultStyle = false;
-      var b = J.class("jet-unpass");
-      b.each(function(a) {
-        _checkIsPw(a);
-        a.removeClass("jet-unpass").val(a.attr("jet-value")).removeAttr("jet-value")
-      })
-    },
-    useDefault: function() {
-      this.useDefaultStyle = true
-    },
-    banValidShow: function() {
-      this.useShowForValid = false
-    },
-    useValidShow: function() {
-      this.useShowForValid = true
-    },
-    banPlaceHolder: function() {
-      this.showInPlaceHolder = false;
-      J.attr("jet-valid").each(function(a) {
-        a.attr("placeholder", "")
-      })
-    },
-    usePlaceHolder: function() {
-      this.showInPlaceHolder = true;
-      J.attr("jet-valid").each(function(a) {
-        a.attr("placeholder", _getValueText(a.attr("jet-valid")))
-      })
-    },
-    show: _mesShow,
-    confirm: _confirmShow,
-    showWait: _mesShowWait,
-    close: _mesClose,
-    confirmClose: _confirmClose,
-    inputClose: _inputClose,
-    checkArg: _checkArg,
-    setNoteStyle: _setNoteStyle,
-    validInput:_validInput,
-    addValidValue:_addValidValue,
-    onOnePass: function(c) {
-      if (c == undefined) {
-        _onOnePass = null
-      } else {
-        if (c.constructor == String) {
-          _onOnePass = function(a, b) {
-            eval(c)
-          }
-        } else {
-          _onOnePass = c
-        }
-      }
-    },
-    onOneFail: function(c) {
-      if (c == undefined) {
-        _onOneFail = null
-      } else {
-        if (c.constructor == String) {
-          _onOneFail = function(a, b) {
-            eval(c)
-          }
-        } else {
-          _onOneFail = c
-        }
-      }
-    },
-    jump: _turnPage,
-    open: function(a) {
-      window.open(a)
-    },
-    back: function() {
-      window.history.back()
-    },
-    forward: function() {
-      window.history.forward()
-    },
-    getUrlPara: _getUrlPara,
-    sign: _sign,
-    getRandom: _getRandomNum,
-    isMobile: _isMobile,
-    copy: _copy,
-    confirmOk:_confirmOk,
-    confirmCancel:_confirmCancel,
-    inputOk:_inputOk,
-    inputCancel:_inputCancel,
-    input: function(c, d, e) {
-      var f = J.id("jetInputContent");
-      if (f == undefined) {
-        _addInputWrapper();
-        f = J.id("jetInputContent")
-      }
-      f.empty();
-      if (c.constructor == String) {
-        f.append(J.new("div").text(_checkArg(c, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        _appendOneInput((this.language == "CHINESE") ? "请输入：" : "Please input:", null, null,null)
-      } else if (c.constructor == Array) {
-        f.append(J.new("div").text(_checkArg(c[0], (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        _appendOneInput(c[1], c[2], c[3],c[4]);
-        if (c[3] != undefined) {
-          this.initValid(f)
-        }
-      } else {
-        f.append(J.new("div").text(_checkArg(c.title, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        var a = _checkArg(c.default, []);
-        var b = _checkArg(c.valid, []);
-        var p = _checkArg(c.placeholder, []);
-        if (c.text == undefined || c.text.constructor == String) {
-          _appendOneInput(c.text, a, b,p)
-        } else {
-          for (var i = 0; i < c.text.length; i++) {
-            _appendOneInput(_checkArg(c.text[i], (this.language == "CHINESE") ? "请输入：" : "Please input:"), a[i], b[i],p[i])
-          }
-        }
-        if (b.length > 0 || b.constructor == String) {
-          this.initValid(f)
-        }
-      }
-      if (d != undefined) {
-        if (d.constructor == Function) {
-          _submitCall = d
-        } else {
-          _submitCall = function() {
-            eval(d)
-          }
-        }
-      }
-      if (e != undefined) {
-        if (e.constructor == Function) {
-          _submitCancelCall = e
-        } else {
-          _submitCancelCall = function() {
-            eval(e)
-          }
-        }
-      }
-      J.id("jetInputWrapper").css("top", "0")
     }
   };
 
@@ -513,9 +300,6 @@
   }
   J.ready(function() {
     J.tag("head").append(J.new("style").text(".j-none{visibility:hidden!important;position:absolute!important;display:block!important;}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"))
-    J.initValid();
-    J.tag("head").append(J.new("style").text(".jet-unpass{border-color:#f20!important;border-style:solid!important;background-color:rgba(255,0,0,.1)!important;color:red!important}.jet-icon-wrapper{width:100%;height:40px}.jet-icon-circle{display:block;width:40px;height:40px;margin:0 auto;border-radius:20px;border:5px solid #fff;position:relative}.jet-icon-circle span{background-color:#fff;display:block;position:absolute;border-radius:3px}.jet-icon-circle.jet-no-border{border-color:transparent;position:relative;top:3px;left:5px}.jet-icon-part-ok1{width:11px;height:7px;top:14px;left:5px}.jet-icon-part-ok2{width:7px;height:18px;top:7px;left:14px}.jet-icon-part-x{width:7px;height:20px;top:5px;left:11px}.jet-rotate-45{transform:rotate(45deg);-ms-transform:rotate(45deg);-webkit-transform:rotate(45deg);-o-transform:rotate(45deg);-moz-transform:rotate(45deg)}.jet-rotate-045{transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-o-transform:rotate(-45deg);-moz-transform:rotate(-45deg)}.jet-icon-part-bar,.jet-icon-part-block{width:7px;left:11px}.jet-icon-part-block{height:7px}.jet-icon-part-bar{height:13px}.jet-icon-part-info1,.jet-icon-part-warn1{top:4px}.jet-icon-part-info2{top:13px}.jet-icon-part-warn2{top:19px}#jetConfirmWrapper,#jetConfirmWrapper *,#jetInputWrapper,#jetInputWrapper *,#jetNoteWrapper,#jetNoteWrapper *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#jetConfirmWrapper,#jetInputWrapper,#jetNoteWrapper{width:100%;position:fixed;z-index:10000;transition:top .3s ease;top:-100%}#jetConfirmWrapper{z-index:10001}#jetNoteWrapper{z-index:10002;cursor:pointer;}#jetConfirmContent,#jetInputContent{font-size:22px;padding:3% 10px 10px 10px;color:#fff;height:50%;white-space:normal;word-break:break-all}#jetConfirmBtnWrapper,#jetInputBtnWrapper{height:50px}#jetInputContent{padding:3% 10% 10px 10%}.jet-input{width:100%;color:#888;padding-left:5px;font-size:18px}.jet-input-text{text-align:left}#jetConfirmCancel,#jetConfirmOk,#jetInputCancel,#jetInputOk{width:50%;float:left;height:100%;border-top:4px solid rgba(255,255,255,.9);cursor:pointer}#jetConfirmOk{border-right:2px solid rgba(255,255,255,.9)}#jetConfirmCancel,#jetInputCancel{border-left:2px solid rgba(255,255,255,.9)}#jetConfirmLittleWrapper,#jetInputLittleWrapper,#jetNoteLittleWrapper{width:30%;min-height:65px;text-align:center;margin:0 auto;border:1px solid #666;border-radius:0 0 10px 10px;border-top:0;padding-top:10px;background-color:rgba(51,134,51,.9)}#jetConfirmLittleWrapper,#jetInputLittleWrapper{width:30%;background-color:rgba(136,136,136,.9);border-color:#bbb;padding-top:0}#jetInputLittleWrapper{background-color:rgba(100,100,100,.9)}#jetConfirmLittleWrapper.jet-large,#jetInputLittleWrapper.jet-large,#jetNoteLittleWrapper[jet-size=large]{width:70%}#jetConfirmLittleWrapper.jet-middle,#jetInputLittleWrapper.jet-middle,#jetNoteLittleWrapper[jet-size=middle]{width:50%}#jetNoteLittleWrapper[jet-style=gray].jet-success{background-color:rgba(210,210,210,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray].jet-success .jet-icon-circle{border-color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray].jet-success .jet-icon-circle span{background-color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info{background-color:rgba(170,170,170,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-warn{background-color:rgba(80,80,80,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray].jet-warn .jet-icon-circle{border-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray].jet-warn .jet-icon-circle span{background-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error{background-color:rgba(40,40,40,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=color]{border-color:#ddd;color:#fff}#jetNoteLittleWrapper[jet-style=color].jet-success{background-color:rgba(51,134,51,.9)}#jetNoteLittleWrapper[jet-style=color].jet-info{background-color:rgba(55,78,237,.9)}#jetNoteLittleWrapper[jet-style=color].jet-warn{background-color:rgba(237,149,58,.9)}#jetNoteLittleWrapper[jet-style=color].jet-error{background-color:rgba(212,73,73,.9)}#jetNoteLittleWrapper[jet-style=color] .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray] .jet-icon-circle{border-color:#fff}#jetNoteLittleWrapper[jet-style=color] .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray] .jet-icon-circle span{background-color:#fff}#jetNoteContent{font-size:20px;margin-bottom:5px;padding-top:5px;white-space:normal;word-break:break-all}"));
-    
   });
 
   window.S=function(s) {
@@ -1938,7 +1722,233 @@
   String.prototype.insert = function(a, i) {
     return this.substring(0, i) + a + this.substring(i)
   };
+})();
+
+/*jetter*/
+(function(){
+  J.ready(function() {
+    Jet.initValid();
+    J.jetForm = function(a) {
+      return J.attr("jet-form=" + a)
+    };
+    J.jetName = function(a, b) {
+      if (arguments.length == 2) {
+        return J.attr("jet-form=" + a).findAttr("jet-name=" + b)
+      } else {
+        return J.attr("jet-name=" + a)
+      }
+    };
+    J.tag("head").append(J.new("style").text(".jet-unpass{border-color:#f20!important;border-style:solid!important;background-color:rgba(255,0,0,.1)!important;color:red!important}.jet-icon-wrapper{width:100%;height:40px}.jet-icon-circle{display:block;width:40px;height:40px;margin:0 auto;border-radius:20px;border:5px solid #fff;position:relative}.jet-icon-circle span{background-color:#fff;display:block;position:absolute;border-radius:3px}.jet-icon-circle.jet-no-border{border-color:transparent;position:relative;top:3px;left:5px}.jet-icon-part-ok1{width:11px;height:7px;top:14px;left:5px}.jet-icon-part-ok2{width:7px;height:18px;top:7px;left:14px}.jet-icon-part-x{width:7px;height:20px;top:5px;left:11px}.jet-rotate-45{transform:rotate(45deg);-ms-transform:rotate(45deg);-webkit-transform:rotate(45deg);-o-transform:rotate(45deg);-moz-transform:rotate(45deg)}.jet-rotate-045{transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-o-transform:rotate(-45deg);-moz-transform:rotate(-45deg)}.jet-icon-part-bar,.jet-icon-part-block{width:7px;left:11px}.jet-icon-part-block{height:7px}.jet-icon-part-bar{height:13px}.jet-icon-part-info1,.jet-icon-part-warn1{top:4px}.jet-icon-part-info2{top:13px}.jet-icon-part-warn2{top:19px}#jetConfirmWrapper,#jetConfirmWrapper *,#jetInputWrapper,#jetInputWrapper *,#jetNoteWrapper,#jetNoteWrapper *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#jetConfirmWrapper,#jetInputWrapper,#jetNoteWrapper{width:100%;position:fixed;z-index:10000;transition:top .3s ease;top:-100%}#jetConfirmWrapper{z-index:10001}#jetNoteWrapper{z-index:10002;cursor:pointer;}#jetConfirmContent,#jetInputContent{font-size:22px;padding:3% 10px 10px 10px;color:#fff;height:50%;white-space:normal;word-break:break-all}#jetConfirmBtnWrapper,#jetInputBtnWrapper{height:50px}#jetInputContent{padding:3% 10% 10px 10%}.jet-input{width:100%;color:#888;padding-left:5px;font-size:18px}.jet-input-text{text-align:left}#jetConfirmCancel,#jetConfirmOk,#jetInputCancel,#jetInputOk{width:50%;float:left;height:100%;border-top:4px solid rgba(255,255,255,.9);cursor:pointer}#jetConfirmOk{border-right:2px solid rgba(255,255,255,.9)}#jetConfirmCancel,#jetInputCancel{border-left:2px solid rgba(255,255,255,.9)}#jetConfirmLittleWrapper,#jetInputLittleWrapper,#jetNoteLittleWrapper{width:30%;min-height:65px;text-align:center;margin:0 auto;border:1px solid #666;border-radius:0 0 10px 10px;border-top:0;padding-top:10px;background-color:rgba(51,134,51,.9)}#jetConfirmLittleWrapper,#jetInputLittleWrapper{width:30%;background-color:rgba(136,136,136,.9);border-color:#bbb;padding-top:0}#jetInputLittleWrapper{background-color:rgba(100,100,100,.9)}#jetConfirmLittleWrapper.jet-large,#jetInputLittleWrapper.jet-large,#jetNoteLittleWrapper[jet-size=large]{width:70%}#jetConfirmLittleWrapper.jet-middle,#jetInputLittleWrapper.jet-middle,#jetNoteLittleWrapper[jet-size=middle]{width:50%}#jetNoteLittleWrapper[jet-style=gray].jet-success{background-color:rgba(210,210,210,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray].jet-success .jet-icon-circle{border-color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray].jet-success .jet-icon-circle span{background-color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-info{background-color:rgba(170,170,170,.9);color:#444}#jetNoteLittleWrapper[jet-style=gray].jet-warn{background-color:rgba(80,80,80,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray].jet-warn .jet-icon-circle{border-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray].jet-warn .jet-icon-circle span{background-color:#ccc}#jetNoteLittleWrapper[jet-style=gray].jet-error{background-color:rgba(40,40,40,.9);color:#ccc}#jetNoteLittleWrapper[jet-style=color]{border-color:#ddd;color:#fff}#jetNoteLittleWrapper[jet-style=color].jet-success{background-color:rgba(51,134,51,.9)}#jetNoteLittleWrapper[jet-style=color].jet-info{background-color:rgba(55,78,237,.9)}#jetNoteLittleWrapper[jet-style=color].jet-warn{background-color:rgba(237,149,58,.9)}#jetNoteLittleWrapper[jet-style=color].jet-error{background-color:rgba(212,73,73,.9)}#jetNoteLittleWrapper[jet-style=color] .jet-icon-circle,#jetNoteLittleWrapper[jet-style=gray] .jet-icon-circle{border-color:#fff}#jetNoteLittleWrapper[jet-style=color] .jet-icon-circle span,#jetNoteLittleWrapper[jet-style=gray] .jet-icon-circle span{background-color:#fff}#jetNoteContent{font-size:20px;margin-bottom:5px;padding-top:5px;white-space:normal;word-break:break-all}"));
+    for(item in Jet){
+      J[item]=Jet[item];
+    }
+  });
   var _t, _ct;
+  window.Jet = {
+    useDefaultStyle: true,
+    useShowForValid: true,
+    showInPlaceHolder: false,
+    noteStyle: "color",
+    language: "ENGLISH",
+    lang: function(l) {
+      this.language = l.toUpperCase()
+    },
+    get: function(a, b, c) {
+      c = this.checkArg(c, "jet-name");
+      if (b != undefined && b != "json") {
+        return _getElemsFormData(_checkJetForm(a), c)
+      } else {
+        return _getElemsObj(_checkJetForm(a), c)
+      }
+    },
+    set: function(a, b, c, d) {
+      d = this.checkArg(d, "jet-name");
+      _setObjVal(_checkJetForm(a), d, b, c)
+    },
+    clear: function(a, b) {
+      this.set(a, {}, null, b)
+    },
+    addValid: function(a, b) {
+      b = this.checkArg(b, "notnull");
+      _checkJetForm(a).addValid(b)
+    },
+    initValid: function(b) {
+      var c;
+      if (b == undefined) {
+        c = J.attr("jet-valid")
+      } else {
+        c = _checkJetForm(b).select("[jet-valid]")
+      }
+      c.each(function(a) {
+        a.attr({
+          "onBlur": "Jet.validInput(this)",
+          "onfocus": "Jet.addValidValue(this)"
+        });
+        if (this.showInPlaceHolder) {
+          a.attr("placeholder", _getValueText(a.attr("jet-valid")))
+        }
+      })
+    },
+    clearValid: function(a) {
+      _checkJetForm(a).clearValid()
+    },
+    validate: function(a, b, c) {
+      if (c != undefined) {
+        _validateForm(_checkJetForm(a), b, c)
+      } else {
+        _validateForm(_checkJetForm(a), b)
+      }
+    },
+    validText: function(a, b) {
+      if(a.constructor==Object&&b==undefined){
+        for (var c in a) {
+          this.validText(c,a[c]);
+        }
+      }else{
+        if(this.language=="CHINESE"){
+          validTextCn[a]=b;
+        }else{
+          validTextEn[a]=b;
+        }
+      }
+    },
+    banDefault: function() {
+      this.useDefaultStyle = false;
+      var b = J.class("jet-unpass");
+      b.each(function(a) {
+        _checkIsPw(a);
+        a.removeClass("jet-unpass").val(a.attr("jet-value")).removeAttr("jet-value")
+      })
+    },
+    useDefault: function() {
+      this.useDefaultStyle = true
+    },
+    banValidShow: function() {
+      this.useShowForValid = false
+    },
+    useValidShow: function() {
+      this.useShowForValid = true
+    },
+    banPlaceHolder: function() {
+      this.showInPlaceHolder = false;
+      J.attr("jet-valid").each(function(a) {
+        a.attr("placeholder", "")
+      })
+    },
+    usePlaceHolder: function() {
+      this.showInPlaceHolder = true;
+      J.attr("jet-valid").each(function(a) {
+        a.attr("placeholder", _getValueText(a.attr("jet-valid")))
+      })
+    },
+    show: _mesShow,
+    confirm: _confirmShow,
+    showWait: _mesShowWait,
+    close: _mesClose,
+    confirmClose: _confirmClose,
+    inputClose: _inputClose,
+    checkArg: _checkArg,
+    setNoteStyle: _setNoteStyle,
+    validInput:_validInput,
+    addValidValue:_addValidValue,
+    onOnePass: function(c) {
+      if (c == undefined) {
+        _onOnePass = null
+      } else {
+        if (c.constructor == String) {
+          _onOnePass = function(a, b) {
+            eval(c)
+          }
+        } else {
+          _onOnePass = c
+        }
+      }
+    },
+    onOneFail: function(c) {
+      if (c == undefined) {
+        _onOneFail = null
+      } else {
+        if (c.constructor == String) {
+          _onOneFail = function(a, b) {
+            eval(c)
+          }
+        } else {
+          _onOneFail = c
+        }
+      }
+    },
+    jump: _turnPage,
+    open: function(a) {
+      window.open(a)
+    },
+    back: function() {
+      window.history.back()
+    },
+    forward: function() {
+      window.history.forward()
+    },
+    getUrlPara: _getUrlPara,
+    sign: _sign,
+    getRandom: _getRandomNum,
+    isMobile: _isMobile,
+    copy: J.copy,
+    confirmOk:_confirmOk,
+    confirmCancel:_confirmCancel,
+    inputOk:_inputOk,
+    inputCancel:_inputCancel,
+    input: function(c, d, e) {
+      var f = J.id("jetInputContent");
+      if (f == undefined) {
+        _addInputWrapper();
+        f = J.id("jetInputContent")
+      }
+      f.empty();
+      if (c.constructor == String) {
+        f.append(J.new("div").text(_checkArg(c, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
+        _appendOneInput((this.language == "CHINESE") ? "请输入：" : "Please input:", null, null,null)
+      } else if (c.constructor == Array) {
+        f.append(J.new("div").text(_checkArg(c[0], (this.language == "CHINESE") ? "信息输入" : "Input Information")));
+        _appendOneInput(c[1], c[2], c[3],c[4]);
+        if (c[3] != undefined) {
+          this.initValid(f)
+        }
+      } else {
+        f.append(J.new("div").text(_checkArg(c.title, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
+        var a = _checkArg(c.default, []);
+        var b = _checkArg(c.valid, []);
+        var p = _checkArg(c.placeholder, []);
+        if (c.text == undefined || c.text.constructor == String) {
+          _appendOneInput(c.text, a, b,p)
+        } else {
+          for (var i = 0; i < c.text.length; i++) {
+            _appendOneInput(_checkArg(c.text[i], (this.language == "CHINESE") ? "请输入：" : "Please input:"), a[i], b[i],p[i])
+          }
+        }
+        if (b.length > 0 || b.constructor == String) {
+          this.initValid(f)
+        }
+      }
+      if (d != undefined) {
+        if (d.constructor == Function) {
+          _submitCall = d
+        } else {
+          _submitCall = function() {
+            eval(d)
+          }
+        }
+      }
+      if (e != undefined) {
+        if (e.constructor == Function) {
+          _submitCancelCall = e
+        } else {
+          _submitCancelCall = function() {
+            eval(e)
+          }
+        }
+      }
+      J.id("jetInputWrapper").css("top", "0")
+    }
+  };
   var _submitCall = null,
     _submitCancelCall = null,
     _onOnePass = null,
@@ -1982,9 +1992,9 @@
       b = a.default;
       c = a.valid;
       p=a.placeholder;
-      a = J.checkArg(a.text, (J.language == "CHINESE") ? "请输入：" : "Please input:")
+      a = Jet.checkArg(a.text, (Jet.language == "CHINESE") ? "请输入：" : "Please input:")
     } else {
-      a = J.checkArg(a, (J.language == "CHINESE") ? "请输入：" : "Please input:")
+      a = Jet.checkArg(a, (Jet.language == "CHINESE") ? "请输入：" : "Please input:")
     }
     J.id("jetInputContent").append(J.new("div").addClass("jet-input-text").text(a));
     var d = J.new("input.jet-input[type=text]");
@@ -2011,8 +2021,8 @@
     } else {
       this.attr({
         "jet-valid": a,
-        "onBlur": "J.validInput(this)",
-        "onfocus": "J.addValidValue(this)"
+        "onBlur": "Jet.validInput(this)",
+        "onfocus": "Jet.addValidValue(this)"
       })
     }
     return this
@@ -2050,10 +2060,10 @@
     return _getContentForGet(this)
   };
   HTMLElement.prototype.get = function(a, b) {
-    return J.get(this, a, b)
+    return Jet.get(this, a, b)
   };
   HTMLElement.prototype.initValid = function() {
-    J.initValid(this);
+    Jet.initValid(this);
     return this
   };
   HTMLCollection.prototype.initValid = NodeList.prototype.initValid = function() {
@@ -2063,11 +2073,11 @@
     return this
   };
   HTMLElement.prototype.set = function(a, b, c) {
-    J.set(this, a, b, c);
+    Jet.set(this, a, b, c);
     return this
   };
   HTMLElement.prototype.clear = function(a) {
-    J.clear(this, a);
+    Jet.clear(this, a);
     return this
   };
   HTMLElement.prototype.validate = function(s, f) {
@@ -2157,21 +2167,21 @@
       c = _checkValue(v, b.content())
     }
     if (c == "true") {
-      if (J.useDefaultStyle) {
+      if (Jet.useDefaultStyle) {
         b.removeClass("jet-unpass").attr("jet-value", "");
         _checkIsPw(b)
       }
       if (_onOnePass != undefined) _onOnePass(b, c)
     } else {
-      if (J.useDefaultStyle) {
+      if (Jet.useDefaultStyle) {
         b.attr("jet-value", b.content()).content(c).addClass("jet-unpass");
         if (b.attr("type") == "password") {
           b.attr("jet-ispw", "true").attr("type", "text")
         }
       }
       if (_onOneFail != undefined) _onOneFail(b, c);
-      if (J.useShowForValid && a != false) {
-        J.show(c, "error")
+      if (Jet.useShowForValid && a != false) {
+        Jet.show(c, "error")
       }
     }
     return c
@@ -2223,9 +2233,9 @@
           eval(c)
         }
       }
-      var i = (J.language == "CHINESE") ? "输入有误，请按提示改正。" : "Values is not expected";
-      if (J.useShowForValid) {
-        J.show(i, "error")
+      var i = (Jet.language == "CHINESE") ? "输入有误，请按提示改正。" : "Values is not expected";
+      if (Jet.useShowForValid) {
+        Jet.show(i, "error")
       } else {
         alert(i)
       }
@@ -2306,7 +2316,7 @@
   };
 
   function _getValidText(a, b) {
-    if (J.language == "CHINESE") {
+    if (Jet.language == "CHINESE") {
       if (b == undefined) {
         return validTextCn[a]
       } else {
@@ -2529,7 +2539,7 @@
     f.className = "jet-" + b;
     J.id("jetNoteContent").text(a);
     J.id("jetNoteWrapper").css("top", "0");
-    c = J.checkArg(c, 1500);
+    c = Jet.checkArg(c, 1500);
     if (c.constructor == String) {
       switch (c) {
       case "slower":
@@ -2595,7 +2605,7 @@
   };
 
   function _mesShowWait(a, b) {
-    b = J.checkArg(b, "info");
+    b = Jet.checkArg(b, "info");
     _mesShow(a, b, 0, function() {}, false)
   };
 
@@ -2627,7 +2637,7 @@
     if (a != "color") {
       a = "gray"
     }
-    J.noteStyle = a;
+    Jet.noteStyle = a;
     if (J.id("jetNoteLittleWrapper") != undefined) {
       J.id("jetNoteLittleWrapper").attr("jet-style", a)
     }
@@ -2641,11 +2651,11 @@
     var c = J.new("div").attr("id", "jetNoteContent");
     var d = J.new("div").attr({
       "id": "jetNoteLittleWrapper",
-      "jet-style": J.noteStyle
+      "jet-style": Jet.noteStyle
     }).append([b, c]);
     J.body().append(J.new("div").attr({
       "id": "jetNoteWrapper",
-      "onclick": "J.close()"
+      "onclick": "Jet.close()"
     }).append(d));
     var w = J.width();
     if (w < 400) {
@@ -2660,11 +2670,11 @@
     var b = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-x jet-rotate-45"), J.new("span").addClass("jet-icon-part-x jet-rotate-045")]);
     var c = J.new("div").attr({
       "id": "jetConfirmOk",
-      "onclick": "J.confirmOk()"
+      "onclick": "Jet.confirmOk()"
     }).append(a);
     var d = J.new("div").attr({
       "id": "jetConfirmCancel",
-      "onclick": "J.confirmCancel()"
+      "onclick": "Jet.confirmCancel()"
     }).append(b);
     var e = J.new("div").attr("id", "jetConfirmBtnWrapper").append([c, d]);
     var f = J.new("div").attr("id", "jetConfirmContent");
@@ -2684,11 +2694,11 @@
     var b = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-x jet-rotate-45"), J.new("span").addClass("jet-icon-part-x jet-rotate-045")]);
     var c = J.new("div").attr({
       "id": "jetInputOk",
-      "onclick": "J.inputOk()"
+      "onclick": "Jet.inputOk()"
     }).append(a);
     var d = J.new("div").attr({
       "id": "jetInputCancel",
-      "onclick": "J.inputCancel()"
+      "onclick": "Jet.inputCancel()"
     }).append(b);
     var e = J.new("div").attr("id", "jetInputBtnWrapper").append([c, d]);
     var f = J.new("div").attr("id", "jetInputContent");

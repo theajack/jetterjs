@@ -39,10 +39,10 @@ J.ready(function(){
   });
   J.id("apiCodeBtn").event("onclick",showResult);
   J.id("apiCodeResetBtn").event("onclick",function(){
-    Jet.confirm("Are you sure to reset code,you will lose all code you are editting!",resetCode);
+    J.confirm("Are you sure to reset code,you will lose all code you are editting!",resetCode);
   });
   J.id("apiCodeClearBtn").event("onclick",function(){
-    Jet.confirm("Are you sure to clear code,you will lose all code you are editting!",function(){
+    J.confirm("Are you sure to clear code,you will lose all code you are editting!",function(){
       J.id("apiCode").val("");
       J.id("apiCodeView").empty()
     });
@@ -50,12 +50,12 @@ J.ready(function(){
   J.id("apiShowAllCodeBtn").event("onclick",showAllCode);
   J.id("apiHideAllCodeBtn").event("onclick",hideAllCode);
   J.id("apiCodeCopyBtn").event("onclick",function(){
-    if(Jet.isMobile()){
-      Jet.show('Sorry,this function is just for PC',"warn","slow");
+    if(J.isMobile()){
+      J.show('Sorry,this function is just for PC',"warn","slow");
     }else{
       if(J.id('apiCode').copy()){
         J.id('apiCode').select();
-        Jet.show('Code copy success');
+        J.show('Code copy success');
       }
     }
   });
@@ -273,13 +273,13 @@ function switchApiDetail(dirc){// 0:prev
       if(arr[0]>0){
         showApiDetailForSearchByIndex(parseInt(arr[0])-1);
       }else{
-        Jet.show("Alerady the first one","warn")
+        J.show("Alerady the first one","warn")
       }
     }else{
       if(arr[0]<searchResult.length-1){
         showApiDetailForSearchByIndex(parseInt(arr[0])+1);
       }else{
-        Jet.show("Alerady the last one","warn")
+        J.show("Alerady the last one","warn")
       }
     }
   }else{
@@ -287,13 +287,13 @@ function switchApiDetail(dirc){// 0:prev
       if(arr[1]>0){
         showApiDetailByIndex(arr[0],parseInt(arr[1])-1);
       }else{
-        Jet.show("Alerady the first one","warn")
+        J.show("Alerady the first one","warn")
       }
     }else{
       if(arr[1]<apiData[arr[0]].length-1){
         showApiDetailByIndex(arr[0],parseInt(arr[1])+1);
       }else{
-        Jet.show("Alerady the last one","warn")
+        J.show("Alerady the last one","warn")
       }
     }
   }
@@ -367,7 +367,7 @@ function checkWidth(){
 function showResult(needShow){
   if(needShow!=false){
     if(showResultBase()){
-      Jet.show("submit success");
+      J.show("submit success");
     }
   }else{
     if(J.id("apiCode").attr("jet-change")=="1"){
@@ -389,7 +389,7 @@ function showResultBase(){
     }
     J.id("apiCode").attr("jet-change","0");
     if(a.has("jet-valid")){
-      Jet.initValid(obj);
+      J.initValid(obj);
     }
     return true;
   }
@@ -428,7 +428,7 @@ function showIntroDetail(obj){
 }
 function copySourceCode(){
   J.id("downloadArea").copy();
-  Jet.show("copy success");
+  J.show("copy success");
 }
 function showApi(i){
   J.scrollTo(J.id("apiPart").top(),function(){
@@ -471,7 +471,7 @@ function resetCode(){
   showDetailBase(apiData[a[0]][a[1]]);
 }
 function showDetailBase(d){
-  Jet.set("apiDetail",d,function(elem,text,name){
+  J.set("apiDetail",d,function(elem,text,name){
     if(name=="title"){
       if(text.length>19){
         elem.css({"font-size":"27px","padding-top":"29px!important"});
