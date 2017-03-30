@@ -299,7 +299,7 @@
     return b.join("&")
   }
   J.ready(function() {
-    J.tag("head").append(J.new("style").text(".j-none{visibility:hidden!important;position:absolute!important;display:block!important;}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"))
+    J.tag("head").append(J.new("style").txt(".j-none{visibility:hidden!important;position:absolute!important;display:block!important;}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"))
   });
 
   window.S=function(s) {
@@ -656,7 +656,7 @@
       return this
     }
   };
-  HTMLElement.prototype.text = function(a) {
+  HTMLElement.prototype.txt = function(a) {
     if (a == undefined && arguments.length == 0) {
       return this.innerText
     } else {
@@ -664,16 +664,16 @@
       return this
     }
   };
-  HTMLCollection.prototype.text = NodeList.prototype.text = function(v) {
+  HTMLCollection.prototype.txt = NodeList.prototype.txt = function(v) {
     if (v == undefined && arguments.length == 0) {
       var a = [];
       this.each(function(b) {
-        a.append(b.text())
+        a.append(b.txt())
       });
       return a
     } else {
       this.each(function(b) {
-        b.text(v)
+        b.txt(v)
       });
       return this
     }

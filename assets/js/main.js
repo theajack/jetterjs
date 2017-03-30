@@ -328,7 +328,7 @@ function showApiSearch(){
       }
     });
   }
-  J.id("resultNum").text(searchResult.length);
+  J.id("resultNum").txt(searchResult.length);
   J.id("apiSearchResultWrapper").slideDown(null,"fast");
 }
 function redefineMouseWhell(e){
@@ -339,7 +339,7 @@ function addApiDetails(){
   var list=J.id("apiBar").child();
   list.each(function(api){
     apiData[api.attr("jet-api")].each(function(data){
-      var span=J.new("span").text(data.title);
+      var span=J.new("span").txt(data.title);
       if(data.title.length>13){
         if(data.title.length<19){
           span.css({"font-size":"22px","padding-top":"25px"});
@@ -413,7 +413,7 @@ function showIntroDetail(obj){
   if(detail.attr("jet-index")=="-1"){
     var i=obj.index();
     detail.css("height","150px");
-    detail.attr("jet-index",i).child(1).text(detailText[i]);
+    detail.attr("jet-index",i).child(1).txt(detailText[i]);
     detail.findClass("trangle").css("margin-left",(10+i*25)+"%");
   }else{
     if(obj.index()==detail.attr("jet-index")){
@@ -422,7 +422,7 @@ function showIntroDetail(obj){
     }else{
       var i=obj.index();
       detail.findClass("trangle").css("margin-left",(10+i*25)+"%");
-      detail.attr("jet-index",i).child(1).text(detailText[i]);
+      detail.attr("jet-index",i).child(1).txt(detailText[i]);
     }
   }
 }
