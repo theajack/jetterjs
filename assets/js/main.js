@@ -17,39 +17,39 @@ var searchResult=[];
 J.ready(function(){
   tabIndent.render(J.id("apiCode"));
   addApiDetails();
-  J.id("downloadArea").event("onclick","J.id('downloadArea').select()");
-  J.class("wechat-public").event({
-    "onmouseover":"J.class('wechat-img').fadeIn()",
-    "onmouseleave":"J.class('wechat-img').fadeOut()"
+  //J.id("downloadArea").clk("J.id('downloadArea').select()");
+  J.class("wechat-public").on({
+    mouseover:"J.class('wechat-img').fadeIn()",
+    mouseleave:"J.class('wechat-img').fadeOut()"
   });
-  J.class("intro-item").event("onclick","showIntroDetail(this)");
-  J.id("copyBtn").event("onclick",copySourceCode);
-  J.class("api-title").event("onclick",function(e){
+  J.class("intro-item").clk("showIntroDetail(this)");
+  //J.id("copyBtn").clk(copySourceCode);
+  J.class("api-title").clk(function(e){
     showRipple(e,this);
     moveApiBar(this);
   })
-  J.id("viewApi").event("onclick",function(){
+  J.id("viewApi").clk(function(){
     showApi(this.parent().attr("jet-index"));
   })
-  J.select("#apiDetail .close-btn").event("onclick",hideApiDetail);
-  J.select("#apiDetail .prev").event("onclick","switchApiDetail(0)");
-  J.select("#apiDetail .next").event("onclick","switchApiDetail(1)");
-  J.select(".api-item span").event("onclick",function(){
+  J.select("#apiDetail .close-btn").clk(hideApiDetail);
+  J.select("#apiDetail .prev").clk("switchApiDetail(0)");
+  J.select("#apiDetail .next").clk("switchApiDetail(1)");
+  J.select(".api-item span").clk(function(){
     showApiDetail(this);
   });
-  J.id("apiCodeBtn").event("onclick",showResult);
-  J.id("apiCodeResetBtn").event("onclick",function(){
+  J.id("apiCodeBtn").clk(showResult);
+  J.id("apiCodeResetBtn").clk(function(){
     J.confirm("Are you sure to reset code,you will lose all code you are editting!",resetCode);
   });
-  J.id("apiCodeClearBtn").event("onclick",function(){
+  J.id("apiCodeClearBtn").clk(function(){
     J.confirm("Are you sure to clear code,you will lose all code you are editting!",function(){
       J.id("apiCode").val("");
       J.id("apiCodeView").empty()
     });
   });
-  J.id("apiShowAllCodeBtn").event("onclick",showAllCode);
-  J.id("apiHideAllCodeBtn").event("onclick",hideAllCode);
-  J.id("apiCodeCopyBtn").event("onclick",function(){
+  J.id("apiShowAllCodeBtn").clk(showAllCode);
+  J.id("apiHideAllCodeBtn").clk(hideAllCode);
+  J.id("apiCodeCopyBtn").clk(function(){
     if(J.isMobile()){
       J.show('Sorry,this function is just for PC',"warn","slow");
     }else{
@@ -59,41 +59,41 @@ J.ready(function(){
       }
     }
   });
-  J.id("apiCode").event({
-    onmouseleave:function(){
+  J.id("apiCode").on({
+    mouseleave:function(){
       showResult(false);
     },
-    onkeydown:codeChange,
-    onkeyup:function(e){
+    keydown:codeChange,
+    keyup:function(e){
       if(e.keyCode==13||e.keyCode==9){
         geneViewCode();
       }
     },
-    oninput:function(){
+    input:function(){
       showResultHtml();
       geneViewCode();
     },
-    onmousewheel:redefineMouseWhell,
-    onscroll:function(event){
+    mousewheel:redefineMouseWhell,
+    scroll:function(event){
       J.id("apiCodeView").scrollTo(J.id("apiCode").scroll(),null,10).scrollXTo(J.id("apiCode").scrollX(),null,10);
     },
     //onclick:moveCursor
   });
-  J.id("apiSearchResultList").event({
-    "onmousewheel":redefineMouseWhell,
+  J.id("apiSearchResultList").on({
+    mousewheel:redefineMouseWhell,
   });
-  J.class("api-item").event("onmousewheel",redefineMouseWhell);
+  J.class("api-item").on("mousewheel",redefineMouseWhell);
   
-  J.class("result-close-btn").event("onclick",function(){this.parent().slideUp(null,"fast")});
-  J.id("apiSearchInput").event("onkeydown",function(e){if(e.keyCode===13){J.id("apiSearchBtn").click()}});
-  J.id("apiSearchBtn").event("onclick",showApiSearch);
+  J.class("result-close-btn").clk(function(){this.parent().slideUp(null,"fast")});
+  J.id("apiSearchInput").on("keydown",function(e){if(e.keyCode===13){J.id("apiSearchBtn").click()}});
+  J.id("apiSearchBtn").clk(showApiSearch);
   checkWidth();
 });
 function showAllCode(){
   J.id("apiDetailWrapper").css("overflow","inherit");
   J.id("apiCodeView").css("height","auto");
   var h=J.id("apiCodeView").css("height");
-  J.id("apiCode").css("height",h).attr("show-all","true").event("onmousewheel","");
+  J.id("apiCode").css("height",h).attr("show-all","true").on("mousewheel","");
   J.id("showCode").parent().css("height",(parseInt(h.replace("px",""))+73)+"px");
   
 }
@@ -105,7 +105,7 @@ function reserAllCode(){
 function hideAllCode(cleaShowAll){
   J.id("apiDetailWrapper").css("overflow","hidden");
   J.id("apiCodeView").css("height","337px");
-  J.id("apiCode").css("height","337px").event("onmousewheel",redefineMouseWhell);
+  J.id("apiCode").css("height","337px").on("mousewheel",redefineMouseWhell);
   if(cleaShowAll==undefined){
     J.id("apiCode").removeAttr("show-all");
   }
@@ -314,7 +314,7 @@ function showApiSearch(){
         }else{
           title=d.title;
         }
-        var span=J.new("span").html(title).event("onclick",function(){
+        var span=J.new("span").html(title).clk(function(){
           showApiDetailForSearch(this);
         });
         if(d.title.length>13){
@@ -427,8 +427,8 @@ function showIntroDetail(obj){
   }
 }
 function copySourceCode(){
-  J.id("downloadArea").copy();
-  J.show("copy success");
+  //J.id("downloadArea").copy();
+  //J.show("copy success");
 }
 function showApi(i){
   J.scrollTo(J.id("apiPart").top(),function(){
@@ -525,17 +525,3 @@ function moveApiBar(obj){
   J.id("apiBar").css("left",(-100*i)+"%");
   J.select(".trangle.api").css({"margin-left":(10+i*25)+"%","border-top-color":obj.css("background-color")});
 }
-
-var scrollFunc=function(e){
-    var direct=0;
-    e=e || window.event;
-   
-    var t1=document.getElementById("wheelDelta");
-    var t2=document.getElementById("detail");
-    if(e.wheelDelta){//IE/Opera/Chrome
-        t1.value=e.wheelDelta;
-    }else if(e.detail){//Firefox
-        t2.value=e.detail;
-    }
-    ScrollText(direct);
-} 
