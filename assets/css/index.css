@@ -517,18 +517,16 @@ a{
   letter-spacing: .3px;
   font-family: Microsoft Yahei;
   overflow: auto;
-  
   position:absolute;
+  white-space: pre;
 }
 #apiCode{
   /**/background-color: transparent;
   color:rgba(255,255,255,0.5);
-  white-space: nowrap;
   border-color:transparent;
 }
 #apiCodeView{
   color:#444;
-  word-wrap: normal;
 }
 ._key{
   color:#22b5ff;
