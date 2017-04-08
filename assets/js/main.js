@@ -73,16 +73,16 @@ J.ready(function(){
       showResultHtml();
       geneViewCode();
     },
-    mousewheel:redefineMouseWhell,
+    //mousewheel:redefineMouseWhell,
     scroll:function(event){
       J.id("apiCodeView").scrollTo(J.id("apiCode").scroll(),null,10).scrollXTo(J.id("apiCode").scrollX(),null,10);
     },
     //onclick:moveCursor
   });
-  J.id("apiSearchResultList").on({
-    mousewheel:redefineMouseWhell,
-  });
-  J.class("api-item").on("mousewheel",redefineMouseWhell);
+  //J.id("apiSearchResultList").on({
+  //  mousewheel:redefineMouseWhell,
+  //});
+  //J.class("api-item").on("mousewheel",redefineMouseWhell);
   
   J.class("result-close-btn").clk(function(){this.parent().slideUp(null,"fast")});
   J.id("apiSearchInput").on("keydown",function(e){if(e.keyCode===13){J.id("apiSearchBtn").click()}});
