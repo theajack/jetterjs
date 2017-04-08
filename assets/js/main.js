@@ -59,6 +59,15 @@ J.ready(function(){
       }
     }
   });
+  J.id("apiClearColor").data("flag",true).clk(function(){
+    if(this.data("flag")){
+      this.data("flag",false);
+      J.id("apiCode").toggleClass("bg");
+      J.id("apiCodeView").fadeToggle(function(){
+        J.id("apiClearColor").data("flag",true);
+      });
+    }
+  });
   J.id("apiCode").on({
     mouseleave:function(){
       showResult(false);
