@@ -68,11 +68,13 @@ J.ready(function(){
       });
     }
   });
-  J.id("apiFixColor").clk(function(){
-    if(J.id("apiCodeView").css("left")=="4px"){
-      J.id("apiCodeView").css("left","0px");
+  J.id("apiFixColor").data("flag",true).clk(function(){
+    if(this.data("flag")){
+      this.data("flag",false)
+      J.id("apiCodeView").css("left","3px");
     }else{
-      J.id("apiCodeView").css("left","4px");
+      this.data("flag",true)
+      J.id("apiCodeView").css("left","0px");
     }
   });
   
