@@ -68,6 +68,14 @@ J.ready(function(){
       });
     }
   });
+  J.id("apiFixColor").clk(function(){
+    if(J.id("apiCodeView").css("left")=="4px"){
+      J.id("apiCodeView").css("left","0px");
+    }else{
+      J.id("apiCodeView").css("left","4px");
+    }
+  });
+  
   J.id("apiCode").on({
     mouseleave:function(){
       showResult(false);
