@@ -234,6 +234,7 @@ a{
   font-weight:bold;
   margin-right:5px;
 }
+
 #apiSearchInput{
   float:left;
   height: 100%;
@@ -242,6 +243,7 @@ a{
   color: #444;
   padding-left:5px;
   outline:none;
+  -webkit-appearance:none;
 }
 #apiSearchBtn{
   display:block;
@@ -520,6 +522,7 @@ a{
   white-space: pre;
   border:0;
   outline:none;
+  -webkit-appearance:none;
 }
 #apiCode{
   /**/background-color: transparent;
