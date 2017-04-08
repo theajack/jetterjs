@@ -304,7 +304,7 @@ function showApiSearch(){
   searchResult.empty();
   for(var key in apiData){
     apiData[key].each(function(d){
-      if(d.title.toLowerCase().includes(skey)){
+      if(d.title.toLowerCase().has(skey)){
         searchResult.append(d);
         var title;
         if(skey!=""){
