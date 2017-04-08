@@ -20,9 +20,9 @@
     <!--header-->
     <div id="header">
       <div id="title">Jetter.js
-        <div id="viewProject" class="border-btn" onclick="J.open('https://github.com/theajack/Jetter.js/tree/gh-pages')">View project on github</div>
       </div>
       <div id="smallTitle">Js library for form operation and validation</div>
+      <div id="viewProject" class="border-btn" onclick="J.open('https://github.com/theajack/Jetter.js/tree/gh-pages')">View project on github</div>
     </div>
     <!--intro-->
     <div id="introPart" class="bg-gray text-black part clearfix pb-none">
@@ -68,12 +68,13 @@
         <div id="apiSearchWrapper">
           <input type="text" id="apiSearchInput" placeholder="Search"/>
           <span id="apiSearchBtn" class="glyphicon glyphicon-search"></span>
-        </div>
-        <div id="apiSearchResultWrapper" class="display-none">
-          <span class="result-close-btn glyphicon glyphicon-eject j-animation"></br>
-            <span><span id="resultNum" class="search-key"></span>results</span>
-          </span>
-          <div id="apiSearchResultList">
+          
+          <div id="apiSearchResultWrapper" class="display-none">
+            <span class="result-close-btn glyphicon glyphicon-eject j-animation"></br>
+              <span><span id="resultNum" class="search-key"></span>results</span>
+            </span>
+            <div id="apiSearchResultList">
+            </div>
           </div>
         </div>
       </div>
@@ -109,8 +110,8 @@
                 <div id="apiCodeCopyBtn" class="border-btn dark"><span class="glyphicon glyphicon-floppy-disk "></span>Copy</div>
                 <div id="apiCodeResetBtn" class="border-btn dark"><span class="glyphicon glyphicon-repeat only"></span></div>
                 <div id="apiCodeClearBtn" class="border-btn dark"><span class="glyphicon glyphicon-remove only"></span></div>
-                <div id="apiHideAllCodeBtn" class="border-btn dark"><span class="glyphicon hide-all glyphicon-chevron-up only"></span></div>
-                <div id="apiShowAllCodeBtn" class="border-btn dark"><span class="glyphicon show-all glyphicon-chevron-down only"></span></div>
+                <div id="apiHideAllCodeBtn" class="border-btn dark d-hide"><span class="glyphicon hide-all glyphicon-chevron-up only"></span></div>
+                <div id="apiShowAllCodeBtn" class="border-btn dark d-hide"><span class="glyphicon show-all glyphicon-chevron-down only"></span></div>
               </div>
               <span class="api-detail-title display-block"><span class="glyphicon glyphicon-pencil"></span>Code:</span>
               <div id="showCode">
@@ -178,18 +179,30 @@
       </div>
     </div>
     <!--footer-->
+
     <div id="footer" class="bg-black text-white part">
       <div id="footerLink">
         <span class="link" onclick="J.open('https://github.com/theajack')">GitHub</span>
         <span class="split-icon">|</span>
         <span class="link" onclick="J.open('http://weibo.com/p/1005055304330572/home?from=page_100505&mod=TAB&is_all=1')">Sina Micro-blog</span>
         <span class="split-icon">|</span>
-        <span class="wechat-public">WeChat Official Accounts<img class="wechat-img" src="assets/images/wechat_qrcode.jpg"/></span>
-        <span class="split-icon">|</span>
-        Email:theajack@163.com
+        
+        <span class="wechat-public d-hide" onclick="this.child(0).fadeToggle()">
+          WeChat Official Accounts
+          <img class="wechat-img" src="assets/images/wechat_qrcode.jpg"/>
+        </span>
+        <span class="split-icon d-hide">|</span>
+        
+        Email:theajack@qq.com
+        <div class=" d-show">
+          <span class="wechat-public" onclick="this.child(0).fadeToggle()">
+            WeChat Official Accounts
+            <img class="wechat-img" src="assets/images/wechat_qrcode.jpg"/>
+          </span>
+        </div>
       </div>
       <div id="copyright">
-        <span class="glyphicon glyphicon-copyright-mark"></span> 2016 TheaJack All rights reserved
+        <span class="glyphicon glyphicon-copyright-mark"></span> 2017 TheaJack All rights reserved
       </div>
     </div>
     <script src="assets/js/jetter.min.js"></script>

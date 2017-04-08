@@ -355,14 +355,7 @@ window.onresize=function(){
   checkWidth();
 }
 function checkWidth(){
-  var w=J.width();
-  if(w>=1800){
-    J.class("part").css("padding","100px 20%");
-  }else if(w<=1200){
-    J.class("part").css("padding","100px 5%");
-  }else{
-    J.class("part").css("padding","100px 15%");
-  }
+  
 }
 function showResult(needShow){
   if(needShow!=false){
@@ -412,12 +405,12 @@ function showIntroDetail(obj){
   var detail= J.id("introDetail");
   if(detail.attr("jet-index")=="-1"){
     var i=obj.index();
-    detail.css("height","150px");
+    detail.addClass("open");
     detail.attr("jet-index",i).child(1).txt(detailText[i]);
     detail.findClass("trangle").css("margin-left",(10+i*25)+"%");
   }else{
     if(obj.index()==detail.attr("jet-index")){
-      detail.css("height","0px");
+      detail.removeClass("open");
       detail.attr("jet-index","-1");
     }else{
       var i=obj.index();
