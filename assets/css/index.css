@@ -709,13 +709,11 @@ a{
 #relatePart{
 }
 #relateItemWrapper{
-  height:200px;
   width:100%;
 }
 .relate-item{
   width:25%;
   float:left;
-  height:200px;
   text-align:center;
   cursor:pointer;
 }
@@ -803,6 +801,7 @@ a{
 #introDetail.open{
   height:150px;
 }
+
 @media screen and (min-width: 1000px) and (max-width:1400px) {
   .part{
     padding:80px 5%;
@@ -810,6 +809,9 @@ a{
 }
 /*end footer*/
 @media screen and (max-width:1000px) {
+  .relate-link{
+    font-size: 15px;
+  }
   .part{
     padding:20px 5px;
   }
@@ -983,7 +985,6 @@ a{
     font-size:12px;
     line-height:15px;
   }
-  #relateItemWrapper,.relate-item{height: 90px;}
   .relate-item-text{
     font-size:13px;
     white-space:normal;
@@ -1048,3 +1049,4 @@ a{
     white-space: nowrap;
   }
 }
+

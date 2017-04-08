@@ -486,11 +486,11 @@ function showDetailBase(d){
   J.set("apiDetail",d,function(elem,text,name){
     if(name=="title"){
       if(text.length>19){
-        elem.css({"font-size":"27px","padding-top":"29px!important"});
+        elem.css({"font-size":"27px","padding-top":"29px"});
       }else if(text.length<13){
-        elem.css({"font-size":"50px","padding-top":"0!important"});
+        elem.css({"font-size":"50px","padding-top":"0"});
       }else{
-        elem.css({"font-size":"35px","padding-top":"25px!important"});
+        elem.css({"font-size":"35px","padding-top":"25px"});
       }
     }
   },"api-part");
