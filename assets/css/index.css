@@ -509,16 +509,15 @@ a{
   border-color: #000;
   color: #fff;
   font-size: 18px;
-  outline: none;
   resize: none;
   height: 337px;
   padding: 10px;
   line-height: 22px;
-  letter-spacing: .3px;
   font-family: Microsoft Yahei;
   overflow: auto;
   position:absolute;
   white-space: pre;
+  border:0;
 }
 #apiCode{
   /**/background-color: transparent;
