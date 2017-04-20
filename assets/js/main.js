@@ -480,7 +480,11 @@ function checkSwitchBtnState(i,b){
 }
 function resetCode(){
   var a=J.id("apiCode").attr("jet-api-index").split(" ");
-  showDetailBase(apiData[a[0]][a[1]]);
+  if(a.length<2){
+    J.id("apiSearchResultList").child(a[0]).click();
+  }else{
+    showDetailBase(apiData[a[0]][a[1]]);
+  }
 }
 function showDetailBase(d){
   J.set("apiDetail",d,function(elem,text,name){
