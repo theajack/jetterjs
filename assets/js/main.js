@@ -37,18 +37,18 @@ J.ready(function(){
   J.select(".api-item span").clk(function(){
     showApiDetail(this);
   });
-  J.id("apiCodeBtn").clk(showResult);
+  J.id("apiCodeBtn").clk(showResult).tip("Submit");
   J.id("apiCodeResetBtn").clk(function(){
     J.confirm("Are you sure to reset code,you will lose all code you are editting!",resetCode);
-  });
+  }).tip("Reset code");
   J.id("apiCodeClearBtn").clk(function(){
     J.confirm("Are you sure to clear code,you will lose all code you are editting!",function(){
       J.id("apiCode").val("");
       J.id("apiCodeView").empty()
     });
-  });
-  J.id("apiShowAllCodeBtn").clk(showAllCode);
-  J.id("apiHideAllCodeBtn").clk(hideAllCode);
+  }).tip("Clear code");
+  J.id("apiShowAllCodeBtn").clk(showAllCode).tip("Self-adapte code");
+  J.id("apiHideAllCodeBtn").clk(hideAllCode).tip("Fixed height");
   J.id("apiCodeCopyBtn").clk(function(){
     if(J.isMobile()){
       J.show('Sorry,this function is just for PC',"warn","slow");
@@ -58,7 +58,7 @@ J.ready(function(){
         J.show('Code copy success');
       }
     }
-  });
+  }).tip("Copy code");
   J.id("apiClearColor").data("flag",true).clk(function(){
     if(this.data("flag")){
       this.data("flag",false);
@@ -67,7 +67,7 @@ J.ready(function(){
         J.id("apiClearColor").data("flag",true);
       });
     }
-  });
+  }).tip("Clear code color");
   J.id("apiFixColor").data("flag",true).clk(function(){
     if(this.data("flag")){
       this.data("flag",false)
@@ -76,7 +76,7 @@ J.ready(function(){
       this.data("flag",true)
       J.id("apiCodeView").css("left","0px");
     }
-  });
+  }).tip("Fix problem");
   
   J.id("apiCode").on({
     mouseleave:function(){
@@ -121,11 +121,11 @@ function reserAllCode(){
   J.id("apiCode").css("height",h);
   J.id("showCode").parent().css("height",(parseInt(h.replace("px",""))+73)+"px");
 }
-function hideAllCode(cleaShowAll){
+function hideAllCode(clearShowAll){
   J.id("apiDetailWrapper").css("overflow","hidden");
   J.id("apiCodeView").css("height","337px");
   J.id("apiCode").css("height","337px").on("mousewheel",redefineMouseWhell);
-  if(cleaShowAll==undefined){
+  if(clearShowAll!=false){
     J.id("apiCode").removeAttr("show-all");
   }
   J.id("showCode").parent().css("height","410px");
