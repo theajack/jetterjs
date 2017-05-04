@@ -4,6 +4,11 @@
   http://www.theajack.com/jetterjs/
 */
 (function(){
+  (function(){var meta=document.createElement("meta");
+  meta.setAttribute("http-equiv","X-UA-Compatible");
+  meta.setAttribute("content","chrome=1");
+  var head=document.getElementsByTagName("head")[0];
+  head.insertBefore(meta,head.children[0]);})();
   window.J = {
     ready: (function() {
       var b = [];
@@ -58,10 +63,12 @@
       }
     },
     height: function() {
-      return document.body.offsetHeight
+      return document.documentElement.clientHeight
+      //return document.body.offsetHeight
     },
     width: function() {
-      return document.body.offsetWidth
+      return document.documentElement.clientWidth
+      //return document.body.offsetWidth
     },
     class: function(a) {
       return _checkSelect(document.getElementsByClassName(a))
@@ -85,6 +92,8 @@
       return document.body
     },
     copy: _copy,
+    clone:_clone,
+    each:_each,
     new: function(a) {
       if (a.has("#") || a.has(".") || a.has("[")) {
         var b = a.split('#');
@@ -138,13 +147,7 @@
             if (c.constructor!= Number) {
               c = _checkAnimateSpeed(c)
             }
-            if (b.constructor == String) {
-              setTimeout(function() {
-                eval(b)
-              }, c)
-            } else {
-              setTimeout(b, c)
-            }
+            setTimeout(_checkFunction(b), c);
           }
         }
       } else {
@@ -163,13 +166,7 @@
         if (b.constructor != Number) {
           b = _checkAnimateSpeed(b)
         }
-        if (a.constructor == String) {
-          setTimeout(function() {
-            eval(a)
-          }, b)
-        } else {
-          setTimeout(a, b)
-        }
+        setTimeout(_checkFunction(a), b);
       }
     },
     ajax: function(a) {
@@ -180,30 +177,28 @@
         data: a.data || null,
         dataType: a.dataType || "text",
         contentType: a.contentType || "application/x-www-form-urlencoded",
-        beforeSend: a.beforeSend ||
-        function() {},
-        success: a.success ||
-        function() {},
-        error: a.error ||
-        function() {}
+        beforeSend: a.beforeSend ||function() {},
+        success: a.success ||function() {},
+        error: a.error ||function() {}
       };
       b.beforeSend();
       var c;
       if (window.ActiveXObject) {
         c = ActiveXObject("Microsoft.XMLHTTP")
       } else if (window.XMLHttpRequest) {
-        c = XMLHttpRequest()
+        c =new XMLHttpRequest()
       }
       c.responseType = b.dataType;
       c.open(b.type, b.url, b.async);
       c.setRequestHeader("Content-Type", b.contentType);
+      //header
       c.send(_convertData(b.data));
       c.onreadystatechange = function() {
         if (c.readyState == 4) {
           if (c.status == 200) {
             b.success(c.response)
           } else {
-            b.error()
+            b.error()//errInfo
           }
         }
       }
@@ -276,11 +271,17 @@
           return a + "=" + b
         }
       }
+    },
+    html5:function(){
+      if (window.applicationCache) {
+        return true;
+      }
+      return false;
     }
   };
 
   function _convertData(a) {
-    if (typeof a === 'object') {
+    if (a.constructor == Object) {
       var b = "";
       for (var c in a) {
         b += c + "=" + a[c] + "&"
@@ -288,7 +289,18 @@
       b = b.substring(0, b.length - 1);
       return b
     } else {
-      return a
+      return a;
+    }
+  }
+  function _checkFunction(a){
+    if(a==undefined){
+      return null;
+    }else{
+      if(a.constructor==Function){
+        return a;
+      }else{
+        return new Function(a);
+      }
     }
   }
   function _formatParams(a) {
@@ -299,7 +311,7 @@
     return b.join("&")
   }
   J.ready(function() {
-    J.tag("head").append(J.new("style").txt(".j-none{visibility:hidden!important;position:absolute!important;display:block!important;}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}"))
+    J.tag("head").append(J.new("style").txt(".j-none{visibility:hidden!important;position:absolute!important;display:block!important;}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}.j-over-hidden{overflow:hidden!important;}#jetTip{box-shadow: 2px 2px 5px 0px #666;top:-100px;position:absolute;border:1px solid#222;background-color:rgba(255,255,255,.8);color:#222;font-size:10px;padding:3px;transition:opacity .2s;-moz-transition:opacity .2s linear;-webkit-transition:opacity .2s linear;-o-transition:opacity .2s linear;opacity:0;z-index:10000}#jetTip.j_active{opacity:1}"));
   });
 
   window.S=function(s) {
@@ -320,8 +332,8 @@
     if (a == undefined) {
       if (d.constructor == Object) {
         for (var b in d) {
-          if (d[b].has("!")) {
-            this.style.setProperty(b, _checkCssValue(this, b, d[b].substring(0, d[b].indexOf("!"))), "important")
+          if (d[b].has("!important")) {
+            this.style.setProperty(b, _checkCssValue(this, b, d[b].substring(0, d[b].indexOf("!important"))), "important")
           } else {
             this.style.setProperty(b, _checkCssValue(this, b, d[b]))
           }
@@ -331,8 +343,8 @@
         return getComputedStyle(this)[d]
       }
     } else {
-      if (a.has("!")) {
-        this.style.setProperty(d, _checkCssValue(this, d, a.substring(0, a.indexOf("!"))), "important")
+      if (a.has("!important")) {
+        this.style.setProperty(d, _checkCssValue(this, d, a.substring(0, a.indexOf("!important"))), "important")
       } else {
         this.style.setProperty(d, _checkCssValue(this, d, a))
       }
@@ -355,34 +367,32 @@
   };
   HTMLElement.prototype.data = function(d, b) {
     if (arguments.length == 0) {
-      if (this.hasAttr("jet-data")) {
-        return JSON.parse(this.attr("jet-data"))
+      if (this.j_data!=undefined) {
+        return this.j_data
       } else {
         return null
       }
     } else if (arguments.length == 1) {
       if (d == undefined) {
-        this.removeAttr("jet-data");
+        this.j_data=undefined;
         return this
       } else {
         if (d.constructor == Object) {
-          if (this.hasAttr("jet-data")) {
-            var c = JSON.parse(this.attr("jet-data"));
+          if (this.j_data!=undefined) {
             for (var e in d) {
               if (d[e] != undefined) {
-                c[e] = d[e]
+                this.j_data[e] = d[e]
               } else {
-                delete c[e]
+                delete this.j_data[e]
               }
             }
-            this.attr("jet-data", JSON.stringify(c))
           } else {
-            this.attr("jet-data", JSON.stringify(d))
+            this.j_data=d
           }
           return this
         } else {
-          if (this.hasAttr("jet-data")) {
-            return JSON.parse(this.attr("jet-data"))[d]
+          if (this.j_data!=undefined) {
+            return this.j_data[d]
           } else {
             return ""
           }
@@ -390,27 +400,23 @@
       }
     } else {
       if (b == undefined) {
-        if (this.hasAttr("jet-data")) {
-          var c = JSON.parse(this.attr("jet-data"));
+        if (this.j_data!=undefined) {
           if (d.constructor == Array) {
             d.each(function(a) {
-              delete c[a]
+              delete this.j_data[a]
             })
           } else {
-            delete c[d]
+            delete this.j_data[d]
           }
-          this.attr("jet-data", JSON.stringify(c))
         }
         return this
       } else {
-        if (this.hasAttr("jet-data")) {
-          var c = JSON.parse(this.attr("jet-data"));
-          c[d] = b;
-          this.attr("jet-data", JSON.stringify(c))
+        if (this.j_data!=undefined) {
+          this.j_data[d] = b;
         } else {
           var c = {};
           c[d] = b;
-          this.attr("jet-data", JSON.stringify(c))
+          this.j_data=c
         }
         return this
       }
@@ -420,17 +426,17 @@
     if (c == undefined && d.constructor != Object && d != undefined) {
       var a = [];
       this.each(function(b) {
-        a.append(b.data(d))
+        a.append(b.data(J.clone(d)))
       });
       return a
     } else {
       if (c == undefined) {
         this.each(function(a) {
-          a.data(d)
+          a.data(J.clone(d))
         })
       } else {
         this.each(function(a) {
-          a.data(d, c)
+          a.data(J.clone(d), c)
         })
       };
       return this
@@ -438,7 +444,7 @@
   };
 
   function _checkCssValue(a, c, d) {
-    if (d.has("=")) {
+    if (d.has("-=")||d.has("+=")) {
       var e = _getCssNumberValue(d.substring(d.indexOf("=") + 1));
       if (d.has("-=")) {
         e[0] = -e[0]
@@ -553,17 +559,19 @@
     return _checkSelect(this.querySelectorAll(a))
   };
   HTMLElement.prototype.addClass = function(a) {
-    var b = a.split(" ");
-    if (b.length > 1) {
+    if(a.has(" ")){
+      var b = a.split(" ");
       var c = this;
       b.each(function(i) {
-        if (!c.hasClass(i)) {
-          c.className += " " + i
+        c.addClass(i)
+      });
+    }else {
+      if(J.html5()){
+        this.classList.add(a)
+      }else{
+        if (!this.hasClass(a)) {
+          this.className += " " + a
         }
-      })
-    } else {
-      if (!this.hasClass(a)) {
-        this.className += " " + a
       }
     }
     return this
@@ -590,19 +598,20 @@
     if (a == undefined) {
       this.className = ""
     } else {
-      var c = a.split(" ");
-      if (c.length > 1) {
+      if(a.has(" ")){
+        var c = a.split(" ");
         var d = this;
         c.each(function(i) {
-          if (d.hasClass(i)) {
-            var b = new RegExp("(\\s|^)" + i + "(\\s|$)");
-            d.className = d.className.replace(b, " ")
-          }
+          d.removeClass(i)
         })
-      } else {
-        if (this.hasClass(a)) {
-          var b = new RegExp("(\\s|^)" + a + "(\\s|$)");
-          this.className = this.className.replace(b, " ")
+      }else {
+        if(J.html5()){
+          this.classList.remove(a)
+        }else{
+          if (this.hasClass(a)) {
+            var b = new RegExp("(\\s|^)" + a + "(\\s|$)");
+            this.className = this.className.replace(b, " ").trim()
+          }
         }
       }
     }
@@ -615,15 +624,23 @@
     return this
   };
   HTMLElement.prototype.toggleClass = function(a) {
-    var b = a.split(" ");
-    var c = this;
-    b.each(function(i) {
-      if (c.hasClass(a)) {
-        c.removeClass(a)
-      } else {
-        c.addClass(a)
+    if(a.has(" ")){
+      var b = a.split(" ");
+      var c = this;
+      b.each(function(i) {
+        c.toggleClass(i)
+      });
+    }else{
+      if(J.html5()){
+        this.classList.toggle(a)
+      }else{
+        if (c.hasClass(a)) {
+          c.removeClass(a)
+        } else {
+          c.addClass(a)
+        }
       }
-    });
+    }
     return this
   };
   HTMLCollection.prototype.toggleClass = NodeList.prototype.toggleClass = function(v) {
@@ -757,7 +774,27 @@
       return this
     }
   };
+  HTMLElement.prototype.allHtml = function(a) {
+    if (a == undefined) {
+      return J.new("div").append(this.clone()).html();
+    } else {
+      var index=this.index();
+      var par=this.parent().append(a,index);
+      this.remove();
+      return par.child(index);
+    }
+  };
+  HTMLCollection.prototype.allHtml = NodeList.prototype.allHtml = function(v) {
+    var a = [];
+    this.each(function(b) {
+      a.append(b.allHtml(v))
+    });
+    return a
+  };
   HTMLElement.prototype.hasClass = function(a) {
+    if(J.html5()){
+      return this.classList.contains(a);
+    }
     return new RegExp("(\\s|^)" + a + "(\\s|$)").test(this.className)
   };
   HTMLElement.prototype.next = function(i) {
@@ -900,15 +937,7 @@
 
   function _checkCallBack(a, b) {
     if (a != undefined) {
-      if (a.constructor == Function) {
-        if (b != undefined) {
-          a(b)
-        } else {
-          a()
-        }
-      } else {
-        eval(a)
-      }
+      _checkFunction(a)(b)
     }
   };
   HTMLCollection.prototype.scale = NodeList.prototype.scale = function(b, c, d, e) {
@@ -1054,6 +1083,39 @@
     return this
   };
 
+  HTMLElement.prototype.tip = function(text) {
+    if(J.id("jetTip")==undefined){
+      J.body().append(J.new("span#jetTip"));
+    }
+    if(text.constructor==Array){
+      text=text[0];
+    }
+    this.jetTip=text;
+    this.on({
+      mousemove: function(e){
+        J.id("jetTip").txt(this.jetTip).addClass("j_active").css({
+          top:e.pageY+5+"px",
+          left:e.pageX+8+"px"
+        })
+      },
+      mouseleave:function(){
+        J.id("jetTip").removeClass("j_active").css("top","-100px");
+      }
+    },true);
+    return this
+  };
+  HTMLCollection.prototype.tip = NodeList.prototype.tip = function(text) {
+    if(text.constructor==Array){
+      this.each(function(a,i) {
+        a.tip(text[i])
+      });
+    }else{
+      this.each(function(a,i) {
+        a.tip(text)
+      });
+    }
+    return this
+  };
   function _removeAnimation(a) {
     a.removeClass("j-animation").css({
       "transition-duration": "0s!important",
@@ -1063,16 +1125,31 @@
       "-moz-transition-duration": "0s!important"
     })
   };
+  function _checkDisplay(obj){
+    if(obj.css("display")=="none"){
+      return false;
+    }
+    return true;
+  }
   HTMLElement.prototype.slideUp = function(a, b, c) {
-    return _checkSlideHeight(this, a, b, c,false)
+    if(_checkDisplay(this)){
+      return _checkSlideHeight(this, a, b, c,false)
+    }
+    return this;
   };
   HTMLElement.prototype.slideDown = function(a, b, c) {
-    if (this.hasClass("j-fade")) {
-      this.removeClass("j-fade").addClass("j-slide")
-    };
-    return _checkSlideHeight(this, a, b, c,true)
+    if(!_checkDisplay(this)){
+      if (this.hasClass("j-fade")) {
+        this.removeClass("j-fade").addClass("j-slide")
+      };
+      return _checkSlideHeight(this, a, b, c,true)
+    }
+    return this;
   };
   HTMLElement.prototype.slideToggle = function(a, b, c) {
+    if(this.css("display")=="none"&&!this.hasClass("j-slide")){
+      this.css("display","initial").addClass("j-slide").hide();
+    }
     if (this.hasClass("j-fade")) {
       this.removeClass("j-fade").addClass("j-slide")
     }
@@ -1095,15 +1172,25 @@
     return obj;
   }
   HTMLElement.prototype.fadeOut = function(a, b, c) {
-    return _animateBase(this, "j-fade", a, b, c, false)
+    if(_checkDisplay(this)){
+      return _animateBase(this, "j-fade", a, b, c, false)
+    }
+    return this;
   };
   HTMLElement.prototype.fadeIn = function(a, b, c) {
-    if (this.hasClass("j-slide")) {
-      this.removeClass("j-slide").addClass("j-fade")
+    if(!_checkDisplay(this)){
+      if (this.hasClass("j-slide")) {
+        this.removeClass("j-slide").addClass("j-fade")
+      }
+      return _animateBase(this, "j-fade", a, b, c, true)
+    }else{
+      return this;
     }
-    return _animateBase(this, "j-fade", a, b, c, true)
   };
   HTMLElement.prototype.fadeToggle = function(a, b, c) {
+    if(this.css("display")=="none"&&!this.hasClass("j-fade")){
+      this.css("display","initial").addClass("j-fade").hide();
+    }
     if (this.hasClass("j-slide")) {
       this.removeClass("j-slide").addClass("j-fade")
     }
@@ -1366,7 +1453,7 @@
       return p
     }
   };
-  HTMLElement.prototype.brother = function(i) {
+  HTMLElement.prototype.bro = function(i) {
     if (i == undefined) {
       return this.parent().child()
     } else {
@@ -1392,28 +1479,35 @@
   };
   HTMLElement.prototype.append = function(b, a) {
     if (a == undefined) {
-      if (b.constructor == Array) {
+      if (b.constructor == Array||b.constructor==HTMLCollection||b.constructor==NodeList) {
         var c = this;
         b.each(function(a) {
-          c.appendChild(a)
+          c.appendChild(_checkHtmle(a))
         })
       } else {
-        this.appendChild(b)
+        this.appendChild(_checkHtmle(b))
       }
     } else {
-      this.insertBefore(b, this.children[a])
+      this.insertBefore(_checkHtmle(b), this.children[a])
     }
     return this
+  };
+  
+  function _checkHtmle(a){
+    if(a.constructor==String){
+      a=J.new("div").html(a).child(0);
+    }
+    return a;
   };
   HTMLElement.prototype.after = function(b) {
     if (b.constructor == Array) {
       var c = this;
       var d = c.next();
       b.each(function(a) {
-        c.parent().insertBefore(a, d)
+        c.parent().insertBefore(_checkHtmle(a), d)
       })
     } else {
-      this.parent().insertBefore(b, this.next())
+      this.parent().insertBefore(_checkHtmle(b), this.next())
     }
     return this
   };
@@ -1427,10 +1521,10 @@
     if (b.constructor == Array) {
       var c = this;
       b.each(function(a) {
-        c.parent().insertBefore(a, c)
+        c.parent().insertBefore(_checkHtmle(a), c)
       })
     } else {
-      this.parent().insertBefore(b, this)
+      this.parent().insertBefore(_checkHtmle(b), this)
     }
     return this
   };
@@ -1455,29 +1549,63 @@
     }
     return -1
   };
-  HTMLElement.prototype.event = function(a, b) {
-    if (b == undefined) {
+  HTMLElement.prototype.on = function(a, b,d) {
+    if(a.constructor==String){
+      return this.event("on"+a,b,d);
+    }else{
+      for (var c in a) {
+        a["on"+c]=a[c];
+        delete a[c];
+      }
+      return this.event(a,b);
+    }
+  };
+  HTMLCollection.prototype.on = NodeList.prototype.on = function(a, c,d) {
+    this.each(function(b) {
+      b.on(J.clone(a), c,d)
+    });
+    return this
+  };
+  HTMLElement.prototype.clk = function(b,d) {
+    return this.event("onclick",b,d);
+  };
+  HTMLCollection.prototype.clk = NodeList.prototype.clk = function(a, c) {
+    this.each(function(b) {
+      b.clk(a, c)
+    });
+    return this
+  };
+  
+  HTMLElement.prototype.event = function(a, b,d) {
+    if(a.constructor==String){
+      if(d==true){
+        _attachEvent(this,a,b);
+      }else{
+        this[a]=_checkFunction(b);
+      }
+    }else{
       for (var c in a) {
         if (a[c] != undefined) {
-          if (a[c].constructor == Function) {
-            eval('this.' + c + '=' + a[c])
-          } else {
-            this.attr(c, a[c])
+          if(b==true){
+            _attachEvent(this,c,a[c]);
+          }else{
+            this[c]=_checkFunction(a[c]);
           }
         }
-      }
-    } else {
-      if (b.constructor == Function) {
-        eval('this.' + a + '=' + b)
-      } else {
-        this.attr(a, b)
       }
     }
     return this
   };
-  HTMLCollection.prototype.event = NodeList.prototype.event = function(a, c) {
+  function _attachEvent(obj,event,fun){
+    if (document.addEventListener) {
+      obj.addEventListener(event.substring(2), _checkFunction(fun), false);
+    } else if (document.attachEvent) {
+      obj.attachEvent(event,  _checkFunction(fun));
+    }
+  }
+  HTMLCollection.prototype.event = NodeList.prototype.event = function(a, c,d) {
     this.each(function(b) {
-      b.event(a, c)
+      b.event(a, c,d)
     });
     return this
   };
@@ -1516,22 +1644,26 @@
       }
     }
   };
-  HTMLElement.prototype.each = function(b) {
-    b(this, 0);
+  HTMLElement.prototype.each = function(b,d) {
+    b(this, 0,d);
     return this
   };
-  HTMLCollection.prototype.each = NodeList.prototype.each = Array.prototype.each = function(b) {
+  HTMLCollection.prototype.each = NodeList.prototype.each = Array.prototype.each = function(b,d) {
     for (var a = 0; a < this.length; a++) {
-      b(this[a], a)
+      b(this[a], a,d)
     }
     return this
   };
-  Array.prototype.removeByIndex = function(b) {
+  Array.prototype.removeByIndex = function(b,order) {
     for (var a = 0; a < this.length; a++) {
       if (a == b) {
-        if (a < this.length - 1) {
-          for (var i = a + 1; i < this.length; i++) {
-            this[i - 1] = this[i]
+        if(order==false){
+          this[a]=this[this.length-1];
+        }else{
+          if (a < this.length - 1) {
+            for (var i = a + 1; i < this.length; i++) {
+              this[i - 1] = this[i]
+            }
           }
         }
         this.length--;
@@ -1541,18 +1673,35 @@
     return this
   };
   Array.prototype.empty = function(b) {
-    this.length = 0
+    this.length = 0;
+    return this;
   };
-  Array.prototype.remove = function(b) {
+  HTMLElement.prototype.last =function(){
+    return this.child().last();
+  };
+  HTMLElement.prototype.first =function(){
+    return this.child().first();
+  };
+  HTMLCollection.prototype.last = NodeList.prototype.last =Array.prototype.last = function(b) {
+    return this[this.length-1];
+  };
+  HTMLCollection.prototype.first = NodeList.prototype.first =Array.prototype.first = function(b) {
+    return this[0];
+  };
+  Array.prototype.remove = function(b,order) {
     for (var a = 0; a < this.length; a++) {
       if (this[a] == b) {
-        if (a < this.length - 1) {
-          for (var i = a + 1; i < this.length; i++) {
-            this[i - 1] = this[i]
+        if(order==false){
+          this[a]=this[this.length-1];
+        }else{
+          if (a < this.length - 1) {
+            for (var i = a + 1; i < this.length; i++) {
+              this[i - 1] = this[i]
+            }
           }
         }
         this.length--;
-        return this
+        break;
       }
     }
     return this
@@ -1571,6 +1720,12 @@
       for(var i=0;i<arguments.length;i++){
         this[this.length] = arguments[i];
       }
+    }
+    return this
+  };
+  Array.prototype.appendArray = function(arr) {
+    for(var i=0;i<arr.length;i++){
+      this[this.length] = arr[i];
     }
     return this
   };
@@ -1594,24 +1749,117 @@
     }
     return this
   };
-  Array.prototype.sortByAttr = function(a, b) {
-    if (!(!parseFloat(this[0][a]))) {
-      var c = this.length;
-      var d, current;
-      for (var i = 1; i < c; i++) {
-        d = i - 1;
-        current = this[i];
-        while (d >= 0 && this[d][a] > current[a]) {
-          this[d + 1] = this[d];
-          d--
-        }
-        this[d + 1] = current
+  Array.prototype.sortByAttr = function(a,type, b) {
+    var c = this.length;
+    var d, current;
+    for (var i = 1; i < c; i++) {
+      d = i - 1;
+      current = this[i];
+      while (d >= 0 && _compareValue(this[d][a],current[a],type) ) {
+        this[d + 1] = this[d];
+        d--
       }
-      if (b == false) {
-        this.reverse()
-      }
+      this[d + 1] = current
+    }
+    if (type == false||b==false) {
+      this.reverse()
     }
     return this
+  };
+  function _compareValue(a,b,type){
+    if(_getSortValue(a,type)>_getSortValue(b,type)){
+      return true;
+    }
+    return false;
+  }
+  function _getSortValue(value,type){
+    if(type==undefined||type.constructor==Boolean){
+      return value;
+    }else{
+      var res=null;
+      switch(type){
+        case "date":
+          if(value.constructor==Date){
+            res=value;
+          }else{
+            var arr;
+            if(value.has("-")){
+              arr=value.split("-");
+            }else{
+              arr=value.split("/");
+            }
+            res=new Date(arr[0],arr[1],arr[2]);
+          }break;
+        case "length":res=value.length;break;
+        case "headLetter":res=value.toLowerCase().charCodeAt(0);break;
+        case "number":res=value;break;
+        default:res=value;break;
+      }
+      return res;
+    }
+  };
+  function _each(obj,fun,arg){
+    if(obj.constructor==Object){
+      var k=0;
+      for (var a in obj) {
+        if(obj[a].constructor!=Function){
+          fun(obj[a], a,k,obj)
+        }
+        k++;
+      }
+    }else if(obj.constructor==Number||obj.constructor==Boolean||obj.constructor==String||obj.constructor==Function){
+      fun(obj, 0,arg);
+    }else{
+      obj.each(fun,arg);
+    }
+    return obj;
+  };
+  function _clone(obj){
+    if(obj.constructor==Object){
+      var a=new Object();
+      for(var attr in obj){
+        if(obj[attr].constructor==Array){
+          a[attr]=obj[attr].clone();
+        }else if(obj[attr].constructor==Object){
+          a[attr]=_clone(obj[attr]);
+        }else{
+          a[attr]=obj[attr];
+        }
+      }
+      return a;
+    }else if(obj.constructor==Number||obj.constructor==Boolean||obj.constructor==String||obj.constructor==Function){
+      return obj;
+    }else{
+      return obj.clone();
+    }
+  };
+  Array.prototype.clone = function() {
+    var a=new Array();
+    this.each(function(item){
+      a.append(_clone(item));
+    });
+    return a;
+  };
+  Array.prototype.sum = function() {
+    var sum;
+    if(this[0].constructor==Number||(this[0].constructor==Array&&this[0][0].constructor==Number)){
+      sum=0;
+    }else{
+      sum="";
+    }
+    this.each(function(a){
+      if(a.constructor==Array){
+        a.each(function(b){
+          sum+=b;
+        });
+      }else{
+        sum+=a;
+      }
+    });
+    return sum;
+  };
+  Array.prototype.ave = function() {
+    return this.sum()/this.length;
   };
   Array.prototype.reverse = function() {
     var t;
