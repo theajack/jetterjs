@@ -1,1 +1,0 @@
-sort() date,length,headLetter
