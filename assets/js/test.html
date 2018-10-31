@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <head>
+<body>
+</body>
+<script type="text/javascript" src='jetter2.min.js'></script>
+<script type="text/javascript">
+//var book={
+  //var _year=2004,
+  //edition:1
+//};
+function Test(data){
+  
+}
+var t={};
+var calls={};
+var _d={a:1,b:2,c:3};
+for(var item in _d){
+}
+var item='a'
+for(var key in _d){
+  defineReactive(t,key)
+  calls['a']=function(){
+    console.log('trigger a');
+  }
+}
+function call(type){
+  if(calls[type]){
+    calls[type]();
+  }
+}
+function defineReactive(obj, key) {
+  Object.defineProperty(obj, key, {
+    get: function () {
+      return _d[key];
+    },
+    set: function (newVal) {
+      call(key)
+      _d[key] = newVal;
+      console.log('值已被修改，现在为 ' + newVal);
+    }
+  })
+}
+</script>
+</html>

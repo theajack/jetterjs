@@ -3,12 +3,32 @@
   2017/3/18
   http://www.theajack.com/jetterjs/
 */
+
+/*
+修改了以下保留字
+class
+new
+default
+null
+float
+新增方法 J.type() 去除了全部的 constructor 因为兼容性
+因为兼容 formdata.get方法需要trycatch
+
+J.load -> J.onload
+J.load 新方法 加载html
+
+hasData
+removeClass("a b") 支持空格
+J.delay
+J.clearDelay
+HTMLCollection NodeList Array 添加了findClass ....
+*/
 (function(){
-  (function(){var meta=document.createElement("meta");
-  meta.setAttribute("http-equiv","X-UA-Compatible");
-  meta.setAttribute("content","chrome=1");
-  var head=document.getElementsByTagName("head")[0];
-  head.insertBefore(meta,head.children[0]);})();
+  //(function(){var meta=document.createElement("meta");
+  //meta.setAttribute("http-equiv","X-UA-Compatible");
+  //meta.setAttribute("content","chrome=1");
+  //var head=document.getElementsByTagName("head")[0];
+  //head.insertBefore(meta,head.children[0]);})();
   window.J = {
     ready: (function() {
       var b = [];
@@ -45,7 +65,7 @@
         }
       }
     })(),
-    load: function(a) {
+    onload: function(a) {
       if (document.addEventListener) {
         document.addEventListener("DOMContentLoaded", function() {
           document.removeEventListener("DOMContentLoaded", arguments.callee, false);
@@ -70,7 +90,7 @@
       return document.documentElement.clientWidth
       //return document.body.offsetWidth
     },
-    class: function(a) {
+    cls: function(a) {
       return _checkSelect(document.getElementsByClassName(a))
     },
     id: function(a) {
@@ -97,184 +117,13 @@
     even:_even,
     toString:_toString,
     type:_type,
-    new: function(a) {
-      if (a.has("#") || a.has(".") || a.has("[")) {
-        var b = a.split('#');
-        if(b.length>1){
-          b=[b[0],a.substring(b[0].length+1)];
-        }
-        var c;
-        if (a.has("[")) {
-          var l = b[b.length - 1];
-          c = l.substring(0, l.indexOf("[")).split('.');
-          c[c.length - 1] += l.substring(l.indexOf("["))
-        } else {
-          c = b[b.length - 1].split('.')
-        }
-        var d = c.length - 1;
-        var f = c[d].split('[');
-        for (var i = 0; i < f.length; i++) {
-          c[d + i] = f[i]
-        }
-        anum = f.length - 1;
-        cnum = c.length - anum - 1;
-        var e;
-        if (b.length == 1) {
-          e = document.createElement(c[0])
-        } else {
-          e = document.createElement(b[0]);
-          e.attr("id", c[0])
-        }
-        for (var i = 1; i < c.length; i++) {
-          if (cnum > 0) {
-            cnum--;
-            e.addClass(c[i])
-          } else {
-            var g = c[i].substring(0, c[i].length - 1);
-            var index=g.indexOf("=");
-            e.attr(g.substring(0,index), g.substring(index+1));
-          }
-        }
-        return e
-      } else {
-        return document.createElement(a)
-      }
-    },
-    scroll: function(a, b, c) {
-      if (arguments.length != 0) {
-        if (a != 0) {
-          document.body.scroll(a, null, c);
-          document.documentElement.scroll(a, null, c);
-          if (b != undefined) {
-            c = _checkArg(c, 400);
-            if (c.constructor!= Number) {
-              c = _checkAnimateSpeed(c)
-            }
-            setTimeout(_checkFunction(b), c);
-          }
-        }
-      } else {
-        if (document.body.scrollTop == 0) {
-          return document.documentElement.scrollTop
-        } else {
-          return document.body.scrollTop
-        }
-      }
-    },
-    scrollTo: function(y, a, b) {
-      document.body.scrollTo(y, null, b);
-      document.documentElement.scrollTo(y, null, b);
-      if (a != undefined) {
-        b = _checkArg(b, 400);
-        if (b.constructor != Number) {
-          b = _checkAnimateSpeed(b)
-        }
-        setTimeout(_checkFunction(a), b);
-      }
-    },
-    ajax: function(a) {
-      var b = {
-        type: a.type || "GET",
-        url: a.url || "",
-        async: a.async || "true",
-        data: a.data || null,
-        dataType: a.dataType || "text",
-        contentType: a.contentType || "application/x-www-form-urlencoded",
-        beforeSend: a.beforeSend ||function() {},
-        success: a.success ||function() {},
-        error: a.error ||function() {}
-      };
-      b.beforeSend();
-      var c;
-      if (window.ActiveXObject) {
-        c = ActiveXObject("Microsoft.XMLHTTP")
-      } else if (window.XMLHttpRequest) {
-        c =new XMLHttpRequest()
-      }
-      c.responseType = b.dataType;
-      c.open(b.type, b.url, b.async);
-      c.setRequestHeader("Content-Type", b.contentType);
-      //header
-      c.send(_convertData(b.data));
-      c.onreadystatechange = function() {
-        if (c.readyState == 4) {
-          if (c.status == 200) {
-            b.success(c.response)
-          } else {
-            b.error()//errInfo
-          }
-        }
-      }
-    },
-    jsonp: function(options) {
-      if (!options.url) {
-        throw new Error("Parameter error");
-      }else{
-        var callbackName = ('_jsonp' + Math.random()).replace(".", "").substring(0, 15);
-        var head = J.tag("head");
-        options.data[_checkArg(options.callback, "callback")] = callbackName;
-        var script = J.new('script');
-        head.append(script);
-        window[callbackName] = function(a) {
-          head.removeChild(script);
-          clearTimeout(script.timer);
-          window[callbackName] = null;
-          if(a.constructor==String){
-            a=JSON.parse(a);
-          }
-          options.success && options.success(a);
-        };
-        if (options.dataType != undefined && options.dataType.toUpperCase() == "JSON") {
-          script.attr("src", options.url + '?json=' + encodeURIComponent(JSON.stringify(options.data)))
-        } else {
-          script.attr("src", options.url + '?' + _formatParams(options.data))
-        }
-        options.time = _checkArg(options.time, 5000);
-        script.timer = setTimeout(function() {
-          window[callbackName] = null;
-          head.removeChild(script);
-          options.timeout && options.timeout({
-            message:( (!options.message)?"timeout":options.message)
-          })
-        }, options.time)
-      }
-    },
-    cookie: function(a, b, d, e) {
-      if (arguments.length == 1) {
-        if (document.cookie.length > 0) {
-          var f = document.cookie.indexOf(a + "=");
-          if (f != -1) {
-            f = f + a.length + 1;
-            var g = document.cookie.indexOf(";", f);
-            if (g == -1) g = document.cookie.length;
-            return unescape(document.cookie.substring(f, g))
-          }
-        }
-        return ""
-      } else {
-        if (b == null) {
-          J.cookie(a, "", -1)
-        } else {
-          var c = a + "=" + escape(b);
-          if (d != undefined) {
-            var h = new Date();
-            h.setDate(h.getDate() + d);
-            c += ";expires=" + h.toGMTString()
-          }
-          if (e != undefined) {
-            if (e.constructor == Boolean) {
-              if (e) {
-                c += (";path=/")
-              }
-            } else {
-              c += (";path=" + e)
-            }
-          }
-          document.cookie = c;
-          return a + "=" + b
-        }
-      }
-    },
+    ct: _create,
+    scroll:_scroll,
+    scrollTo:_scrollTo,
+    ajax:_ajax,
+    load:_load,
+    jsonp:_jsonp,
+    cookie:_cookie,
     initTip:function(){
       J.attr("jet-tip").each(function(item){
         item.tip(item.attr("jet-tip"));
@@ -286,210 +135,268 @@
       }
       return false;
     },
-    jetForm:function(a) {
-      return J.attr("jet-form=" + a)
-    },
-    jetName:function(a, b) {
-      if (arguments.length == 2) {
-        return J.attr("jet-form=" + a).findAttr("jet-name=" + b)
-      } else {
-        return J.attr("jet-name=" + a)
-      }
-    },
-    useDefaultStyle: true,
-    useShowForValid: true,
-    showInPlaceHolder: false,
-    noteStyleStr: "color",
     language: "CHINESE",
-    lang: function(l) {
-      this.language = l.toUpperCase()
-    },
-    get: function(a, b, c) {
-      c = this.checkArg(c, "jet-name");
-      if (b != undefined && b != "json") {
-        return _getElemsFormData(_checkJetForm(a), c)
-      } else {
-        return _getElemsObj(_checkJetForm(a), c)
-      }
-    },
-    set: function(a, b, c, d) {
-      d = this.checkArg(d, "jet-name");
-      _setObjVal(_checkJetForm(a), d, b, c)
-    },
-    clear: function(a, b) {
-      this.set(a, {}, null, b);
-      a.select("select[jet-name]").each(function(item){
-        item.child(0).selected=true;
-      });
-    },
-    addValid: function(a, b) {
-      b = this.checkArg(b, "notnull");
-      _checkJetForm(a).addValid(b)
-    },
-    initValid: function(b) {
-      var c;
-      if (b == undefined) {
-        c = J.attr("jet-valid")
-      } else {
-        c = _checkJetForm(b).select("[jet-valid]")
-      }
-      c.each(function(a) {
-        a.on({
-          "blur": "J.validInput(this)",
-          "focus": "J.addValidValue(this)"
-        },true)._jet_v_event=true;
-        if (this.showInPlaceHolder) {
-          a.attr("placeholder", _getValueText(a.attr("jet-valid")))
-        }
-      })
-    },
-    clearValid: function(a) {
-      _checkJetForm(a).clearValid()
-    },
-    resetValid: function(a) {
-      _checkJetForm(a).resetValid()
-    },
-    validate: function(a, b, c) {
-      if (c != undefined) {
-        _validateForm(_checkJetForm(a), b, c)
-      } else {
-        _validateForm(_checkJetForm(a), b)
-      }
-    },
-    validText: function(a, b) {
-      if(a.constructor==Object&&b==undefined){
-        for (var c in a) {
-          this.validText(c,a[c]);
-        }
-      }else{
-        if(this.language=="CHINESE"){
-          validTextCn[a]=b;
-        }else{
-          validTextEn[a]=b;
-        }
-      }
-    },
-    banDefault: function() {
-      this.useDefaultStyle = false;
-      var b = J.class("jet-unpass");
-      b.each(function(a) {
-        _checkIsPw(a);
-        a.removeClass("jet-unpass").val(a.attr("jet-value")).removeAttr("jet-value")
-      })
-    },
-    useDefault: function() {
-      this.useDefaultStyle = true
-    },
-    banValidShow: function() {
-      this.useShowForValid = false
-    },
-    useValidShow: function() {
-      this.useShowForValid = true
-    },
-    banPlaceHolder: function() {
-      this.showInPlaceHolder = false;
-      J.attr("jet-valid").each(function(a) {
-        a.attr("placeholder", "")
-      })
-    },
-    usePlaceHolder: function() {
-      this.showInPlaceHolder = true;
-      J.attr("jet-valid").each(function(a) {
-        a.attr("placeholder", _getValueText(a.attr("jet-valid")))
-      })
-    },
-    show: _mesShow,
-    confirm: _confirmShow,
-    showWait: _mesShowWait,
-    close: _mesClose,
-    confirmClose: _confirmClose,
-    inputClose: _inputClose,
+    lang: function(l) {this.language = l.toUpperCase()},
     checkArg: _checkArg,
-    noteStyle: _setNoteStyle,
-    validInput:_validInput,
-    addValidValue:_addValidValue,
-    onOnePass: function(c) {
-      _onOnePass=_checkFunction(c);
-    },
-    onOneFail: function(c) {
-      _onOneFail=_checkFunction(c);
-    },
+    toFunc:_checkFunction,
     jump: _jump,
-    open: function(a) {
-      window.open(a)
-    },
-    back: function() {
-      window.history.back()
-    },
-    forward: function() {
-      window.history.forward()
-    },
+    open: function(a) {window.open(a)},
+    back: function() {window.history.back()},
+    forward: function() {window.history.forward()},
     urlParam: _getUrlParam,
     sign: _sign,
     random: _getRandomNum,
     isMobile: _isMobile,
-    copy: _copy,
-    confirmOk:_confirmOk,
-    confirmCancel:_confirmCancel,
-    inputOk:_inputOk,
-    inputCancel:_inputCancel,
-    input: function(c, d, e) {
-      var f = J.id("jetInputContent");
-      if (!f.exist()) {
-        _addInputWrapper();
-        f = J.id("jetInputContent")
-      }
-      f.empty();
-      if (c.constructor == String) {
-        f.append(J.new("div").txt(_checkArg(c, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        _appendOneInput((this.language == "CHINESE") ? "请输入：" : "Please input:", null, null,null)
-      } else if (c.constructor == Array) {
-        f.append(J.new("div").txt(_checkArg(c[0], (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        _appendOneInput(c[1], c[2], c[3],c[4]);
-        if (c[3] != undefined) {
-          this.initValid(f)
-        }
-      } else {
-        f.append(J.new("div").txt(_checkArg(c.title, (this.language == "CHINESE") ? "信息输入" : "Input Information")));
-        var a = _checkArg(c.default, []);
-        var b = _checkArg(c.valid, []);
-        var p = _checkArg(c.placeholder, []);
-        if (c.text == undefined || c.text.constructor == String) {
-          _appendOneInput(c.text, a, b,p)
-        } else {
-          for (var i = 0; i < c.text.length; i++) {
-            _appendOneInput(_checkArg(c.text[i], (this.language == "CHINESE") ? "请输入：" : "Please input:"), a[i], b[i],p[i])
-          }
-        }
-        if (b.length > 0 || b.constructor == String) {
-          this.initValid(f)
-        }
-      }
-      _submitCall=_checkFunction(d);
-      _submitCancelCall=_checkFunction(e);
-      setTimeout(function(){J.id("jetInputWrapper").css("top", "0");},0);
+    delay:function(call,time){
+      return setTimeout(call,time);
+    },
+    clearDelay:function(t){
+      return setTimeout(t);
+    },
+    repeat:function(call,time){
+      return setInterval(call,time);
+    },
+    clearRepeat:function(t){
+      return clearInterval(t);
     }
   };
-
+  function _scrollTo(y, a, b) {
+    document.body.scrollTo(y, null, b);
+    document.documentElement.scrollTo(y, null, b);
+    if (a != undefined) {
+      b = _checkArg(b, 400);
+      if (J.type(b)=="number") {
+        b = _checkAnimateSpeed(b)
+      }
+      setTimeout(_checkFunction(a), b);
+    }
+  };
+  function _scroll(a, b, c) {
+    if (arguments.length != 0) {
+      if (a != 0) {
+        document.body.scroll(a, null, c);
+        document.documentElement.scroll(a, null, c);
+        if (b != undefined) {
+          c = _checkArg(c, 400);
+          if (J.type(c)=="number") {
+            c = _checkAnimateSpeed(c)
+          }
+          setTimeout(_checkFunction(b), c);
+        }
+      }
+    } else {
+      if (document.body.scrollTop == 0) {
+        return document.documentElement.scrollTop
+      } else {
+        return document.body.scrollTop
+      }
+    }
+  };
+  function _ajax(a) {
+    var b = {
+      type: a.type || "get",
+      url: a.url || "",
+      async: a.async || true,
+      data: a.data || null,
+      dataType: a.dataType || "text",
+      contentType: a.contentType || "application/x-www-form-urlencoded",
+      beforeSend: a.beforeSend ||function() {},
+      success: a.success ||function() {},
+      error: a.error ||function() {},
+      header:a.header||{}
+    };
+    b.beforeSend();
+    var c;
+    if (window.XMLHttpRequest) {
+      c =new XMLHttpRequest()
+    } else if (window.ActiveXObject) {
+      c = ActiveXObject("Microsoft.XMLHTTP")
+    }
+    var _d=_convertData(b.data);
+    var _t=b.type.toLowerCase();
+    //||_t=='delete'
+    if((_t=='get')&&_d!==''){
+      b.url=b.url+'?'+_d;
+    }
+    c.open(b.type, b.url, b.async);
+    c.responseType = b.dataType;
+    if(a.contentType!==null){
+        c.setRequestHeader("Content-Type", b.contentType);
+    }
+    for(var k in b.header){
+      c.setRequestHeader(k, b.header[k]);
+    }
+    if(b.type.toLowerCase()=='get'){
+      c.send();
+    }else{
+      c.send(_d);
+    }
+    c.onreadystatechange = function() {
+      if (c.readyState == 4) {
+        if (c.status == 200) {
+          b.success(c.response||c.responseText)
+        } else {
+          b.error(c.response||c.responseText)//errInfo
+        }
+      }
+    }
+    return c;
+  };
+  function _load(name,call,ecall){
+    J.ajax({ 
+      url : name, 
+      async:true,
+      success : function(result){ 
+        call(result);
+      },
+      error : function(err){ 
+        if(ecall!=undefined)
+          ecall(err);
+        throw new Error("加载失败");
+      },
+    })
+  };
+  function _jsonp(options) {
+    if (!options.url) {
+      throw new Error("Parameter error");
+    }else{
+      var callbackName = ('_jsonp' + Math.random()).replace(".", "").substring(0, 15);
+      var head = J.tag("head");
+      options.data[_checkArg(options.callback, "callback")] = callbackName;
+      var script = J.ct('script');
+      head.append(script);
+      window[callbackName] = function(a) {
+        head.removeChild(script);
+        clearTimeout(script.timer);
+        window[callbackName] = null;
+        if(J.type(a)=="string"){
+          a=JSON.parse(a);
+        }
+        options.success && options.success(a);
+      };
+      if (options.dataType != undefined && options.dataType.toUpperCase() == "JSON") {
+        script.attr("src", options.url + '?json=' + encodeURIComponent(JSON.stringify(options.data)))
+      } else {
+        script.attr("src", options.url + '?' + _formatParams(options.data))
+      }
+      options.time = _checkArg(options.time, 5000);
+      script.timer = setTimeout(function() {
+        window[callbackName] = null;
+        head.removeChild(script);
+        options.timeout && options.timeout({
+          message:( (!options.message)?"timeout":options.message)
+        })
+      }, options.time)
+    }
+  };
+  function _cookie(a, b, d, e) {
+    if (arguments.length == 1) {
+      if (document.cookie.length > 0) {
+        var f = document.cookie.indexOf(a + "=");
+        if (f != -1) {
+          f = f + a.length + 1;
+          var g = document.cookie.indexOf(";", f);
+          if (g == -1) g = document.cookie.length;
+          return unescape(document.cookie.substring(f, g))
+        }
+      }
+      return ""
+    } else {
+      if (b == null) {
+        J.cookie(a, "", -1)
+      } else {
+        var c = a + "=" + escape(b);
+        if (d != undefined) {
+          var h = new Date();
+          h.setDate(h.getDate() + d);
+          c += ";expires=" + h.toGMTString()
+        }
+        if (e != undefined) {
+          if (J.type(e)=="boolean") {
+            if (e) {
+              c += (";path=/")
+            }
+          } else {
+            c += (";path=" + e)
+          }
+        }
+        document.cookie = c;
+        return a + "=" + b
+      }
+    }
+  };
+  function _create(a) {
+    if (a.has("#") || a.has(".") || a.has("[")) {
+      var b = a.split('#');
+      if(b.length>1){
+        b=[b[0],a.substring(b[0].length+1)];
+      }
+      var c;
+      if (a.has("[")) {
+        var l = b[b.length - 1];
+        c = l.substring(0, l.indexOf("[")).split('.');
+        c[c.length - 1] += l.substring(l.indexOf("["))
+      } else {
+        c = b[b.length - 1].split('.')
+      }
+      var d = c.length - 1;
+      var f = c[d].split('[');
+      for (var i = 0; i < f.length; i++) {
+        c[d + i] = f[i]
+      }
+      anum = f.length - 1;
+      cnum = c.length - anum - 1;
+      var e;
+      if (b.length == 1) {
+        e = document.createElement(c[0])
+      } else {
+        e = document.createElement(b[0]);
+        e.attr("id", c[0])
+      }
+      for (var i = 1; i < c.length; i++) {
+        if (cnum > 0) {
+          cnum--;
+          e.addClass(c[i])
+        } else {
+          var g = c[i].substring(0, c[i].length - 1);
+          var index=g.indexOf("=");
+          e.attr(g.substring(0,index), g.substring(index+1));
+        }
+      }
+      return e
+    } else {
+      return document.createElement(a)
+    }
+  };
   function _convertData(a) {
-    if (a.constructor == Object) {
+    if(a==undefined){
+      return "";
+    }
+    var t=$J.type(a);
+    if (t=="json") {
       var b = "";
       for (var c in a) {
-        b += c + "=" + a[c] + "&"
+        if(typeof a[c]==='object'){
+          b += (c + "=" + encodeURIComponent(JSON.stringify(a[c])) + "&")
+        }else{
+          b += (c + "=" + encodeURIComponent(a[c]) + "&")
+        }
       }
       b = b.substring(0, b.length - 1);
       return b
-    } /*else if(a.constructor == FormData){
-      if(a.entries!=undefined){
-        var b = "";
-        for (var i of a.entries()) {
-          b += i[0] + "=" + i[1] + "&"
-        }
-        b = b.substring(0, b.length - 1);
-        return b
-      }
+    }else if(t=='array'){
+      return JSON.stringify(a);
+    } else if($J.type(a)=="formdata"){
+      // if(a.entries!=undefined){
+      //   var b = "";
+      //   for (var i of a.entries()) {
+      //     b += i[0] + "=" + i[1] + "&"
+      //   }
+      //   b = b.substring(0, b.length - 1);
+      //   return b
+      // }
       return a;
-    }*/else{
+    }else{
       return a;
     }
   }
@@ -497,7 +404,7 @@
     if(a==undefined){
       return function(){};
     }else{
-      if(a.constructor==Function){
+      if(J.type(a)=="function"){
         return a;
       }else{
         return new Function(a);
@@ -512,9 +419,7 @@
     return b.join("&")
   }
   J.ready(function() {
-    J.tag("head").append(J.new("style").txt("#jCopyInput{height:0px;position:fixed;top:-100px;}.j-for-slide-height{opacity:0!important;position:absolute!important;display:block!important}.j-none{visibility:hidden!important;position:absolute!important;display:block!important}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}@keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-moz-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-webkit-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-o-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}.j-over-hidden{overflow:hidden!important}#jetTip{box-shadow:2px 2px 5px 0 #666;top:-100px;position:absolute;border:1px solid#222;background-color:rgba(255,255,255,.8);color:#222;font-size:10px;padding:3px;transition:opacity .2s;-moz-transition:opacity .2s linear;-webkit-transition:opacity .2s linear;-o-transition:opacity .2s linear;opacity:0;z-index:10000}#jetTip.j_active{opacity:1}"));
-    J.initValid();
-    J.tag("head").append(J.new("style").txt(".jet-unpass{border-color:#f20!important;border-style:solid!important;background-color:rgba(255,0,0,.1)!important;color:red!important}.jet-icon-wrapper{width:100%;height:40px}.jet-icon-circle{display:block;width:40px;height:40px;margin:0 auto;border-radius:20px;border:5px solid #fff;position:relative}.jet-icon-circle span{background-color:#fff;display:block;position:absolute;border-radius:3px}.jet-icon-circle.jet-no-border{border-color:transparent;position:relative;top:-3px}.jet-icon-part-ok1{width:11px;height:7px;top:14px;left:5px}.jet-icon-part-ok2{width:7px;height:18px;top:7px;left:14px}.jet-icon-part-x{width:7px;height:20px;top:5px;left:11px}.jet-rotate-45{transform:rotate(45deg);-ms-transform:rotate(45deg);-webkit-transform:rotate(45deg);-o-transform:rotate(45deg);-moz-transform:rotate(45deg)}.jet-rotate-045{transform:rotate(-45deg);-ms-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-o-transform:rotate(-45deg);-moz-transform:rotate(-45deg)}.jet-icon-part-bar,.jet-icon-part-block{width:7px;left:11px}.jet-icon-part-block{height:7px}.jet-icon-part-bar{height:13px}.jet-icon-part-info1,.jet-icon-part-warn1{top:4px}.jet-icon-part-info2{top:13px}.jet-icon-part-warn2{top:19px}#jetConfirmWrapper,#jetConfirmWrapper *,#jetInputWrapper,#jetInputWrapper *,#jetNoteWrapper,#jetNoteWrapper *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#jetConfirmWrapper,#jetInputWrapper,#jetNoteWrapper{position:fixed;top:-100%;z-index:10000;transition:top .3s ease;-webkit-transition:top .3s ease;-moz-transition:top .3s ease;-o-transition:top .3s ease;min-height:65px;text-align:center;border:1px solid #666;border-radius:0 0 10px 10px;border-top:0;padding-top:10px;background-color:rgba(51,134,51,.9);left:50%;width:30%;margin-left:-15%;font-family:microsoft Yahei}#jetConfirmWrapper{z-index:10001}#jetNoteWrapper{z-index:10002;cursor:pointer}#jetConfirmWrapper,#jetInputWrapper{background-color:rgba(50,50,50,.9);border-color:#eee;padding-top:0}#jetInputWrapper{background-color:rgba(40,40,40,.9)}#jetConfirmContent,#jetInputContent{font-size:22px;padding:3% 10px 10px 10px;color:#fff;height:50%;white-space:normal;word-break:break-all}#jetConfirmBtnWrapper,#jetInputBtnWrapper{height:40px}#jetInputContent{padding:3% 10% 10px 10%}.jet-input{width:100%;color:#888;padding-left:5px;font-size:18px}.jet-input-text{text-align:left}#jetConfirmCancel,#jetConfirmOk,#jetInputCancel,#jetInputOk{width:50%;float:left;height:100%;border-top:2px solid rgba(255,255,255,.9);cursor:pointer}#jetConfirmCancel,#jetInputCancel{border-radius:0 0 10px 0;}#jetConfirmOk,#jetInputOk{border-radius:0 0 0 10px;}#jetConfirmCancel:hover,#jetConfirmOk:hover,#jetInputCancel:hover,#jetInputOk:hover{background-color:rgba(80,80,80,.8)}#jetConfirmCancel:active,#jetConfirmOk:active,#jetInputCancel:active,#jetInputOk:active{background-color:rgba(120,120,120,.8)}#jetConfirmOk{border-right:1px solid rgba(255,255,255,.9)}#jetConfirmCancel,#jetInputCancel{border-left:1px solid rgba(255,255,255,.9)}#jetNoteWrapper[jet-style=gray].jet-success{background-color:rgba(210,210,210,.9);color:#444}#jetNoteWrapper[jet-style=gray].jet-info .jet-icon-circle,#jetNoteWrapper[jet-style=gray].jet-success .jet-icon-circle{border-color:#444}#jetNoteWrapper[jet-style=gray].jet-info .jet-icon-circle span,#jetNoteWrapper[jet-style=gray].jet-success .jet-icon-circle span{background-color:#444}#jetNoteWrapper[jet-style=gray].jet-info{background-color:rgba(170,170,170,.9);color:#444}#jetNoteWrapper[jet-style=gray].jet-warn{background-color:rgba(80,80,80,.9);color:#ccc}#jetNoteWrapper[jet-style=gray].jet-info #jetNoteContent,#jetNoteWrapper[jet-style=gray].jet-success #jetNoteContent{color:#222}#jetNoteWrapper[jet-style=gray].jet-error .jet-icon-circle,#jetNoteWrapper[jet-style=gray].jet-warn .jet-icon-circle{border-color:#ccc}#jetNoteWrapper[jet-style=gray].jet-error .jet-icon-circle span,#jetNoteWrapper[jet-style=gray].jet-warn .jet-icon-circle span{background-color:#ccc}#jetNoteWrapper[jet-style=gray].jet-error{background-color:rgba(40,40,40,.9);color:#ccc}#jetNoteWrapper[jet-style=color]{border-color:#ddd;color:#fff}#jetNoteWrapper[jet-style=color].jet-success,#jetNoteWrapper[jet-style=simple].jet-success{background-color:rgba(51,134,51,.9)}#jetNoteWrapper[jet-style=color].jet-info,#jetNoteWrapper[jet-style=simple].jet-info{background-color:rgba(55,78,237,.9)}#jetNoteWrapper[jet-style=color].jet-warn,#jetNoteWrapper[jet-style=simple].jet-warn{background-color:rgba(237,149,58,.9)}#jetNoteWrapper[jet-style=color].jet-error,#jetNoteWrapper[jet-style=simple].jet-error{background-color:rgba(212,73,73,.9)}#jetNoteWrapper[jet-style=color] .jet-icon-circle,#jetNoteWrapper[jet-style=gray] .jet-icon-circle{border-color:#fff}#jetNoteWrapper[jet-style=color] .jet-icon-circle span,#jetNoteWrapper[jet-style=gray] .jet-icon-circle span{background-color:#fff}#jetNoteWrapper[jet-style=simple]{color:#fff;opacity:0;top:-100%;transition:opacity .5s ease;-webkit-transition:opacity .5s ease;-moz-transition:opacity .5s ease;-o-transition:opacity .5s ease;font-size:20px;padding:15px;min-height:50px;line-height:20px;border-radius:0;border:1px solid #ccc;border-top:none}#jetNoteContent{color:#fff;font-size:20px;margin-bottom:5px;padding-top:5px;white-space:normal;word-break:break-all}@media screen and (min-width:500px) and (max-width:1200px){#jetConfirmWrapper,#jetInputWrapper,#jetNoteWrapper{width:50%;margin-left:-25%}#jetConfirmContent,#jetInputContent{font-size:19px}#jetNoteContent{font-size:17px}.jet-input{font-size:15px}#jetNoteWrapper[jet-style=simple]{min-height:40px;padding:10px;font-size:18px;width:60%;margin-left:-30%}}@media screen and (max-width:500px){#jetConfirmWrapper,#jetInputWrapper,#jetNoteWrapper{width:80%;margin-left:-40%}#jetConfirmContent,#jetInputContent{font-size:16px}#jetNoteContent{font-size:14px}.jet-input{font-size:12px}#jetNoteWrapper[jet-style=simple]{min-height:40px;padding:10px;font-size:16px;width:98%;margin-left:-49%}}"));
+    J.tag("head").append(J.ct("style").txt("#jCopyInput{height:0px;position:fixed;top:-100px;}.j-for-slide-height{opacity:0!important;position:absolute!important;display:block!important}.j-none{visibility:hidden!important;position:absolute!important;display:block!important}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}@keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-moz-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-webkit-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-o-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}.j-over-hidden{overflow:hidden!important}#jetTip{box-shadow:2px 2px 5px 0 #666;top:-100px;position:absolute;border:1px solid#222;background-color:rgba(255,255,255,.8);color:#222;font-size:10px;padding:3px;transition:opacity .2s;-moz-transition:opacity .2s linear;-webkit-transition:opacity .2s linear;-o-transition:opacity .2s linear;opacity:0;z-index:10000}#jetTip.j_active{opacity:1}"));
     J.initTip();
   });
   window.S=function(s) {
@@ -527,7 +432,7 @@
 
   function _checkSelect(b) {
     if(b==null||b==undefined){
-      return J.new("div").findClass("a");
+      return J.ct("div").findClass("a");
     }else if (b.length == 1) {
       return b[0]
     }
@@ -535,7 +440,7 @@
   };
   HTMLElement.prototype.css = function(d, a) {
     if (a == undefined) {
-      if (d.constructor == Object) {
+      if (J.type(d)=="json") {
         for (var b in d) {
           if (d[b].has("!important")) {
             this.style.setProperty(b, _checkCssValue(this, b, d[b].substring(0, d[b].indexOf("!important"))), "important")
@@ -557,7 +462,7 @@
     }
   };
   HTMLCollection.prototype.css = NodeList.prototype.css = function(d, c) {
-    if (c == undefined && d.constructor != Object) {
+    if (c == undefined && J.type(d)!="json") {
       var a = [];
       this.each(function(b) {
         a.append(b.css(d))
@@ -570,6 +475,9 @@
       return this
     }
   };
+  HTMLElement.prototype.hasData = function(d, b) {
+    return (d in this.j_data)
+  }
   HTMLElement.prototype.data = function(d, b) {
     if (arguments.length == 0) {
       if (this.j_data!=undefined) {
@@ -582,7 +490,7 @@
         this.j_data=undefined;
         return this
       } else {
-        if (d.constructor == Object) {
+        if (J.type(d)=="json") {
           if (this.j_data!=undefined) {
             for (var e in d) {
               if (d[e] != undefined) {
@@ -599,14 +507,14 @@
           if (this.j_data!=undefined) {
             return this.j_data[d]
           } else {
-            return ""
+            return undefined
           }
         }
       }
     } else {
       if (b == undefined) {
         if (this.j_data!=undefined) {
-          if (d.constructor == Array) {
+          if (J.type(d)=="array") {
             d.each(function(a) {
               delete this.j_data[a]
             })
@@ -628,7 +536,7 @@
     }
   };
   HTMLCollection.prototype.data = NodeList.prototype.data = function(d, c) {
-    if (c == undefined && d.constructor != Object && d != undefined) {
+    if (c == undefined && J.type(d)!="json" && d != undefined) {
       var a = [];
       this.each(function(b) {
         a.append(b.data(J.clone(d)))
@@ -697,7 +605,7 @@
   };
   HTMLElement.prototype.attr = function(c, b) {
     if (b == undefined) {
-      if (c.constructor == Object) {
+      if (J.type(c)=="json") {
         for (var a in c) {
           this.setAttribute(a, c[a])
         }
@@ -711,7 +619,7 @@
     }
   };
   HTMLCollection.prototype.attr = NodeList.prototype.attr = function(d, c) {
-    if (c == undefined && d.constructor != Object) {
+    if (c == undefined && J.type(d)!="json") {
       var a = [];
       this.each(function(b) {
         a.append(b.attr(d))
@@ -748,20 +656,99 @@
   HTMLElement.prototype.findClass = function(a) {
     return _checkSelect(this.getElementsByClassName(a))
   };
+  HTMLCollection.prototype.findClass = NodeList.prototype.findClass =  Array.prototype.findClass = function(a) {
+    var arr=[];
+    this.each(function(item){
+      if(item.hasClass(a)){
+        arr.push(item)
+      }
+    });
+    if(arr.length==1)
+      return arr[0];
+    return arr
+  };
   HTMLElement.prototype.findId = function(a) {
     return J.id(a)
+  };
+  HTMLCollection.prototype.findId = NodeList.prototype.findId =  Array.prototype.findId = function(a) {
+    var arr=[];
+    this.each(function(item){
+      if(item.attr("id")==a){
+        arr.push(item)
+      }
+    });
+    if(arr.length==1)
+      return arr[0];
+    return arr
   };
   HTMLElement.prototype.findTag = function(a) {
     return _checkSelect(this.getElementsByTagName(a))
   };
+  HTMLCollection.prototype.findTag = NodeList.prototype.findTag =  Array.prototype.findTag = function(a) {
+    var arr=[];
+    this.each(function(item){
+      if(item.tagName.toLowerCase()==a){
+        arr.push(item)
+      }
+    });
+    if(arr.length==1)
+      return arr[0];
+    return arr
+  };
   HTMLElement.prototype.findAttr = function(a) {
     return _checkSelect(this.querySelectorAll("[" + a + "]"))
+  };
+  HTMLCollection.prototype.findAttr = NodeList.prototype.findAttr =  Array.prototype.findAttr = function(a) {
+    var arr=[];
+    var a=a.split("=");
+    if(a.length==1){
+      this.each(function(item){
+        if(item.hasAttr(a[0])){
+          arr.push(item);
+        }
+      });
+    }else{
+      this.each(function(item){
+        if(item.attr(a[0])==a[1]){
+          arr.push(item)
+        }
+      });
+    }
+    if(arr.length==1)
+      return arr[0];
+    return arr
   };
   HTMLElement.prototype.findName = function(a) {
     return _checkSelect(this.querySelectorAll("[name=" + a + "]"))
   };
+  HTMLCollection.prototype.findName = NodeList.prototype.findName =  Array.prototype.findName = function(a) {
+    var arr=[];
+    this.each(function(item){
+      if(item.attr("name")==a){
+        arr.push(item)
+      }
+    });
+    if(arr.length==1)
+      return arr[0];
+    return arr
+  };
   HTMLElement.prototype.select = function(a) {
     return _checkSelect(this.querySelectorAll(a))
+  };
+  HTMLCollection.prototype.select = NodeList.prototype.select =  Array.prototype.select = function(a) {
+    var arr=[];
+    this.each(function(item){
+      var list = item.parent().select(a);
+      for(var i=0;i<list.length;i++){
+        if(list[i]==item){
+          arr.push(item)
+          break;
+        }
+      }
+    });
+    if(arr.length==1)
+      return arr[0];
+    return arr
   };
   HTMLElement.prototype.addClass = function(a) {
     if(a.has(" ")){
@@ -941,7 +928,7 @@
   function _copy(b) {
     var a = J.id("jCopyInput");
     if (!a.exist()) {
-      a = J.new("input").attr({
+      a = J.ct("input").attr({
         "type": "text",
         "id": "jCopyInput"
       });
@@ -982,7 +969,7 @@
   };
   HTMLElement.prototype.allHtml = function(a) {
     if (a == undefined) {
-      return J.new("div").append(this.clone()).html();
+      return J.ct("div").append(this.clone()).html();
     } else {
       var index=this.index();
       var par=this.parent().append(a,index);
@@ -1211,7 +1198,7 @@
       a = 2
     }
     _checkOrigin(this, c);
-    if (b.constructor == Number) {
+    if (J.type(b)=="number") {
       this.stopSpin();
       var f = this;
       setTimeout(function() {
@@ -1229,7 +1216,7 @@
       "-webkit-animation": "j-spin " + a + "s " + e + " 0s " + b,
       "-o-animation": "j-spin " + a + "s " + e + " 0s " + b
     });
-    if (b.constructor == Number) {
+    if (J.type(b)=="number") {
       if (d != undefined) {
         setTimeout(function() {
           _checkCallBack(d, f)
@@ -1246,7 +1233,7 @@
     } else {
       a = 2
     }
-    if (b.constructor == Number) {
+    if (J.type(b)=="number") {
       this.stopSpin();
       var f = this;
       setTimeout(function() {
@@ -1264,7 +1251,7 @@
       "-webkit-animation": "j-twinkle " + a + "s " + e + " 0s " + b,
       "-o-animation": "j-twinkle " + a + "s " + e + " 0s " + b
     });
-    if (b.constructor == Number) {
+    if (J.type(b)=="number") {
       if (d != undefined) {
         setTimeout(function() {
           _checkCallBack(d, f)
@@ -1286,7 +1273,7 @@
   };
 
   function _checkSpinSpeed(a) {
-    if (a.constructor == String) {
+    if (J.type(a)=="string") {
       switch (a) {
       case "slower":
         a = 3;
@@ -1351,9 +1338,9 @@
 
   HTMLElement.prototype.tip = function(text) {
     if(!J.id("jetTip").exist()){
-      J.body().append(J.new("span#jetTip").clk('this.removeClass("j_active").css("top","-100px")'));
+      J.body().append(J.ct("span#jetTip").clk('this.removeClass("j_active").css("top","-100px")'));
     }
-    if(text.constructor==Array){
+    if(J.type(text)=="array"){
       text=text[0];
     }
     this.jetTip=text;
@@ -1371,7 +1358,7 @@
     return this
   };
   HTMLCollection.prototype.tip = NodeList.prototype.tip = function(text) {
-    if(text.constructor==Array){
+    if(J.type(text)=="array"){
       this.each(function(a,i) {
         a.tip(text[i])
       });
@@ -1624,7 +1611,7 @@
   };
 
   function _checkAnimateSpeed(a) {
-    if (a.constructor == String) {
+    if (J.type(a)=="string") {
       switch (a) {
       case "slower":
         a = 1500;
@@ -1731,13 +1718,16 @@
     }
   };
   HTMLElement.prototype.prepend = function(a) {
-    if (a.constructor == Array) {
+    var t=J.type(a);
+    if (t=="array"||t=="htmlcollection"||t=="nodelist") {
       var b = this;
-      a.each(function(a) {
-        b.insertBefore(a, this.children[0])
+      a.each(function(item) {
+        b.insertBefore(_checkHtmle(item), b.children[0])
       })
-    } else {
-      this.insertBefore(a, this.children[0])
+    } else if(t=="string"){
+      this.insertBefore(_checkHtmle(a),this.children[0])
+    }else{
+      this.insertBefore(_checkHtmle(a), this.children[0])
     }
     return this
   };
@@ -1749,11 +1739,12 @@
   };
   HTMLElement.prototype.append = function(b, a) {
     if (a == undefined) {
-      if (b.constructor == Array||b.constructor==HTMLCollection||b.constructor==NodeList) {
+      var type=J.type(b);
+      if (type=="array"||type=="htmlcollection"||type=="nodelist") {
         for(var i=0;i<b.length;i++){
           this.append(b[i]);
         }
-      } else if(b.constructor==String){
+      } else if(type=="string"){
         this.append(_checkHtmle(b))
       }else{
         this.appendChild(_checkHtmle(b))
@@ -1761,6 +1752,12 @@
     } else {
       this.insertBefore(_checkHtmle(b), this.children[a])
     }
+    return this
+  };
+  HTMLCollection.prototype.append = NodeList.prototype.append = function(b, a) {
+    this.each(function(c) {
+      c.append(b, a)
+    });
     return this
   };
   HTMLElement.prototype.toArray=function(){
@@ -1774,8 +1771,8 @@
     return a
   };
   function _checkHtmle(a){
-    if(a.constructor==String){
-      var e=J.new("div").html(a);
+    if(J.type(a)=="string"){
+      var e=J.ct("div").html(a);
       if(e.child().length==1){
         return e.child(0);
       }else{
@@ -1785,7 +1782,8 @@
     return a;
   };
   HTMLElement.prototype.after = function(b) {
-    if (b.constructor == Array) {
+    var type=J.type(b);
+    if (type=="array"||type=="htmlcollection"||type=="nodelist") {
       var c = this;
       var d = c.next();
       b.each(function(a) {
@@ -1803,7 +1801,8 @@
     return this
   };
   HTMLElement.prototype.before = function(b) {
-    if (b.constructor == Array) {
+    var type=J.type(b);
+    if (type=="array"||type=="htmlcollection"||type=="nodelist") {
       var c = this;
       b.each(function(a) {
         c.parent().insertBefore(_checkHtmle(a), c)
@@ -1819,12 +1818,6 @@
     });
     return this
   };
-  HTMLCollection.prototype.append = NodeList.prototype.append = function(b, a) {
-    this.each(function(c) {
-      c.append(b, a)
-    });
-    return this
-  };
   HTMLElement.prototype.index = function() {
     var a = this.parent().child();
     for (var i = 0; i < a.length; i++) {
@@ -1835,7 +1828,7 @@
     return -1
   };
   HTMLElement.prototype.on = function(a, b,d) {
-    if(a.constructor==String){
+    if(J.type(a)=="string"){
       return this.event("on"+a,b,d);
     }else{
       for (var c in a) {
@@ -1862,7 +1855,7 @@
   };
   
   HTMLElement.prototype.event = function(a, b,d) {
-    if(a.constructor==String){
+    if(J.type(a)=="string"){
       if(d==true){
         _attachEvent(this,a,b);
       }else{
@@ -1904,6 +1897,7 @@
     return this
   };
   HTMLElement.prototype.remove = function() {
+    if(this.parentNode===null)return
     this.parentNode.removeChild(this)
   };
   HTMLCollection.prototype.remove = NodeList.prototype.remove = function(a) {
@@ -1912,7 +1906,7 @@
         this[i].remove()
       }
     } else {
-      if (a.constructor == Number) {
+      if (J.type(a)=="number") {
         for (var i = 0; i < this.length; i++) {
           if (i == a) {
             this[i].remove();
@@ -1981,21 +1975,20 @@
     return this
   };
   Array.prototype.removeByIndex = function(b,order) {
-    if(b==undefined||b.constructor==Boolean){
-      b=0;
+    if(J.type(b)!="number"){
+      throw new Error("removeByIndex 第一个参数必须为数字")
     }
-    var res=J.clone(this[b]);
     if(order==false){
       this[b]=this[this.length-1];
     }else{
       if (b < this.length - 1) {
-        for (var i = a + 1; i < this.length; i++) {
+        for (var i = b + 1; i < this.length; i++) {
           this[i - 1] = this[i]
         }
       }
     }
     this.length--;
-    return res
+    return this
   };
   Array.prototype.insert = function(b, i) {
     var index=i;
@@ -2054,36 +2047,40 @@
     return this.insertArray(b, 0)
   };
   Array.prototype.sort = function(a) {
-    var b = this.length;
-    var c, current;
-    for (var i = 1; i < b; i++) {
-      c = i - 1;
-      current = this[i];
-      while (c >= 0 && this[c] > current) {
-        this[c + 1] = this[c];
-        c--
+    if(this.length>1){
+      var b = this.length;
+      var c, current;
+      for (var i = 1; i < b; i++) {
+        c = i - 1;
+        current = this[i];
+        while (c >= 0 && this[c] > current) {
+          this[c + 1] = this[c];
+          c--
+        }
+        this[c + 1] = current
       }
-      this[c + 1] = current
-    }
-    if (a == false) {
-      this.reverse()
+      if (a == false) {
+        this.reverse()
+      }
     }
     return this
   };
   Array.prototype.sortByAttr = function(a,type, b) {
-    var c = this.length;
-    var d, current;
-    for (var i = 1; i < c; i++) {
-      d = i - 1;
-      current = this[i];
-      while (d >= 0 && _compareValue(this[d][a],current[a],type) ) {
-        this[d + 1] = this[d];
-        d--
+    if(this.length>1){
+      var c = this.length;
+      var d, current;
+      for (var i = 1; i < c; i++) {
+        d = i - 1;
+        current = this[i];
+        while (d >= 0 && _compareValue(this[d][a],current[a],type) ) {
+          this[d + 1] = this[d];
+          d--
+        }
+        this[d + 1] = current
       }
-      this[d + 1] = current
-    }
-    if (type == false||b==false) {
-      this.reverse()
+      if (type == false||b==false) {
+        this.reverse()
+      }
     }
     return this
   };
@@ -2094,13 +2091,13 @@
     return false;
   };
   function _getSortValue(value,type){
-    if(type==undefined||type.constructor==Boolean){
+    if(type==undefined||J.type(type)=="boolean"){
       return value;
     }else{
       var res=null;
       switch(type){
         case "date":
-          if(value.constructor==Date){
+          if(J.type(value)=="date"){
             res=value;
           }else{
             var arr;
@@ -2120,15 +2117,16 @@
     }
   };
   function _each(obj,fun,arg){
-    if(obj.constructor==Object){
+    var type=J.type(obj);
+    if(type=="json"||type=="object"){
       var k=0;
       for (var a in obj) {
-        if(obj[a].constructor!=Function){
+        if(J.type(obj[a])!="function"){
           fun(obj[a], a,k,obj)
         }
         k++;
       }
-    }else if(obj.constructor==Number||obj.constructor==Boolean||obj.constructor==String||obj.constructor==Function){
+    }else if(type=="number"||type=="boolean"||type=="string"||type=="function"){
       fun(obj, 0,arg);
     }else{
       obj.each(fun,arg);
@@ -2136,12 +2134,12 @@
     return obj;
   };
   function _type(obj){
-    if(obj==undefined){
+    if(arguments.length==0){
       throw new Error("This function need a argument");
     }else{
       var type=typeof obj;
       if(type=="object"){
-        if(obj==null){
+        if(obj===null){
           return "null";
         }else{
           var con = obj.constructor;
@@ -2168,40 +2166,45 @@
     if(obj==undefined){
       return null;
     }
-    if(obj.constructor==Object){
+    var type=J.type(obj);
+    if(type=="htmlelement"||type=="array"){
+      return obj.clone();
+    }else if(type=="json"||type=="object"){
       var a=new Object();
       for(var attr in obj){
         if(obj[attr]==null||obj[attr]==undefined){
           a[attr]=obj[attr];
-        }else if(obj[attr].constructor==Array){
+        }else if(J.type(obj[attr])=="array"){
           a[attr]=obj[attr].clone();
-        }else if(obj[attr].constructor==Object){
+        }else if(J.type(obj[attr])=="json"||J.type(obj[attr])=="object"){
           a[attr]=_clone(obj[attr]);
         }else{
           a[attr]=obj[attr];
         }
       }
       return a;
-    }else if(obj.constructor==Number||obj.constructor==Boolean||obj.constructor==String||obj.constructor==Function){
+    }else if(type=="number"||type=="boolean"||type=="string"||type=="function"){
       return obj;
     }else{
-      return obj.clone();
+      return obj;
     }
   };
   function _even(a,b){
     if(a==undefined||b==undefined){
       return (a==b);
     }else{
-      if(a.constructor!=b.constructor){
+      var atype=J.type(a);
+      var btype=J.type(b);
+      if(atype!=btype){
         return false;
       }else{
-        if(a.constructor==Object){
+        if(atype=="json"||atype=="object"){
           return (JSON.stringify(a)==JSON.stringify(b));
-        }else if(a.constructor==Array||a.constructor==Function){
+        }else if(atype=="array"||atype=="function"){
           return (a.toString()==b.toString());
-        }else if(a.constructor.toString().has("HTML")||a.constructor==NodeList){
+        }else if(atype=="htmlelement"||atype=="htmlcollection"||atype=="nodelist"){
           var arr=a.allHtml();
-          if(arr.constructor==Array){
+          if(J.type(arr)=="array"){
             return _even(arr,b.allHtml());
           }
           return (arr==b.allHtml());
@@ -2215,11 +2218,12 @@
     if(a==undefined){
       return "undefined";
     }else{
-      if(a.constructor==Object){
+      var type=J.type(a);
+      if(type=="json"||type=="object"){
         return JSON.stringify(a);
-      }else if(a.constructor==String){
+      }else if(type=="string"){
         return '"'+a+'"';
-      }else if(a.constructor==Array){
+      }else if(type=="array"){
         var s="[";
         for(var i=0;i<a.length;i++){
           s+=_toString(a[i])+',';
@@ -2228,9 +2232,9 @@
           }
         }
         return s+"]";
-      }else if(a.constructor.toString().has("HTML")||a.constructor==NodeList){
+      }else if(type=="htmlelement"||type=="htmlcollection"||type=="nodelist"){
         var arr=a.allHtml();
-        if(arr.constructor==Array){
+        if(J.type(arr)=="array"){
           return arr.toString();
         }
         return arr;
@@ -2259,37 +2263,43 @@
       return true;
     }
   };
-  Array.prototype.sum = function() {
+  Array.prototype.sum = function(a,b) {
     if(_checkEmptyArray(this)){
-      var con=this[0].constructor;
-      if(con==Number||con==String||con==Array){
-        var sum;
-        if(con==Number||(con==Array&&this[0][0].constructor==Number)){
-          sum=0;
-        }else if(con==String||(con==Array&&this[0][0].constructor==String)){
-          sum="";
+      if(a!=undefined){
+        return this.slice(a,b).sum();
+      }else{
+        var con=J.type(this[0]);
+        if(con=="number"||con=="string"||con=="array"){
+          var sum;
+          if(con=="number"||(con=="array"&&J.type(this[0][0])=="number")){
+            sum=0;
+          }else if(con=="string"||(con=="array"&&J.type(this[0][0])=="string")){
+            sum="";
+          }else{
+            throw new Error("sum方法不支持除Number,String,Array以外的类型");
+          }
+          this.each(function(a){
+            if(J.type(a)=="array"){
+              a.each(function(b){
+                sum+=b;
+              });
+            }else{
+              sum+=a;
+            }
+          });
+          return sum;
         }else{
           throw new Error("sum方法不支持除Number,String,Array以外的类型");
         }
-        this.each(function(a){
-          if(a.constructor==Array){
-            a.each(function(b){
-              sum+=b;
-            });
-          }else{
-            sum+=a;
-          }
-        });
-        return sum;
-      }else{
-        throw new Error("sum方法不支持除Number,String,Array以外的类型");
       }
+    }else{
+      return 0;
     }
   };
   Array.prototype.avg = function() {
     if(_checkEmptyArray(this)){
-      var con=this[0].constructor;
-      if(con==Number||con==String){
+      var con=J.type(this[0]);
+      if(con=="number"||con=="string"){
         return this.sum()/this.length;
       }else{
         throw new Error("ave方法不支持除Number,String以外的类型");
@@ -2298,13 +2308,14 @@
   };
   Array.prototype.max = function(attr,type) {
     if(_checkEmptyArray(this)){
-      if(this[0].constructor==Number){
+      var type=J.type(this[0]);
+      if(type=="number"){
         return Math.max.apply(null,this);
-      }else if(this[0].constructor==String||this[0].constructor==Array){
+      }else if(type=="string"||type=="array"){
         return J.clone(this).sortByAttr("length").last();
-      }else if(this[0].constructor==Date){
+      }else if(type=="date"){
         return J.clone(this).sort().last();
-      }else if(this[0].constructor==Object){
+      }else if(type=="json"||type=="object"){
         if(attr==undefined){
           throw new Error("Object类型数组参数不可为空");
         }else{
@@ -2316,13 +2327,14 @@
   };
   Array.prototype.min = function() {
     if(_checkEmptyArray(this)){
-      if(this[0].constructor==Number){
+      var type=J.type(this[0]);
+      if(type=="number"){
         return Math.min.apply(null,this);
-      }else if(this[0].constructor==String||this[0].constructor==Array){
+      }else if(type=="string"||type=="array"){
         return J.clone(this).sortByAttr("length").first();
-      }else if(this[0].constructor==Date){
+      }else if(type=="date"){
         return J.clone(this).sort().first();
-      }else if(this[0].constructor==Object){
+      }else if(type=="json"||type=="object"){
         if(attr==undefined){
           throw new Error("Object类型数组参数不可为空");
         }else{
@@ -2344,7 +2356,8 @@
   };
   Array.prototype.has = function(a) {
     if(_checkEmptyArray(this,false)){
-      if(this[0].constructor==Number||this[0].constructor==String){
+      var type=J.type(this[0]);
+      if(type=="number"||type=="string"){
         return (this.indexOf(a)>-1);
       }else{
         for(var i=0;i<this.length;i++){
@@ -2360,7 +2373,8 @@
   };
   Array.prototype.index =function(a){
     if(_checkEmptyArray(this,false)){
-      if(this[0].constructor==Number||this[0].constructor==String){
+      var type=J.type(this[0]);
+      if(type=="number"||type=="string"){
         return this.indexOf(a);
       }else{
         for(var i=0;i<this.length;i++){
@@ -2418,7 +2432,7 @@
     return s;
   };
   String.prototype.has = function(s) {
-    if (s.constructor == String) {
+    if (J.type(s)=="string") {
       if (this.includes == undefined) {
         return (this.indexOf(s) != -1)
       } else {
@@ -2433,7 +2447,7 @@
     }
   };
   String.prototype.timeOf = function(s) {
-    if (s.constructor == String) {
+    if (J.type(s)=="string") {
       return this.split(s).length - 1
     } else {
       var a = this.match(s);
@@ -2445,8 +2459,8 @@
     }
   };
   String.prototype.replaceAll = function(a, b) {
-    if (b.constructor == Array) {
-      if (a.constructor == String) {
+    if (J.type(b)=="array") {
+      if (J.type(a)=="string") {
         var s = this.split(a);
         var d = s[0];
         s.each(function(a, i) {
@@ -2471,7 +2485,7 @@
         return this
       }
     } else {
-      if (a.constructor == String) {
+      if (J.type(a)=="string") {
         return this.replace(new RegExp(a, "g"), b)
       } else {
         return this.replace(a, b)
@@ -2481,7 +2495,7 @@
   String.prototype.indexsOf = function(a, i) {
     var b = this.split(a);
     var c = null;
-    if (a.constructor != String) {
+    if (J.type(a)!="string") {
       c = this.match(a)
     }
     if (b.length <= 2) {
@@ -2516,263 +2530,8 @@
   String.prototype.insert = function(a, i) {
     return this.substring(0, i) + a + this.substring(i)
   };
-  var _t;
-  var _submitCall = null,
-    _submitCancelCall = null,
-    _onOnePass = null,
-    _onOneFail = null;
-
-  function _checkIsPw(a) {
-    if (a.attr("jet-ispw") == "true") {
-      a.attr("type", "password")
-    }
-  };
-
-  function _inputOk() {
-    if (_submitCall != null) {
-      J.id("jetInputContent").validate(function() {
-        var a=_submitCall;
-        _submitCall = null;
-        a(J.id("jetInputContent").findClass("jet-input").val());
-        _inputClose();
-      });
-    } else {
-      J.id("jetInputContent").validate(function() {
-        _inputClose()
-      });
-    }
-  };
-
-  function _inputCancel() {
-    if (_submitCancelCall != null) {
-      var a=_submitCancelCall;
-      _submitCancelCall = null;
-      a();
-    }
-    _inputClose()
-  };
-
-  function _inputClose() {
-    if(J.id("jetInputWrapper").exist()){
-      J.id("jetInputWrapper").css("top", "-100%");
-      setTimeout(function() {
-        J.id("jetInputContent").empty()
-      }, 300)
-    }
-  };
-
-  function _appendOneInput(a, b, c,p) {
-    if (arguments.length == 1) {
-      b = a.default;
-      c = a.valid;
-      p=a.placeholder;
-      a = J.checkArg(a.text, (J.language == "CHINESE") ? "请输入：" : "Please input:")
-    } else {
-      a = J.checkArg(a, (J.language == "CHINESE") ? "请输入：" : "Please input:")
-    }
-    J.id("jetInputContent").append(J.new("div").addClass("jet-input-text").txt(a));
-    var d = J.new("input.jet-input[type=text]");
-    if (b != undefined) {
-      d.val(b)
-    }
-    if (c != undefined) {
-      d.attr("jet-valid", c)
-    }
-    if (p != undefined) {
-      d.attr("placeholder", p)
-    }
-    J.id("jetInputContent").append(d)
-  };
-  HTMLElement.prototype.addValid = function(a) {
-    if (this.hasAttr("jet-form")) {
-      if (a.constructor == Object) {
-        for (var b in a) {
-          this.findAttr("jet-name=" + b).addValid(a[b])
-        }
-      } else {
-        this.findAttr("jet-name").addValid(a)
-      }
-    } else {
-      this.attr({
-        "jet-valid": a
-      });
-      if(this._jet_v_event!=true){
-        this.on({
-          "blur": "J.validInput(this)",
-          "focus": "J.addValidValue(this)"
-        },true)._jet_v_event=true;
-      }
-    }
-    return this
-  };
-  HTMLCollection.prototype.addValid = NodeList.prototype.addValid = function(b) {
-    if (b.constructor == Array) {
-      this.each(function(a, i) {
-        a.addValid(b[i])
-      })
-    } else {
-      this.each(function(a) {
-        a.addValid(b)
-      })
-    }
-    return this
-  };
-  HTMLElement.prototype.clearValid = function() {
-    if (this.hasAttr("jet-form")) {
-      this.findAttr("jet-name").clearValid()
-    } else {
-      if (this.hasClass("jet-unpass")) {
-        this.removeClass("jet-unpass").val(this.attr("jet-value"))
-      }
-      this.removeAttr("jet-valid jet-value");
-    }
-    return this
-  };
-  HTMLCollection.prototype.clearValid = NodeList.prototype.clearValid = function() {
-    this.each(function(a) {
-      a.clearValid()
-    });
-    return this
-  };
-  HTMLElement.prototype.resetValid = function() {
-    if (this.hasAttr("jet-form")) {
-      this.findAttr("jet-name").resetValid()
-    } else {
-      if (this.hasClass("jet-unpass")) {
-        this.removeClass("jet-unpass").val(this.attr("jet-value"))
-      }
-    }
-    return this
-  };
-  HTMLCollection.prototype.resetValid = NodeList.prototype.resetValid = function() {
-    this.each(function(a) {
-      a.resetValid()
-    });
-    return this
-  };
-  HTMLElement.prototype.getContent = function() {
-    return _getContentForGet(this)
-  };
-  HTMLElement.prototype.get = function(a, b) {
-    return J.get(this, a, b)
-  };
-  HTMLElement.prototype.initValid = function() {
-    J.initValid(this);
-    return this
-  };
-  HTMLCollection.prototype.initValid = NodeList.prototype.initValid = function() {
-    this.each(function(a) {
-      a.initValid()
-    });
-    return this
-  };
-  HTMLElement.prototype.set = function(a, b, c) {
-    J.set(this, a, b, c);
-    return this
-  };
-  HTMLElement.prototype.clear = function(a) {
-    J.clear(this, a);
-    return this
-  };
-  HTMLElement.prototype.validate = function(s, f) {
-    _validateForm(this, s, f)
-  };
-
-  function _checkJetForm(a) {
-    if (a.constructor == String) {
-      return J.select("[jet-form=" + a + "]")
-    }
-    return a
-  };
 
 
-  function _getElemsObj(d, b) {
-    var a = d.select("[" + b + "]");
-    var c = {};
-    a.each(function(e) {
-      c[e.attr(b)] = _getGetValue(e);
-    });
-    return c
-  };
-  function _getElemsFormData(d, b) {
-    var a = d.select("[" + b + "]");
-    var c = new FormData();
-    a.each(function(e) {
-      c.append(e.attr(b), _getGetValue(e))
-    });
-    return c
-  };
-  function _getGetValue(e){
-    var value="";
-    var type=e.attr("jet-get");
-    var name="";
-    if(type!=undefined&&type.has(":")){
-      name=type.split(":")[1];
-      type=type.split(":")[0];
-    }
-    switch(type){
-      case "allHtml":value = e.allHtml();break;
-      case "html":value = e.html();break;
-      case "class":value = e.attr("class");break;
-      case "value":value = e.val();break;
-      case "text":value = e.txt();break;
-      case "attr":value = e.attr(name);break;
-      case "css":value = e.css(name);break;
-      default:value = _getContentForGet(e);break;
-    }
-    return value;
-  };
-  function _getContentForGet(b) {
-    if (b.hasClass("jet-unpass")) {
-      return b.attr("jet-value")
-    } else {
-      var a = b.content();
-      return a
-    }
-  };
-  //text value html class addClass attr:name css:name
-  function _setObjVal(c, a, b, f) {
-    c.select("[" + a + "]").each(function(d) {
-      var e = d.attr(a);
-      var type="";
-      var name="";
-      if(d.hasAttr("jet-set")){
-        type=d.attr("jet-set");
-        if(type.has(":")){
-          name=type.split(":")[1];
-          type=type.split(":")[0];
-        }
-      }
-      var data=_getObjOrFormData(b,e);
-      _checkSetObjValFun(d,data,type,name);
-      if (f != undefined) {
-        f(d, data, e)
-      }
-    })
-    
-  };
-  function _getObjOrFormData(d,a){
-    if (d.constructor == Object) {
-      return d[a];
-    }else if(d.constructor == FormData){
-      return d.get(a);
-    }else{
-      throw new Error("该方法不支持Object和FormData以外的数据类型");
-    }
-  };
-  function _checkSetObjValFun(elem,val,type,name){
-    switch(type){
-      case "text":elem.txt(val);break;
-      case "value":elem.val(val);break;
-      case "allHtml":elem.allHtml(val);break;
-      case "html":elem.html(val);break;
-      case "attr":elem.attr(name,val);break;
-      case "class":elem.className=val;break;
-      case "addClass":elem.addClass(val);break;
-      case "css":elem.css(name,val);break;
-      default:elem.content(val);break;
-    }
-  };
   HTMLElement.prototype.exist = function(call,callf){
     if(call!=undefined){
       _checkFunction(call)(this);
@@ -2792,308 +2551,6 @@
     return false;
   };
   
-  function _validInput(b, a) {
-    var v = b.attr("jet-valid");
-    var c = "";
-    if(v!=null){
-      if (v.indexOf("lengthOfAny") != -1) {
-        var e = v.substring(12, v.length - 1).split(",");
-        var f = "lengthOfAny";
-        var d = b.content();
-        if (d.length >= parseInt(e[0]) && d.length <= parseInt(e[1])) {
-          c = "true"
-        } else {
-          c = _getValidText(f, e)
-        }
-      } else {
-        c = _checkValue(v, b.content())
-      }
-      if (c == "true") {
-        if (J.useDefaultStyle) {
-          b.removeClass("jet-unpass").attr("jet-value", "");
-          _checkIsPw(b)
-        }
-        if (_onOnePass != undefined) _onOnePass(b, c)
-      } else {
-        if (J.useDefaultStyle) {
-          b.attr("jet-value", b.content()).content(c).addClass("jet-unpass");
-          if (b.attr("type") == "password") {
-            b.attr("jet-ispw", "true").attr("type", "text")
-          }
-        }
-        if (_onOneFail != undefined) _onOneFail(b, c);
-        if (J.useShowForValid && a != false) {
-          J.show(c, "error")
-        }
-      }
-    }
-    return c
-  };
-
-  function _validInputOfForm(b) {
-    if (b.hasClass("jet-unpass")) {
-      if (_onOneFail != undefined) {
-        _onOneFail(b, b.val())
-      }
-      return b.val()
-    } else {
-      return _validInput(b, false)
-    }
-  };
-
-  function _addValidValue(a) {
-    if (a.hasClass("jet-unpass")) {
-      a.content(a.attr("jet-value"));
-      _checkIsPw(a)
-    }
-  };
-
-  function _validateForm(g, f, c) {
-    var e = [];
-    var b = true;
-    if (c == undefined) {
-      b = false
-    }
-    var d = true;
-    var a = g.select("[jet-valid]");
-    a.each(function(j) {
-      var h = _validInputOfForm(j);
-      if (h != "true") {
-        d = false;
-        if (b) {
-          e[e.length] = {
-            "obj": j,
-            "error": h
-          }
-        }
-      }
-    });
-    if (!d) {
-      if (b) {
-        _checkFunction(c)(e,g);
-      }
-      var i = (J.language == "CHINESE") ? "输入有误，请按提示改正。" : "Values is not expected";
-      if (J.useShowForValid) {
-        J.show(i, "error")
-      } else {
-        //alert(i)
-      }
-    } else {
-      if (f != undefined) {
-        _checkFunction(f)(g.get(),g);
-      }
-    }
-  };
-
-  function _getElemsStrs(d, b) {
-    var a = d.select("[" + b + "]");
-    var c = [];
-    a.each(function(e) {
-      c[i] = [e.attr(b), _getContentForGet(e)]
-    });
-    return c
-  };
-  var validTextCn = {
-    "null": "*可以为空",
-    "notnull": "*必填",
-    "date": "*格式为XXXX-XX-XX",
-    "email": "*格式为XXX@XX.com",
-    "number": "*须为纯数字",
-    "idcard": "*17位数字加一位数字或X",
-    "length": "*输入长度为",
-    "url": "*请输入正确的网址",
-    "float": "*请正确的小数",
-    "lengthOfAny": "*输入长度为",
-    "phone": "*须为11位纯数字",
-    "letterStart": "*字母开头且长度为",
-    "range": "*数字不在范围内",
-    "express": "*自定义错误",
-  };
-  var validTextEn = {
-    "null": "*null is allowed",
-    "notnull": "*Required",
-    "date": "*format:XXXX-XX-XX",
-    "email": "*format:XXX@XX.com",
-    "number": "*expect a number",
-    "idcard": "*17 numbers plus a number or X",
-    "length": "*length between",
-    "url": "*Expect an url name",
-    "float": "*Expect a float number",
-    "lengthOfAny": "*length between",
-    "phone": "*must be 11 digits",
-    "letterStart": "*letter start and length",
-    "range": "*not in range",
-    "express": "*wrong express",
-  };
-
-  function _getValueText(b) {
-    var c = 0;
-    if (b.indexOf("range") != -1) {
-      c = 6
-    } else {
-      if (b.indexOf("letterStart") != -1) {
-        c = 12
-      } else if (b.indexOf("length") != -1) {
-        c = 7
-      } else if (b.has("number") && b != "number") {
-        c = 7
-      }
-    }
-    if (c != 0) {
-      var a = b.substring(c, b.length - 1).split(",");
-      if (a[1] == undefined) {
-        a[1] = a[0]
-      }
-      return _getValidText(b.substring(0, c - 1), a)
-    } else {
-      return _getValidText(b)
-    }
-  };
-
-  function _getValidText(a, b) {
-    if (J.language == "CHINESE") {
-      if (b == undefined) {
-        return validTextCn[a]
-      } else {
-        var c = "";
-        if (a.has("number")) {
-          c = " 且长度为"
-        }
-        return validTextCn[a] + c + "[" + b[0] + "," + b[1] + "]"
-      }
-    } else {
-      if (b == undefined) {
-        return validTextEn[a]
-      } else {
-        var c = "";
-        if (a.has("number")) {
-          c = " and length between"
-        }
-        return validTextEn[a] + c + "[" + b[0] + "," + b[1] + "]"
-      }
-    }
-  };
-
-  function _getRegExp(f) {
-    var d = -1;
-    var c = -1;
-    if (f.indexOf("length") != -1) {
-      var e = f.substring(7, f.length - 1).split(",");
-      f = "length";
-      d = e[0];
-      if (e[1] == undefined) {
-        e[1] = e[0]
-      }
-      c = e[1]
-    } else if (f.indexOf("letterStart") != -1) {
-      var e = f.substring(12, f.length - 1).split(",");
-      f = "letterStart";
-      d = e[0];
-      if (e[1] == undefined) {
-        e[1] = e[0]
-      }
-      c = e[1]
-    } else if (f.has("number") && f != "number") {
-      var e = f.substring(7, f.length - 1).split(",");
-      f = "number";
-      d = e[0];
-      if (e[1] == undefined) {
-        e[1] = e[0]
-      }
-      c = e[1]
-    } else if (f.has("express")) {
-      d = f.substring(8, f.length - 1);
-      f = "express"
-    }
-    switch (f) {
-    case "null":
-      return /^\S{0}$/;
-      break;
-    case "date":
-      return /^(([12]\d{3}-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2]\d)|3(0|1))))$/;
-      break;
-    case "email":
-      return /^((\w*@\w*.com))$/;
-      break;
-    case "number":
-      if (d >= 0) {
-        return new RegExp("^-?(\\d{" + d + "," + c + "})$")
-      } else {
-        return /^-?(\d+)$/
-      }
-      break;
-    case "float":
-      return /^-?[1-9]\d*.\d*|0.\d*[1-9]\d*$/;
-      break;
-    case "idcard":
-      return /^(\d{17}(X|\d))$/;
-      break;
-    case "url":
-      return /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+$/;
-      break;
-    case "phone":
-      return /^([1]\d{10})$/;
-      break;
-    case "letterStart":
-      return new RegExp("^([a-zA-Z]([a-zA-Z\\d]){" + (parseInt(d) - 1) + "," + (parseInt(c) - 1) + "})$");
-      break;
-    case "length":
-      return new RegExp("^(([a-zA-Z\\d]){" + d + "," + c + "})$");
-      break;
-    case "express":
-      return new RegExp(d);
-      break;
-    default:
-      return "null";
-      break
-    }
-  };
-
-  function _checkValue(a, e) {
-    if (a.indexOf("notnull") != -1) {
-      if (e.length == 0) {
-        return _getValueText("notnull")
-      }
-    } else if (a.indexOf("null") != -1) {
-      var c = a.split(" ");
-      var b = (c[0] == "null") ? c[1] : c[0];
-      if (b.indexOf("range") != -1) {
-        var d = _testRange(a, e);
-        if (d != "true" && e != "") {
-          return d
-        }
-      }
-      if (!_getRegExp(b).test(e) && e != "") {
-        return _getValueText(b)
-      }
-    } else {
-      if (a.indexOf("range") != -1) {
-        var d = _testRange(a, e);
-        if (d != "true") {
-          return d
-        }
-      } else {
-        if (!_getRegExp(a).test(e)) {
-          return _getValueText(a)
-        }
-      }
-    }
-    return "true"
-  };
-
-  function _testRange(b, c) {
-    var a = b.substring(6, b.length - 1).split(",");
-    b = "number";
-    if (_getRegExp(b).test(c)) {
-      if (parseInt(c) < parseInt(a[0]) || parseInt(c) > parseInt(a[1])) {
-        return _getValidText("range", a)
-      }
-    } else {
-      return _getValidText("number")
-    }
-    return "true"
-  };
-
   function _getUrlParam() {
     var d = decodeURI(location.search.substring(1)).split("&");
     if (d.length == 0) {
@@ -3116,10 +2573,9 @@
     try{
       window.location.href = (encodeURI(a))
     }catch(e){
-      J.show("跳转地址错误","error");
+      throw new Error("跳转地址错误","error");
     }
   };
-
   function _getRandomNum(a, b) {
     return (a + Math.round(Math.random() * (b - a)))
   };
@@ -3131,227 +2587,14 @@
     return -1
   };
 
+  function _checkArg(a, b) {
+    return (a == undefined) ? b : a
+  };
   function _isMobile() {
     if ((/AppleWebKit.*Mobile/i).test(navigator.userAgent)) {
       return true
     } else {
       return false
     }
-  };
-
-  function _mesShow(a, b, c, d, e) {//text type time call needClose
-    clearTimeout(_t);
-    var f = J.id("jetNoteWrapper");
-    if (!f.exist()) {
-      _addNoteWrapper();
-      f = J.id("jetNoteWrapper");
-    }
-    var style=J.noteStyleStr;
-    if(style!="simple"){
-      var g = f.findClass("jet-icon-circle").child();
-      if (!b) {
-        g[0].className = "jet-icon-part-ok1 jet-rotate-45";
-        g[1].className = "jet-icon-part-ok2 jet-rotate-45";
-        b = "success"
-      } else {
-        switch (b) {
-        case "success":
-          g[0].className = "jet-icon-part-ok1 jet-rotate-45";
-          g[1].className = "jet-icon-part-ok2 jet-rotate-45";
-          break;
-        case "warn":
-          g[0].className = "jet-icon-part-bar jet-icon-part-warn1";
-          g[1].className = "jet-icon-part-block jet-icon-part-warn2";
-          break;
-        case "error":
-          g[0].className = "jet-icon-part-x jet-rotate-45";
-          g[1].className = "jet-icon-part-x jet-rotate-045";
-          break;
-        case "info":
-          g[0].className = "jet-icon-part-block jet-icon-part-info1";
-          g[1].className = "jet-icon-part-bar jet-icon-part-info2";
-          break;
-        default:
-          g[0].className = "jet-icon-part-ok1 jet-rotate-45";
-          g[1].className = "jet-icon-part-ok2 jet-rotate-45";
-          break
-        }
-      }
-      J.id("jetNoteContent").txt(a);
-    }else{
-      J.id("jetNoteWrapper").txt(a);
-    }
-    f.className = "jet-" + b;
-    setTimeout(function(){
-      if(style!="simple"){
-          if(f.css("opacity")=="0"){
-            f.css("opacity","1");
-          }
-          f.css("top", "0");
-      }else{
-        f.css("top","0");
-        setTimeout(function(){f.css("opacity","1");},10)
-      }
-    },0);
-    c = J.checkArg(c, 1500);
-    if (c.constructor == String) {
-      switch (c) {
-      case "slower":
-        c = 2500;
-        break;
-      case "slow":
-        c = 2000;
-        break;
-      case "normal":
-        c = 1500;
-        break;
-      case "fast":
-        c = 1000;
-        break;
-      case "faster":
-        c = 500;
-        break;
-      default:
-        c = 1500
-      }
-    }
-    _t = setTimeout(function() {
-      if (e != false) {
-        _t = setTimeout(function() {
-          _mesClose();
-          if (d != undefined) {
-            d()
-          }
-        }, c)
-      }
-    }, 300)
-  };
-  
-  function _mesShowWait(a, b) {
-    b = J.checkArg(b, "info");
-    _mesShow(a, b, 0, function() {}, false)
-  };
-
-  function _mesClose() {
-    if(J.id("jetNoteWrapper").exist()){
-      if(J.noteStyleStr=="simple"){
-        J.id("jetNoteWrapper").css("opacity", "0");
-        setTimeout(function(){J.id("jetNoteWrapper").css("top", "-100%")},550);
-      }else{
-        J.id("jetNoteWrapper").css("top", "-100%")
-      }
-    }
-  };
-  
-  var _okCall = null;
-  var _cancelCall = null;
-
-  function _confirmShow(a, b, c) {
-    var d = J.id("jetConfirmContent");
-    if (!d.exist()) {
-      _addConfirmWrapper();
-      d = J.id("jetConfirmContent")
-    }
-    d.txt(a);
-    setTimeout(function(){J.id("jetConfirmWrapper").css("top", "0");},0);
-    _okCall=_checkFunction(b);
-    _cancelCall=_checkFunction(c);
-  };
-
-
-  function _confirmOk() {
-    if (_okCall != null) {
-      var a=_okCall;
-      _okCall = null
-      a();
-    }
-    _confirmClose()
-  };
-
-  function _confirmCancel() {
-    if (_cancelCall != null) {
-      var a=_cancelCall;
-      _cancelCall = null
-      a();
-    }
-    _confirmClose()
-  };
-
-  function _confirmClose() {
-    if(J.id("jetConfirmWrapper").exist()){
-      J.id("jetConfirmWrapper").css("top", "-100%")
-    }
-  };
-
-  function _setNoteStyle(a) {
-    if(a==undefined||(a != "color"&&a!="simple")){
-      a="gray";
-    }
-    var w=J.id("jetNoteWrapper");
-    var old=J.noteStyleStr;
-    J.noteStyleStr = a;
-    if (w != undefined) {
-      if((old=="color"||old=="gray")&&a=="simple"){
-        w.empty();
-      }else if((a=="color"||a=="gray")&&old=="simple"){
-        w.empty();
-        w.append(_geneNoteContent());
-      }
-      w.attr("jet-style", a)
-    }
-    _mesClose();
-  };
-  function _checkArg(a, b) {
-    return (a == undefined) ? b : a
-  };
-  function _addNoteWrapper() {
-    var d = J.new("div").attr({
-      "id": "jetNoteWrapper",
-      "jet-style": J.noteStyleStr,
-      "onclick": "J.close()"
-    });
-    if(J.noteStyleStr!="simple"){
-      d.append(_geneNoteContent());
-    }
-    J.body().append(d);
-  };
-  function _geneNoteContent(){
-    var a = J.new("span").addClass("jet-icon-circle").append([J.new("span"), J.new("span")]);
-    var b = J.new("div").attr("id", "jetNoteIcon").addClass("jet-icon-wrapper").append(a);
-    var c = J.new("div").attr("id", "jetNoteContent");
-    return [b,c];
-  }
-  function _addConfirmWrapper() {
-    var a = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-ok1 jet-rotate-45"), J.new("span").addClass("jet-icon-part-ok2 jet-rotate-45")]);
-    var b = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-x jet-rotate-45"), J.new("span").addClass("jet-icon-part-x jet-rotate-045")]);
-    var c = J.new("div").attr({
-      "id": "jetConfirmOk",
-      "onclick": "J.confirmOk()"
-    }).append(a);
-    var d = J.new("div").attr({
-      "id": "jetConfirmCancel",
-      "onclick": "J.confirmCancel()"
-    }).append(b);
-    var e = J.new("div").attr("id", "jetConfirmBtnWrapper").append([c, d]);
-    var f = J.new("div").attr("id", "jetConfirmContent");
-    var g = J.new("div").attr("id", "jetConfirmWrapper").append([f, e]);
-    J.body().append(g);
-  };
-
-  function _addInputWrapper() {
-    var a = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-ok1 jet-rotate-45"), J.new("span").addClass("jet-icon-part-ok2 jet-rotate-45")]);
-    var b = J.new("span").addClass("jet-icon-circle jet-no-border").append([J.new("span").addClass("jet-icon-part-x jet-rotate-45"), J.new("span").addClass("jet-icon-part-x jet-rotate-045")]);
-    var c = J.new("div").attr({
-      "id": "jetInputOk",
-      "onclick": "J.inputOk()"
-    }).append(a);
-    var d = J.new("div").attr({
-      "id": "jetInputCancel",
-      "onclick": "J.inputCancel()"
-    }).append(b);
-    var e = J.new("div").attr("id", "jetInputBtnWrapper").append([c, d]);
-    var f = J.new("div").attr("id", "jetInputContent");
-    var g = J.new("div").attr("id", "jetInputWrapper").append([f, e]);
-    J.body().append(g);
   };
 })();

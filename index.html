@@ -53,8 +53,8 @@
     <!--download-->
     <div id="downloadPart" class="bg-dark text-white part">
       <div class="part-title hassmall">Download</div>
-      <div class="part-title small">Cite: &lt;script src="http://www.theajack.com/jetterjs/assets/js/jetter.min.js"&gt;&lt;/script&gt;</div>
-      <div id="copyBtn" class="border-btn" onclick="J.open('assets/js/jetter.min.js')">View and copy code</div>
+      <div class="part-title small">Cite: &lt;script src="https://www.theajack.com/jetterjs/assets/js/jetter2.min.js"&gt;&lt;/script&gt;</div>
+      <div id="copyBtn" class="border-btn" onclick="J.open('assets/js/jetter2.0.js')">View and copy code</div>
     </div>
     <!--api-->
     <div id="apiPart" class="bg-gray part">
@@ -151,26 +151,26 @@
       <div class="part-title hassmall">Related link</div>
       <div class="part-title small">(Welcome to visit)</div>
       <div id="relateItemWrapper" class="clearfix">
-        <div class="relate-item" onclick="J.open('https://theajack.github.io/')">
+        <div class="relate-item" onclick="J.open('https://www.theajack.com/')">
           <img class="relate-item-img" src="assets/images/theajack.png"/>
           <span class="relate-item-text">TheaJack's home page</span>
         </div>
-        <div class="relate-item" onclick="J.open('http://bikeshare.imwork.net/')">
-          <img class="relate-item-img" src="assets/images/bikeshare.png"/>
-          <span class="relate-item-text">Bikeshare for ofo</span>
+        <div class="relate-item" onclick="J.open('https://www.theajack.com/jet/')">
+          <img class="relate-item-img" src="assets/images/Jet.png"/>
+          <span class="relate-item-text">Jet</span>
         </div>
-        <div class="relate-item" onclick="J.open('https://theajack.github.io/bombbattle')">
-          <img class="relate-item-img" src="assets/images/bombbattle.png"/>
-          <span class="relate-item-text">BombBattle-standalone</span>
+        <div class="relate-item" onclick="J.open('https://www.theajack.com/cnchar/')">
+          <img class="relate-item-img" src="assets/images/cncharjs.png"/>
+          <span class="relate-item-text">cnchar.js</span>
         </div>
         <div class="relate-item">
           <div class="relate-item-img app">
+            <img class="relate-app-img" src="assets/images/Chinese typing game.png" onclick="J.open('https://www.theajack.com/type/')"/>
             <img class="relate-app-img" src="assets/images/app_2048plus.png" onclick="J.open('http://a.app.qq.com/o/simple.jsp?pkgname=com.main.theajack')"/>
-            <img class="relate-app-img" src="assets/images/app_bikeshare.png" onclick="J.open('http://bikeshare.imwork.net/download.aspx')"/>
+            <img class="relate-app-img" src="assets/images/奔跑的柴柴.png" onclick="J.open('https://minapp.com/miniapp/6495/')"/>
             <img class="relate-app-img" src="assets/images/app_stonefinanace.png" onclick="J.open('http://a.app.qq.com/o/simple.jsp?pkgname=com.example.stonefinance')"/>
-            <img class="relate-app-img" src="assets/images/app_breakdefence.png" onclick="J.show('This is in developing','info')"/>
           </div>
-          <span class="relate-item-text">Android apps</span>
+          <span class="relate-item-text">Games</span>
         </div>
       </div>
       <div id="tjLinks" link-en=true>
@@ -200,16 +200,36 @@
         </div>
       </div>
       <div id="copyright">
-        <span class="glyphicon glyphicon-copyright-mark"></span> 2017 TheaJack All rights reserved
+        <span class="glyphicon glyphicon-copyright-mark"></span> 2018 TheaJack All rights reserved
       </div>
     </div>
-    <script src="assets/js/jetter.min.js"></script>
+    <script src="assets/js/jetter2.min.js"></script>
+    <script>
+      J.new=J.ct;
+      J.class=J.cls;
+      J.load=J.ready;
+    </script>
     <script src="assets/js/codeEditor.js"></script>
     <script src="assets/js/apiData.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <script src="http://www.theajack.com/assets/js/logo.js"></script>
-    <script src="http://www.theajack.com/assets/js/log.js"></script>
-    <script src="http://www.theajack.com/assets/js/link.js"></script>
-    <script name="jetterjs" src="http://www.theajack.com/assets/js/stat.js"></script>
+    <script src="https://www.theajack.com/assets/js/logo.js"></script>
+    <script src="https://www.theajack.com/assets/js/log.js"></script>
+    <script src="https://www.theajack.com/assets/js/link.js"></script>
+    <script name="jetterjs" src="https://www.theajack.com/assets/js/stat.js"></script>
+    <script type="text/javascript">
+    
+    i=20;
+    function F(a,arr){   //一个经典的递归阶乘函数
+      this.a=a;
+      this.a.b++;
+      this.arr=arr;
+      if(i>0){
+        i--;
+        this.init();
+      }
+    };F.prototype.init=function(){
+      this.arr.push(new F(this.a,this.arr))
+    }
+    </script>
   </body>
 </html>

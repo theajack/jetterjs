@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+ <head>
+<body>
+<form method="post" action="http://up-z2.qiniu.com/"
+ enctype="multipart/form-data">
+  <ul>
+    <li>
+        <label for="token">七牛的token:</label>
+        <input id="token" name="token"  value="1yO6M0kKNO3NyoIbaQlf_rBt5TjhdXj4QpascjI_:gdGbvBWtRNc4BgR-Pt9iDUYWOO0=:eyJzY29wZSI6Imxlc3NvbiIsImRlYWRsaW5lIjoxNDk4MjAyNjA0fQ==">
+    </li>
+    <li>
+        <label for="bucket">文件:</label>
+        <input id="file" name="file" type="file" />
+    </li>
+    <li>
+        <button type="submit">submit</button>
+    </li>
+</form>
+</body>
+<script type="text/javascript" src="jetter2.min.js"></script>
+<script type="text/javascript">
+function test(x,y,node,flinks){
+  var arr={
+    north:[],
+    south:[],
+    west:[],
+    east:[]
+  };
+  var neighbors=create_neighbors(node,x,y);
+  var queue = [node];
+  neighbors.each(function(neighbor){
+    queue.push(neighbor);
+    if(neighbor==node-x)
+      arr.north.push(neighbor)
+    else if(neighbor==node-1)
+      arr.west.push(neighbor)
+    else if(neighbor==node+1)
+      arr.east.push(neighbor)
+    else
+      arr.south.push(neighbor)
+  });
+  var i=1;
+  while(i<x*y){
+    node=queue[i];
+    i++;
+    neighbors=create_neighbors(node,x,y);
+    neighbors.each(function(neighbor){
+      if(!queue.has(neighbor) && !flinks.has(node+"->"+neighbor)){
+        queue.push(neighbor);
+        if(arr.north.has(node))
+          arr.north.push(neighbor)
+        else if(arr.west.has(node))
+          arr.west.push(neighbor)
+        else if(arr.east.has(node))
+          arr.east.push(neighbor)
+        else
+          arr.south.push(neighbor)
+      }
+    });
+  }
+  return arr;
+}
+function create_neighbors(node,x,y){
+  var arr=[];
+  var dx=node%x;
+  var dy=Math.floor(node/x);
+  if(dy-1>=0){
+    arr.push(node-x)
+  }
+  if(dx-1>=0){
+    arr.push(node-1)
+  }
+  if(dx+1<x){
+    arr.push(node+1)
+  }
+  if(dy+1<y){
+    arr.push(node+x)
+  }
+  return arr;
+}
+</script>
+</html>

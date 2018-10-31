@@ -12,13 +12,13 @@ J.ready(function(){
   J.lang("english");
   addApiDetails();
   //J.id("downloadArea").clk("J.id('downloadArea').select()");
-  J.class("wechat-public").on({
-    mouseover:"J.class('wechat-img').fadeIn()",
-    mouseleave:"J.class('wechat-img').fadeOut()"
+  J.cls("wechat-public").on({
+    mouseover:"J.cls('wechat-img').fadeIn()",
+    mouseleave:"J.cls('wechat-img').fadeOut()"
   });
-  J.class("intro-item").clk("showIntroDetail(this)");
+  J.cls("intro-item").clk("showIntroDetail(this)");
   //J.id("copyBtn").clk(copySourceCode);
-  J.class("api-title").clk(function(e){
+  J.cls("api-title").clk(function(e){
     showRipple(e,this);
     moveApiBar(this);
   })
@@ -37,9 +37,9 @@ J.ready(function(){
   //J.id("apiSearchResultList").on({
   //  mousewheel:redefineMouseWhell,
   //});
-  //J.class("api-item").on("mousewheel",redefineMouseWhell);
+  //J.cls("api-item").on("mousewheel",redefineMouseWhell);
   
-  J.class("result-close-btn").clk(function(){this.parent().slideUp(null,"fast")});
+  J.cls("result-close-btn").clk(function(){this.parent().slideUp(null,"fast")});
   J.id("apiSearchInput").on("keydown",function(e){if(e.keyCode===13){J.id("apiSearchBtn").click()}});
   J.id("apiSearchBtn").clk(showApiSearch);
   checkWidth();
@@ -123,7 +123,7 @@ function showApiSearch(){
         }else{
           title=d.title;
         }
-        var span=J.new("span").html(title).clk(function(){
+        var span=J.ct("span").html(title).clk(function(){
           showApiDetailForSearch(this);
         });
         if(d.title.length>13){
@@ -148,7 +148,7 @@ function addApiDetails(){
   var list=J.id("apiBar").child();
   list.each(function(api){
     apiData[api.attr("jet-api")].each(function(data){
-      var span=J.new("span").txt(data.title);
+      var span=J.ct("span").txt(data.title);
       if(data.title.length>13){
         if(data.title.length<19){
           span.css({"font-size":"22px","padding-top":"25px"});
@@ -184,7 +184,7 @@ function showResultBase(){
     if(a.has("<\/script>")){
       var script=a.substring(a.indexOf("<script"),a.indexOf("<\/script>")+9);
       var elems=a.replace(script,"");
-      var newScript = J.new('script[type=text/javascript]').html(script.substring(script.indexOf(">")+1,(script.indexOf("<\/script>"))));
+      var newScript = J.ct('script[type=text/javascript]').html(script.substring(script.indexOf(">")+1,(script.indexOf("<\/script>"))));
       obj.append(newScript).html(elems);
     }else{
       obj.html(a);
@@ -284,10 +284,10 @@ function showDetailBase(d){
   showResultBase();
   if(!d.test){
     J.id("resultArea").addClass("hide");
-    J.class("result-cover").removeClass("hide");
+    J.cls("result-cover").removeClass("hide");
   }else{
     J.id("resultArea").removeClass("hide");
-    J.class("result-cover").addClass("hide");
+    J.cls("result-cover").addClass("hide");
   }
   J.id('apiDetail').addClass('show');
   if(J.id('apiCode').attr("show-all")=="true"){
@@ -301,17 +301,17 @@ function hideApiDetail(){
   }
 }
 function showRipple(e,obj){
-  J.class("ripple").remove();
+  J.cls("ripple").remove();
   var offset = obj.offset();
   var len=(offset.width>offset.height)?offset.width:offset.height;
   if(obj.hasClass("bg-dark")){
-    obj.prepend(J.new("span").addClass("ripple r-white"));
+    obj.prepend(J.ct("span").addClass("ripple r-white"));
   }else{
-    obj.prepend(J.new("span").addClass("ripple r-black"));
+    obj.prepend(J.ct("span").addClass("ripple r-black"));
   }
   var x = e.pageX - offset.left - len / 2;
   var y = e.pageY - offset.top - len / 2;
-  J.class("ripple").css({
+  J.cls("ripple").css({
     "width": len+ 'px',
     "height": len+ 'px',
     "top": y + 'px',
