@@ -195,7 +195,7 @@
           "blur": "J.validInput(this)",
           "focus": "J.addValidValue(this)"
         },true)._jet_v_event=true;
-        if (this.showInPlaceHolder) {
+        if (J.showInPlaceHolder) {
           a.attr("placeholder", _getValueText(a.attr("jet-valid")))
         }
       })
