@@ -1,0 +1,23 @@
+{
+    "name": "jetterjs",
+    "version": "0.0.1",
+    "description": "Js library for form operation and validation",
+    "main": "jetter.min.js",
+    "scripts": {},
+    "unpkg": "jetter.min.js",
+    "jsdelivr": "jetter.min.js",
+    "typings": "jetter.min.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/theajack/jetterjs.git"
+    },
+    "keywords": [
+    ],
+    "author": "theajack",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/theajack/jetterjs/issues"
+    },
+    "homepage": "https://theajack.gitee.io/jetterjs/",
+    "dependencies": {}
+}
