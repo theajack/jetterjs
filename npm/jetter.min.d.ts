@@ -43,6 +43,7 @@ declare interface IJ {
     copy(b: any): boolean
     clone(b: any): boolean;
     // 太多了暂时没时间加
+    
 }
 
 declare const J: IJ;

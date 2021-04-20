@@ -94,16 +94,16 @@ const J = {
     isMobile: _isMobile,
       
     delay: function (call, time) {
-        return setTimeout(call, time);
+        return window.setTimeout(call, time);
     },
     clearDelay: function (t) {
-        return setTimeout(t);
+        return window.clearTimeout(t);
     },
     repeat: function (call, time) {
-        return setInterval(call, time);
+        return window.setInterval(call, time);
     },
     clearRepeat: function (t) {
-        return clearInterval(t);
+        return window.clearInterval(t);
     },
       
     jetForm: function (a) {
@@ -215,21 +215,21 @@ const J = {
         });
     },
     show: _mesShow,
-    confirm: _confirmShow,
     showWait: _mesShowWait,
     close: _mesClose,
-    confirmClose: _confirmClose,
-    inputClose: _inputClose,
     noteStyle: _setNoteStyle,
     validInput: _validInput,
     addValidValue: _addValidValue,
     onOnePass: _onOnePassCallback,
     onOneFail: _onOneFailCallback,
+    confirm: _confirmShow,
+    confirmClose: _confirmClose,
     confirmOk: _confirmOk,
     confirmCancel: _confirmCancel,
+    input: _input,
+    inputClose: _inputClose,
     inputOk: _inputOk,
     inputCancel: _inputCancel,
-    input: _input
 };
 J.ready(function () {
     J.tag('head').append(J.ct('style').txt('#jCopyInput{height:0px;position:fixed;top:-100px;}.j-for-slide-height{opacity:0!important;position:absolute!important;display:block!important}.j-none{visibility:hidden!important;position:absolute!important;display:block!important}.j-animation{transition:all .5s linear!important;-moz-transition:all .5s linear!important;-webkit-transition:all .5s linear!important;-o-transition:all .5s linear!important}.j-slide{overflow:hidden!important;height:0!important;padding-top:0!important;padding-bottom:0!important}.j-fade{opacity:0!important}.j-display-none{display:none!important}@keyframes j-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}@-moz-keyframes j-spin{from{-moz-transform:rotate(0)}to{-moz-transform:rotate(360deg)}}@-webkit-keyframes j-spin{from{-webkit-transform:rotate(0)}to{-webkit-transform:rotate(360deg)}}@-o-keyframes j-spin{from{-o-transform:rotate(0)}to{-o-transform:rotate(360deg)}}@keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-moz-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-webkit-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}@-o-keyframes j-twinkle{0%{opacity:1}50%{opacity:.1}100%{opacity:1}}.j-over-hidden{overflow:hidden!important}#jetTip{box-shadow:2px 2px 5px 0 #666;top:-100px;position:absolute;border:1px solid#222;background-color:rgba(255,255,255,.8);color:#222;font-size:10px;padding:3px;transition:opacity .2s;-moz-transition:opacity .2s linear;-webkit-transition:opacity .2s linear;-o-transition:opacity .2s linear;opacity:0;z-index:10000}#jetTip.j_active{opacity:1}'));
